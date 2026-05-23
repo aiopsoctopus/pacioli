@@ -1,0 +1,302 @@
+[
+  {
+    "month": "2025-06",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 1196.79,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 51.07,
+        "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2025-07",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 592.22,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 100.46,
+        "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2025-08",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 1033.32,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 52.23,
+        "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2025-09",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 191.98,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 94.44,
+        "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2025-10",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 715.69,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 70.78,
+        "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2025-11",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 715.07,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 77.44,
+        "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2025-12",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 301.7,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 84.26,
+        "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2026-01",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 1130.92,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 94.42,
+        "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2026-02",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 137.46,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 110.78,
+        "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2026-03",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 901.05,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 101.49,
+        "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2026-04",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 408.21,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 63.48,
+        "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2026-05",
+    "sources": [
+      {
+        "label": "Salary \u2013 Christina",
+        "amount": 6250.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2013 Partner",
+        "amount": 5833.0,
+        "type": "salary"
+      },
+      {
+        "label": "Freelance",
+        "amount": 189.79,
+        "type": "freelance"
+      },
+      {
+        "label": "Dividends",
+        "amount": 40.26,
+        "type": "investment"
+      }
+    ]
+  }
+]

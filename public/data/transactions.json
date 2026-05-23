@@ -1,0 +1,4090 @@
+[
+  {
+    "id": "tx_0016",
+    "date": "2025-06-01",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.32,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0038",
+    "date": "2025-06-02",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 94.55,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0039",
+    "date": "2025-06-02",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 90.22,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0008",
+    "date": "2025-06-03",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 74.32,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0019",
+    "date": "2025-06-03",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.46,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0020",
+    "date": "2025-06-03",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.05,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0033",
+    "date": "2025-06-03",
+    "merchant": "Netflix",
+    "category": "Subscriptions",
+    "amount": 25.93,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0040",
+    "date": "2025-06-03",
+    "merchant": "Movie Tickets",
+    "category": "Entertainment",
+    "amount": 32.91,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0006",
+    "date": "2025-06-04",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 203.17,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0032",
+    "date": "2025-06-04",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 15.57,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0009",
+    "date": "2025-06-05",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 29.34,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0010",
+    "date": "2025-06-06",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 26.03,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0021",
+    "date": "2025-06-07",
+    "merchant": "Date Night Restaurant",
+    "category": "Dining Out",
+    "amount": 96.12,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0024",
+    "date": "2025-06-07",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 15.81,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0037",
+    "date": "2025-06-07",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 76.42,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0007",
+    "date": "2025-06-08",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 133.61,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0015",
+    "date": "2025-06-08",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.01,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0029",
+    "date": "2025-06-08",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 56.26,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0028",
+    "date": "2025-06-11",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 67.59,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0013",
+    "date": "2025-06-13",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 51.68,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0034",
+    "date": "2025-06-13",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 32.53,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0011",
+    "date": "2025-06-14",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 31.9,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0025",
+    "date": "2025-06-14",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.21,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0030",
+    "date": "2025-06-14",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 19.91,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0026",
+    "date": "2025-06-15",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 19.96,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0036",
+    "date": "2025-06-16",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 60.06,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0002",
+    "date": "2025-06-17",
+    "merchant": "HOA Fee",
+    "category": "Housing",
+    "amount": 309.04,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0004",
+    "date": "2025-06-18",
+    "merchant": "Internet",
+    "category": "Housing",
+    "amount": 89.75,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0017",
+    "date": "2025-06-19",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.99,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0022",
+    "date": "2025-06-19",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.41,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0041",
+    "date": "2025-06-19",
+    "merchant": "Transfer to HY Savings",
+    "category": "Savings",
+    "amount": 923.86,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0003",
+    "date": "2025-06-20",
+    "merchant": "Gas Bill",
+    "category": "Housing",
+    "amount": 50.03,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0005",
+    "date": "2025-06-20",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 170.5,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0027",
+    "date": "2025-06-22",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.83,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0012",
+    "date": "2025-06-23",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 40.97,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0018",
+    "date": "2025-06-23",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.47,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0001",
+    "date": "2025-06-24",
+    "merchant": "Mortgage Payment",
+    "category": "Housing",
+    "amount": 2173.9,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0023",
+    "date": "2025-06-26",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.85,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0035",
+    "date": "2025-06-26",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 68.12,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0014",
+    "date": "2025-06-29",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.06,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0031",
+    "date": "2025-06-30",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 15.71,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0070",
+    "date": "2025-07-01",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 19.88,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0058",
+    "date": "2025-07-02",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.21,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0057",
+    "date": "2025-07-03",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.48,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0061",
+    "date": "2025-07-03",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 20.4,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0079",
+    "date": "2025-07-04",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 38.96,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0080",
+    "date": "2025-07-04",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 68.94,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0086",
+    "date": "2025-07-04",
+    "merchant": "Transfer to HY Savings",
+    "category": "Savings",
+    "amount": 1065.93,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0052",
+    "date": "2025-07-05",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 41.82,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0064",
+    "date": "2025-07-05",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.62,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0048",
+    "date": "2025-07-06",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 63.79,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0046",
+    "date": "2025-07-07",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 120.21,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0054",
+    "date": "2025-07-07",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.78,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0066",
+    "date": "2025-07-07",
+    "merchant": "Auto Loan Payment",
+    "category": "Transport",
+    "amount": 419.74,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0083",
+    "date": "2025-07-07",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 81.52,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0043",
+    "date": "2025-07-08",
+    "merchant": "Gas Bill",
+    "category": "Housing",
+    "amount": 51.13,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0077",
+    "date": "2025-07-09",
+    "merchant": "Gym",
+    "category": "Subscriptions",
+    "amount": 42.99,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0044",
+    "date": "2025-07-10",
+    "merchant": "Internet",
+    "category": "Housing",
+    "amount": 77.99,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0051",
+    "date": "2025-07-10",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 31.63,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0065",
+    "date": "2025-07-10",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.27,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0076",
+    "date": "2025-07-13",
+    "merchant": "NY Times",
+    "category": "Subscriptions",
+    "amount": 16.12,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0071",
+    "date": "2025-07-14",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 19.63,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0075",
+    "date": "2025-07-15",
+    "merchant": "Spotify",
+    "category": "Subscriptions",
+    "amount": 10.49,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0050",
+    "date": "2025-07-17",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 23.87,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0056",
+    "date": "2025-07-17",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.96,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0082",
+    "date": "2025-07-17",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 77.85,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0078",
+    "date": "2025-07-18",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 33.23,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0042",
+    "date": "2025-07-19",
+    "merchant": "HOA Fee",
+    "category": "Housing",
+    "amount": 276.88,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0045",
+    "date": "2025-07-20",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 206.92,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0049",
+    "date": "2025-07-20",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 32.06,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0068",
+    "date": "2025-07-20",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 66.64,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0059",
+    "date": "2025-07-21",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.73,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0055",
+    "date": "2025-07-22",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.48,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0087",
+    "date": "2025-07-22",
+    "merchant": "401k Contribution",
+    "category": "Savings",
+    "amount": 1337.21,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0053",
+    "date": "2025-07-24",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 45.72,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0060",
+    "date": "2025-07-24",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.79,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0081",
+    "date": "2025-07-24",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 72.76,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0084",
+    "date": "2025-07-24",
+    "merchant": "Movie Tickets",
+    "category": "Entertainment",
+    "amount": 33.64,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0067",
+    "date": "2025-07-25",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 63.11,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0069",
+    "date": "2025-07-26",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 24.05,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0072",
+    "date": "2025-07-26",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 16.64,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0073",
+    "date": "2025-07-26",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 19.09,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0063",
+    "date": "2025-07-27",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.29,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0074",
+    "date": "2025-07-28",
+    "merchant": "Netflix",
+    "category": "Subscriptions",
+    "amount": 22.79,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0047",
+    "date": "2025-07-29",
+    "merchant": "Costco",
+    "category": "Groceries",
+    "amount": 191.54,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0062",
+    "date": "2025-07-29",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 16.1,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0085",
+    "date": "2025-07-30",
+    "merchant": "Books",
+    "category": "Entertainment",
+    "amount": 20.88,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0122",
+    "date": "2025-08-01",
+    "merchant": "Spotify",
+    "category": "Subscriptions",
+    "amount": 12.17,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0117",
+    "date": "2025-08-03",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 19.61,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0107",
+    "date": "2025-08-05",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.09,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0094",
+    "date": "2025-08-06",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 125.72,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0097",
+    "date": "2025-08-08",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 70.98,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0098",
+    "date": "2025-08-08",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 32.07,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0116",
+    "date": "2025-08-08",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 57.75,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0114",
+    "date": "2025-08-09",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 19.44,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0130",
+    "date": "2025-08-09",
+    "merchant": "401k Contribution",
+    "category": "Savings",
+    "amount": 1478.95,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0090",
+    "date": "2025-08-10",
+    "merchant": "Electric Bill",
+    "category": "Housing",
+    "amount": 92.32,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0089",
+    "date": "2025-08-13",
+    "merchant": "HOA Fee",
+    "category": "Housing",
+    "amount": 289.63,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0118",
+    "date": "2025-08-13",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 23.28,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0121",
+    "date": "2025-08-13",
+    "merchant": "Netflix",
+    "category": "Subscriptions",
+    "amount": 25.78,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0119",
+    "date": "2025-08-14",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 17.5,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0092",
+    "date": "2025-08-15",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 176.88,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0105",
+    "date": "2025-08-15",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.38,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0109",
+    "date": "2025-08-15",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.61,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0111",
+    "date": "2025-08-15",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 20.14,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0115",
+    "date": "2025-08-15",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 54.14,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0120",
+    "date": "2025-08-15",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 17.55,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0101",
+    "date": "2025-08-16",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.64,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0108",
+    "date": "2025-08-17",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.76,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0088",
+    "date": "2025-08-18",
+    "merchant": "Mortgage Payment",
+    "category": "Housing",
+    "amount": 2078.36,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0129",
+    "date": "2025-08-19",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 89.7,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0091",
+    "date": "2025-08-20",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 188.35,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0128",
+    "date": "2025-08-20",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 88.9,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0095",
+    "date": "2025-08-21",
+    "merchant": "Costco",
+    "category": "Groceries",
+    "amount": 227.87,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0100",
+    "date": "2025-08-21",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 46.02,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0102",
+    "date": "2025-08-21",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.68,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0126",
+    "date": "2025-08-22",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 70.6,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0124",
+    "date": "2025-08-24",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 35.48,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0127",
+    "date": "2025-08-24",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 60.27,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0096",
+    "date": "2025-08-25",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 59.83,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0103",
+    "date": "2025-08-25",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.73,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0113",
+    "date": "2025-08-25",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 16.64,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0093",
+    "date": "2025-08-26",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 134.44,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0104",
+    "date": "2025-08-26",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.65,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0099",
+    "date": "2025-08-28",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 30.26,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0112",
+    "date": "2025-08-28",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.86,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0123",
+    "date": "2025-08-28",
+    "merchant": "Amazon Prime",
+    "category": "Subscriptions",
+    "amount": 16.75,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0110",
+    "date": "2025-08-29",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.03,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0125",
+    "date": "2025-08-29",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 32.07,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0106",
+    "date": "2025-08-30",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.25,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0141",
+    "date": "2025-09-03",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 28.77,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0164",
+    "date": "2025-09-03",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 16.89,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0143",
+    "date": "2025-09-04",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.07,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0148",
+    "date": "2025-09-04",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.76,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0168",
+    "date": "2025-09-04",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 37.55,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0134",
+    "date": "2025-09-05",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 165.88,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0133",
+    "date": "2025-09-07",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 198.32,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0161",
+    "date": "2025-09-08",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 23.45,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0162",
+    "date": "2025-09-08",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 19.03,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0167",
+    "date": "2025-09-09",
+    "merchant": "Gym",
+    "category": "Subscriptions",
+    "amount": 42.39,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0138",
+    "date": "2025-09-10",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 57.36,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0165",
+    "date": "2025-09-10",
+    "merchant": "Netflix",
+    "category": "Subscriptions",
+    "amount": 24.12,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0171",
+    "date": "2025-09-10",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 80.81,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0172",
+    "date": "2025-09-10",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 75.17,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0157",
+    "date": "2025-09-11",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 15.45,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0131",
+    "date": "2025-09-12",
+    "merchant": "Gas Bill",
+    "category": "Housing",
+    "amount": 50.45,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0140",
+    "date": "2025-09-13",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 31.71,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0145",
+    "date": "2025-09-14",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.58,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0166",
+    "date": "2025-09-14",
+    "merchant": "Apple iCloud",
+    "category": "Subscriptions",
+    "amount": 3.44,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0152",
+    "date": "2025-09-15",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.65,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0146",
+    "date": "2025-09-17",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.53,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0160",
+    "date": "2025-09-17",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 24.96,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0135",
+    "date": "2025-09-19",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 136.12,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0139",
+    "date": "2025-09-19",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 29.49,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0153",
+    "date": "2025-09-19",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 16.75,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0156",
+    "date": "2025-09-19",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.6,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0170",
+    "date": "2025-09-20",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 62.64,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0132",
+    "date": "2025-09-21",
+    "merchant": "Internet",
+    "category": "Housing",
+    "amount": 68.1,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0149",
+    "date": "2025-09-21",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.41,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0151",
+    "date": "2025-09-21",
+    "merchant": "Date Night Restaurant",
+    "category": "Dining Out",
+    "amount": 88.45,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0173",
+    "date": "2025-09-21",
+    "merchant": "Movie Tickets",
+    "category": "Entertainment",
+    "amount": 35.54,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0136",
+    "date": "2025-09-23",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 111.22,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0142",
+    "date": "2025-09-23",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 48.68,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0150",
+    "date": "2025-09-23",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.75,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0163",
+    "date": "2025-09-23",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 17.95,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0137",
+    "date": "2025-09-24",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 69.26,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0169",
+    "date": "2025-09-24",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 68.8,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0144",
+    "date": "2025-09-26",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.35,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0158",
+    "date": "2025-09-26",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 57.51,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0154",
+    "date": "2025-09-27",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 20.35,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0147",
+    "date": "2025-09-28",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.71,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0155",
+    "date": "2025-09-29",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.73,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0159",
+    "date": "2025-09-29",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 63.79,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0211",
+    "date": "2025-10-02",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 60.72,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0184",
+    "date": "2025-10-03",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.76,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0188",
+    "date": "2025-10-03",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.67,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0205",
+    "date": "2025-10-03",
+    "merchant": "Spotify",
+    "category": "Subscriptions",
+    "amount": 10.89,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0217",
+    "date": "2025-10-05",
+    "merchant": "401k Contribution",
+    "category": "Savings",
+    "amount": 1374.33,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0193",
+    "date": "2025-10-06",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 19.58,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0213",
+    "date": "2025-10-07",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 81.85,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0177",
+    "date": "2025-10-08",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 106.26,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0174",
+    "date": "2025-10-09",
+    "merchant": "HOA Fee",
+    "category": "Housing",
+    "amount": 311.39,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0199",
+    "date": "2025-10-09",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 53.18,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0180",
+    "date": "2025-10-10",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 28.58,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0186",
+    "date": "2025-10-10",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.32,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0196",
+    "date": "2025-10-10",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 19.08,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0207",
+    "date": "2025-10-10",
+    "merchant": "Gym",
+    "category": "Subscriptions",
+    "amount": 47.19,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0209",
+    "date": "2025-10-11",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 30.97,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0198",
+    "date": "2025-10-14",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 66.36,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0185",
+    "date": "2025-10-15",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.68,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0195",
+    "date": "2025-10-15",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 15.97,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0197",
+    "date": "2025-10-16",
+    "merchant": "Auto Loan Payment",
+    "category": "Transport",
+    "amount": 390.57,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0203",
+    "date": "2025-10-16",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 18.1,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0212",
+    "date": "2025-10-16",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 91.31,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0208",
+    "date": "2025-10-18",
+    "merchant": "Amazon Prime",
+    "category": "Subscriptions",
+    "amount": 12.91,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0215",
+    "date": "2025-10-18",
+    "merchant": "Books",
+    "category": "Entertainment",
+    "amount": 21.39,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0202",
+    "date": "2025-10-19",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 15.52,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0181",
+    "date": "2025-10-20",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 31.86,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0214",
+    "date": "2025-10-20",
+    "merchant": "Movie Tickets",
+    "category": "Entertainment",
+    "amount": 34.87,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0191",
+    "date": "2025-10-21",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 16.1,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0175",
+    "date": "2025-10-22",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 155.89,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0183",
+    "date": "2025-10-22",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 39.35,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0190",
+    "date": "2025-10-22",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.09,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0187",
+    "date": "2025-10-23",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.22,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0194",
+    "date": "2025-10-24",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 19.75,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0176",
+    "date": "2025-10-26",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 183.39,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0178",
+    "date": "2025-10-26",
+    "merchant": "Costco",
+    "category": "Groceries",
+    "amount": 227.82,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0189",
+    "date": "2025-10-26",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.05,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0192",
+    "date": "2025-10-27",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 16.07,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0200",
+    "date": "2025-10-27",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 24.38,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0206",
+    "date": "2025-10-28",
+    "merchant": "NY Times",
+    "category": "Subscriptions",
+    "amount": 15.27,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0210",
+    "date": "2025-10-28",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 67.86,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0179",
+    "date": "2025-10-30",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 63.88,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0204",
+    "date": "2025-10-30",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 16.8,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0216",
+    "date": "2025-10-30",
+    "merchant": "Transfer to HY Savings",
+    "category": "Savings",
+    "amount": 884.04,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0182",
+    "date": "2025-10-31",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 30.21,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0201",
+    "date": "2025-10-31",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 18.84,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0236",
+    "date": "2025-11-01",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.8,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0253",
+    "date": "2025-11-01",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 39.19,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0259",
+    "date": "2025-11-02",
+    "merchant": "Transfer to HY Savings",
+    "category": "Savings",
+    "amount": 1123.19,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0235",
+    "date": "2025-11-04",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.09,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0232",
+    "date": "2025-11-05",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.98,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0233",
+    "date": "2025-11-05",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.01,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0252",
+    "date": "2025-11-05",
+    "merchant": "Gym",
+    "category": "Subscriptions",
+    "amount": 41.38,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0228",
+    "date": "2025-11-08",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 28.6,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0238",
+    "date": "2025-11-09",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.13,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0258",
+    "date": "2025-11-09",
+    "merchant": "Books",
+    "category": "Entertainment",
+    "amount": 18.75,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0223",
+    "date": "2025-11-10",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 128.14,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0255",
+    "date": "2025-11-10",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 69.79,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0234",
+    "date": "2025-11-11",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.33,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0249",
+    "date": "2025-11-12",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 17.63,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0219",
+    "date": "2025-11-13",
+    "merchant": "Gas Bill",
+    "category": "Housing",
+    "amount": 49.9,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0226",
+    "date": "2025-11-13",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 27.62,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0239",
+    "date": "2025-11-13",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.81,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0241",
+    "date": "2025-11-13",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 20.45,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0257",
+    "date": "2025-11-13",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 97.33,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0218",
+    "date": "2025-11-14",
+    "merchant": "HOA Fee",
+    "category": "Housing",
+    "amount": 302.61,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0229",
+    "date": "2025-11-14",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 38.84,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0254",
+    "date": "2025-11-15",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 75.95,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0256",
+    "date": "2025-11-15",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 97.12,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0225",
+    "date": "2025-11-16",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 61.98,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0230",
+    "date": "2025-11-16",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 47.77,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0222",
+    "date": "2025-11-17",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 111.62,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0250",
+    "date": "2025-11-19",
+    "merchant": "Netflix",
+    "category": "Subscriptions",
+    "amount": 24.24,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0251",
+    "date": "2025-11-20",
+    "merchant": "NY Times",
+    "category": "Subscriptions",
+    "amount": 17.93,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0224",
+    "date": "2025-11-22",
+    "merchant": "Costco",
+    "category": "Groceries",
+    "amount": 219.32,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0231",
+    "date": "2025-11-22",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.05,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0242",
+    "date": "2025-11-23",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 20.09,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0247",
+    "date": "2025-11-23",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 20.68,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0245",
+    "date": "2025-11-24",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 54.38,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0246",
+    "date": "2025-11-25",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 64.49,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0221",
+    "date": "2025-11-26",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 199.14,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0248",
+    "date": "2025-11-26",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 15.6,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0227",
+    "date": "2025-11-28",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 25.38,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0237",
+    "date": "2025-11-28",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.56,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0240",
+    "date": "2025-11-28",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.94,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0243",
+    "date": "2025-11-28",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.22,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0220",
+    "date": "2025-11-29",
+    "merchant": "Internet",
+    "category": "Housing",
+    "amount": 70.39,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0244",
+    "date": "2025-11-30",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 58.05,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0285",
+    "date": "2025-12-04",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 15.82,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0302",
+    "date": "2025-12-04",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 70.24,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0263",
+    "date": "2025-12-05",
+    "merchant": "Gas Bill",
+    "category": "Housing",
+    "amount": 57.12,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0286",
+    "date": "2025-12-05",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.4,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0301",
+    "date": "2025-12-05",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 67.81,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0279",
+    "date": "2025-12-08",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.9,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0297",
+    "date": "2025-12-08",
+    "merchant": "Gym",
+    "category": "Subscriptions",
+    "amount": 51.6,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0300",
+    "date": "2025-12-09",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 74.2,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0260",
+    "date": "2025-12-10",
+    "merchant": "Mortgage Payment",
+    "category": "Housing",
+    "amount": 2533.57,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0264",
+    "date": "2025-12-10",
+    "merchant": "Internet",
+    "category": "Housing",
+    "amount": 85.84,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0266",
+    "date": "2025-12-11",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 193.36,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0270",
+    "date": "2025-12-11",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 30.56,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0261",
+    "date": "2025-12-12",
+    "merchant": "HOA Fee",
+    "category": "Housing",
+    "amount": 251.82,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0274",
+    "date": "2025-12-12",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 39.47,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0291",
+    "date": "2025-12-12",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 20.13,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0293",
+    "date": "2025-12-12",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 18.24,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0294",
+    "date": "2025-12-12",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 15.63,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0303",
+    "date": "2025-12-12",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 95.66,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0283",
+    "date": "2025-12-14",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 15.93,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0288",
+    "date": "2025-12-14",
+    "merchant": "Auto Loan Payment",
+    "category": "Transport",
+    "amount": 408.43,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0289",
+    "date": "2025-12-14",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 64.88,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0295",
+    "date": "2025-12-15",
+    "merchant": "Apple iCloud",
+    "category": "Subscriptions",
+    "amount": 2.62,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0275",
+    "date": "2025-12-18",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.64,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0298",
+    "date": "2025-12-18",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 31.93,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0277",
+    "date": "2025-12-19",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.57,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0290",
+    "date": "2025-12-20",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 60.29,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0296",
+    "date": "2025-12-20",
+    "merchant": "NY Times",
+    "category": "Subscriptions",
+    "amount": 19.4,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0262",
+    "date": "2025-12-22",
+    "merchant": "Electric Bill",
+    "category": "Housing",
+    "amount": 102.28,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0276",
+    "date": "2025-12-22",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.9,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0287",
+    "date": "2025-12-22",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 20.43,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0265",
+    "date": "2025-12-24",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 160.1,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0267",
+    "date": "2025-12-26",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 121.42,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0269",
+    "date": "2025-12-27",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 73.66,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0299",
+    "date": "2025-12-27",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 38.88,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0272",
+    "date": "2025-12-28",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 29.48,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0292",
+    "date": "2025-12-28",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 17.26,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0280",
+    "date": "2025-12-29",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.6,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0268",
+    "date": "2025-12-30",
+    "merchant": "Costco",
+    "category": "Groceries",
+    "amount": 204.99,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0281",
+    "date": "2025-12-30",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.4,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0282",
+    "date": "2025-12-30",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 19.09,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0271",
+    "date": "2025-12-31",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 24.43,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0273",
+    "date": "2025-12-31",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 49.67,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0278",
+    "date": "2025-12-31",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.54,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0284",
+    "date": "2025-12-31",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 15.5,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0336",
+    "date": "2026-01-01",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 30.71,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0306",
+    "date": "2026-01-02",
+    "merchant": "Internet",
+    "category": "Housing",
+    "amount": 90.82,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0322",
+    "date": "2026-01-02",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.47,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0326",
+    "date": "2026-01-02",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 20.53,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0339",
+    "date": "2026-01-02",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 78.91,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0308",
+    "date": "2026-01-03",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 113.6,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0320",
+    "date": "2026-01-03",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.19,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0335",
+    "date": "2026-01-03",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 31.24,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0307",
+    "date": "2026-01-04",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 179.47,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0312",
+    "date": "2026-01-04",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 49.76,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0318",
+    "date": "2026-01-09",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.55,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0317",
+    "date": "2026-01-11",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.74,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0337",
+    "date": "2026-01-12",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 63.21,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0316",
+    "date": "2026-01-13",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.7,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0314",
+    "date": "2026-01-14",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.83,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0315",
+    "date": "2026-01-14",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.42,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0321",
+    "date": "2026-01-14",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.55,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0324",
+    "date": "2026-01-14",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.21,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0340",
+    "date": "2026-01-14",
+    "merchant": "Movie Tickets",
+    "category": "Entertainment",
+    "amount": 29.82,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0304",
+    "date": "2026-01-15",
+    "merchant": "Mortgage Payment",
+    "category": "Housing",
+    "amount": 2342.69,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0328",
+    "date": "2026-01-16",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 56.87,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0341",
+    "date": "2026-01-16",
+    "merchant": "401k Contribution",
+    "category": "Savings",
+    "amount": 1386.11,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0311",
+    "date": "2026-01-17",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 28.89,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0327",
+    "date": "2026-01-17",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 56.66,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0323",
+    "date": "2026-01-18",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.08,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0329",
+    "date": "2026-01-18",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 21.13,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0310",
+    "date": "2026-01-20",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 28.26,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0309",
+    "date": "2026-01-21",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 66.66,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0319",
+    "date": "2026-01-22",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.52,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0332",
+    "date": "2026-01-22",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 18.77,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0333",
+    "date": "2026-01-22",
+    "merchant": "Netflix",
+    "category": "Subscriptions",
+    "amount": 25.26,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0331",
+    "date": "2026-01-25",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 19.72,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0338",
+    "date": "2026-01-25",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 75.87,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0330",
+    "date": "2026-01-26",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 17.62,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0305",
+    "date": "2026-01-28",
+    "merchant": "Electric Bill",
+    "category": "Housing",
+    "amount": 99.53,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0313",
+    "date": "2026-01-29",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 48.63,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0334",
+    "date": "2026-01-30",
+    "merchant": "NY Times",
+    "category": "Subscriptions",
+    "amount": 16.18,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0325",
+    "date": "2026-01-31",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 19.35,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0342",
+    "date": "2026-02-01",
+    "merchant": "Electric Bill",
+    "category": "Housing",
+    "amount": 86.58,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0347",
+    "date": "2026-02-02",
+    "merchant": "Costco",
+    "category": "Groceries",
+    "amount": 215.79,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0376",
+    "date": "2026-02-02",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 61.93,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0357",
+    "date": "2026-02-03",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.04,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0362",
+    "date": "2026-02-03",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 16.26,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0369",
+    "date": "2026-02-03",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 20.75,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0350",
+    "date": "2026-02-04",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 27.2,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0353",
+    "date": "2026-02-04",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.08,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0375",
+    "date": "2026-02-04",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 38.27,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0351",
+    "date": "2026-02-06",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 30.53,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0378",
+    "date": "2026-02-06",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 64.26,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0345",
+    "date": "2026-02-08",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 120.01,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0356",
+    "date": "2026-02-08",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.4,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0360",
+    "date": "2026-02-08",
+    "merchant": "Date Night Restaurant",
+    "category": "Dining Out",
+    "amount": 83.68,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0366",
+    "date": "2026-02-11",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 55.51,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0359",
+    "date": "2026-02-12",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.82,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0370",
+    "date": "2026-02-12",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 19.79,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0382",
+    "date": "2026-02-12",
+    "merchant": "401k Contribution",
+    "category": "Savings",
+    "amount": 1296.72,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0354",
+    "date": "2026-02-13",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.09,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0380",
+    "date": "2026-02-13",
+    "merchant": "Movie Tickets",
+    "category": "Entertainment",
+    "amount": 29.93,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0344",
+    "date": "2026-02-14",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 162.49,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0377",
+    "date": "2026-02-15",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 67.48,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0363",
+    "date": "2026-02-16",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.81,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0367",
+    "date": "2026-02-16",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 60.93,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0358",
+    "date": "2026-02-17",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.04,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0372",
+    "date": "2026-02-17",
+    "merchant": "Netflix",
+    "category": "Subscriptions",
+    "amount": 22.19,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0349",
+    "date": "2026-02-19",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 63.14,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0365",
+    "date": "2026-02-19",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.77,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0361",
+    "date": "2026-02-20",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 16.13,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0381",
+    "date": "2026-02-20",
+    "merchant": "Books",
+    "category": "Entertainment",
+    "amount": 24.46,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0371",
+    "date": "2026-02-21",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 19.97,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0374",
+    "date": "2026-02-21",
+    "merchant": "NY Times",
+    "category": "Subscriptions",
+    "amount": 15.41,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0352",
+    "date": "2026-02-23",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 50.67,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0343",
+    "date": "2026-02-25",
+    "merchant": "Gas Bill",
+    "category": "Housing",
+    "amount": 50.97,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0364",
+    "date": "2026-02-25",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.43,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0379",
+    "date": "2026-02-25",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 83.73,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0346",
+    "date": "2026-02-26",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 114.75,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0368",
+    "date": "2026-02-26",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 57.81,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0373",
+    "date": "2026-02-26",
+    "merchant": "Spotify",
+    "category": "Subscriptions",
+    "amount": 11.78,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0348",
+    "date": "2026-02-28",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 61.35,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0355",
+    "date": "2026-02-28",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.32,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0418",
+    "date": "2026-03-01",
+    "merchant": "NY Times",
+    "category": "Subscriptions",
+    "amount": 15.76,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0392",
+    "date": "2026-03-02",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 68.16,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0413",
+    "date": "2026-03-03",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 21.17,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0425",
+    "date": "2026-03-03",
+    "merchant": "Movie Tickets",
+    "category": "Entertainment",
+    "amount": 36.35,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0414",
+    "date": "2026-03-04",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 19.83,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0421",
+    "date": "2026-03-04",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 73.77,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0390",
+    "date": "2026-03-05",
+    "merchant": "Costco",
+    "category": "Groceries",
+    "amount": 192.09,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0395",
+    "date": "2026-03-06",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 47.99,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0399",
+    "date": "2026-03-08",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.31,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0423",
+    "date": "2026-03-08",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 93.77,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0384",
+    "date": "2026-03-10",
+    "merchant": "HOA Fee",
+    "category": "Housing",
+    "amount": 279.86,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0388",
+    "date": "2026-03-10",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 162.73,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0420",
+    "date": "2026-03-10",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 31.03,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0415",
+    "date": "2026-03-11",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 19.57,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0383",
+    "date": "2026-03-13",
+    "merchant": "Mortgage Payment",
+    "category": "Housing",
+    "amount": 2079.52,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0393",
+    "date": "2026-03-13",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 25.1,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0412",
+    "date": "2026-03-13",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 62.04,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0396",
+    "date": "2026-03-14",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 43.17,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0424",
+    "date": "2026-03-14",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 74.84,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0397",
+    "date": "2026-03-15",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.4,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0402",
+    "date": "2026-03-15",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.97,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0405",
+    "date": "2026-03-16",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 20.02,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0416",
+    "date": "2026-03-16",
+    "merchant": "Spotify",
+    "category": "Subscriptions",
+    "amount": 11.64,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0417",
+    "date": "2026-03-16",
+    "merchant": "Apple iCloud",
+    "category": "Subscriptions",
+    "amount": 2.94,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0387",
+    "date": "2026-03-17",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 172.54,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0403",
+    "date": "2026-03-17",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.1,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0391",
+    "date": "2026-03-18",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 71.53,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0426",
+    "date": "2026-03-18",
+    "merchant": "Books",
+    "category": "Entertainment",
+    "amount": 18.83,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0422",
+    "date": "2026-03-20",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 67.72,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0401",
+    "date": "2026-03-22",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.61,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0386",
+    "date": "2026-03-24",
+    "merchant": "Gas Bill",
+    "category": "Housing",
+    "amount": 63.2,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0419",
+    "date": "2026-03-24",
+    "merchant": "Gym",
+    "category": "Subscriptions",
+    "amount": 46.47,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0389",
+    "date": "2026-03-25",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 119.51,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0408",
+    "date": "2026-03-25",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 16.17,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0398",
+    "date": "2026-03-26",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.82,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0404",
+    "date": "2026-03-26",
+    "merchant": "Date Night Restaurant",
+    "category": "Dining Out",
+    "amount": 97.98,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0385",
+    "date": "2026-03-27",
+    "merchant": "Electric Bill",
+    "category": "Housing",
+    "amount": 84.39,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0394",
+    "date": "2026-03-27",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 29.62,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0410",
+    "date": "2026-03-27",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 61.09,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0407",
+    "date": "2026-03-28",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 15.97,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0400",
+    "date": "2026-03-29",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.21,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0409",
+    "date": "2026-03-29",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 18.07,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0406",
+    "date": "2026-03-30",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 15.85,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0411",
+    "date": "2026-03-30",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 53.2,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0449",
+    "date": "2026-04-02",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 19.22,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0455",
+    "date": "2026-04-02",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 19.53,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0432",
+    "date": "2026-04-03",
+    "merchant": "Costco",
+    "category": "Groceries",
+    "amount": 234.26,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0465",
+    "date": "2026-04-03",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 73.24,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0428",
+    "date": "2026-04-04",
+    "merchant": "Gas Bill",
+    "category": "Housing",
+    "amount": 59.48,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0468",
+    "date": "2026-04-04",
+    "merchant": "Movie Tickets",
+    "category": "Entertainment",
+    "amount": 36.66,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0429",
+    "date": "2026-04-05",
+    "merchant": "Internet",
+    "category": "Housing",
+    "amount": 68.2,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0454",
+    "date": "2026-04-05",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 68.49,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0464",
+    "date": "2026-04-06",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 75.01,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0433",
+    "date": "2026-04-07",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 56.1,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0460",
+    "date": "2026-04-08",
+    "merchant": "NY Times",
+    "category": "Subscriptions",
+    "amount": 19.35,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0443",
+    "date": "2026-04-09",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.08,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0463",
+    "date": "2026-04-10",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 37.04,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0467",
+    "date": "2026-04-10",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 98.33,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0434",
+    "date": "2026-04-11",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 31.64,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0438",
+    "date": "2026-04-11",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.18,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0441",
+    "date": "2026-04-11",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.71,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0427",
+    "date": "2026-04-12",
+    "merchant": "HOA Fee",
+    "category": "Housing",
+    "amount": 298.8,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0437",
+    "date": "2026-04-12",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 49.89,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0435",
+    "date": "2026-04-13",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 32.11,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0452",
+    "date": "2026-04-13",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 59.46,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0439",
+    "date": "2026-04-14",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.4,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0444",
+    "date": "2026-04-14",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.48,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0440",
+    "date": "2026-04-15",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.42,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0469",
+    "date": "2026-04-15",
+    "merchant": "401k Contribution",
+    "category": "Savings",
+    "amount": 1500.26,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0436",
+    "date": "2026-04-16",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 25.93,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0461",
+    "date": "2026-04-16",
+    "merchant": "Gym",
+    "category": "Subscriptions",
+    "amount": 45.24,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0457",
+    "date": "2026-04-19",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 15.47,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0459",
+    "date": "2026-04-19",
+    "merchant": "Spotify",
+    "category": "Subscriptions",
+    "amount": 9.8,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0447",
+    "date": "2026-04-20",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 19.18,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0450",
+    "date": "2026-04-20",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 20.69,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0430",
+    "date": "2026-04-21",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 162.45,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0446",
+    "date": "2026-04-22",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 16.9,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0453",
+    "date": "2026-04-22",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 55.68,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0458",
+    "date": "2026-04-22",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 17.73,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0431",
+    "date": "2026-04-23",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 119.23,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0442",
+    "date": "2026-04-23",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 11.99,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0448",
+    "date": "2026-04-23",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.7,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0462",
+    "date": "2026-04-23",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 34.44,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0466",
+    "date": "2026-04-23",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 76.51,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0456",
+    "date": "2026-04-25",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 22.96,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0451",
+    "date": "2026-04-26",
+    "merchant": "Auto Loan Payment",
+    "category": "Transport",
+    "amount": 451.48,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0445",
+    "date": "2026-04-27",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.85,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0486",
+    "date": "2026-05-02",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.17,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0494",
+    "date": "2026-05-02",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 16.15,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0470",
+    "date": "2026-05-03",
+    "merchant": "HOA Fee",
+    "category": "Housing",
+    "amount": 259.27,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0472",
+    "date": "2026-05-03",
+    "merchant": "Gas Bill",
+    "category": "Housing",
+    "amount": 48.82,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0482",
+    "date": "2026-05-03",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 45.03,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0487",
+    "date": "2026-05-03",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 10.36,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0499",
+    "date": "2026-05-04",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 58.64,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0508",
+    "date": "2026-05-04",
+    "merchant": "Target",
+    "category": "Shopping",
+    "amount": 86.18,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0511",
+    "date": "2026-05-04",
+    "merchant": "Transfer to HY Savings",
+    "category": "Savings",
+    "amount": 888.6,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0475",
+    "date": "2026-05-06",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 129.64,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0489",
+    "date": "2026-05-07",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.96,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0509",
+    "date": "2026-05-07",
+    "merchant": "Movie Tickets",
+    "category": "Entertainment",
+    "amount": 30.68,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0480",
+    "date": "2026-05-09",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 25.45,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0481",
+    "date": "2026-05-09",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 24.85,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0493",
+    "date": "2026-05-10",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.75,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0485",
+    "date": "2026-05-11",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 13.23,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0497",
+    "date": "2026-05-12",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 70.84,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0476",
+    "date": "2026-05-14",
+    "merchant": "Trader Joe's",
+    "category": "Groceries",
+    "amount": 120.1,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0502",
+    "date": "2026-05-14",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 16.64,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0473",
+    "date": "2026-05-15",
+    "merchant": "Internet",
+    "category": "Housing",
+    "amount": 78.19,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0500",
+    "date": "2026-05-15",
+    "merchant": "Parking",
+    "category": "Transport",
+    "amount": 20.34,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0504",
+    "date": "2026-05-15",
+    "merchant": "NY Times",
+    "category": "Subscriptions",
+    "amount": 16.99,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0505",
+    "date": "2026-05-15",
+    "merchant": "Pharmacy",
+    "category": "Health",
+    "amount": 39.9,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0495",
+    "date": "2026-05-16",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 17.81,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0471",
+    "date": "2026-05-17",
+    "merchant": "Electric Bill",
+    "category": "Housing",
+    "amount": 92.46,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0477",
+    "date": "2026-05-17",
+    "merchant": "Costco",
+    "category": "Groceries",
+    "amount": 197.1,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0479",
+    "date": "2026-05-17",
+    "merchant": "Chipotle",
+    "category": "Dining Out",
+    "amount": 31.32,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0491",
+    "date": "2026-05-18",
+    "merchant": "Date Night Restaurant",
+    "category": "Dining Out",
+    "amount": 89.01,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0483",
+    "date": "2026-05-19",
+    "merchant": "Local Pizza",
+    "category": "Dining Out",
+    "amount": 50.96,
+    "account": "chk_main"
+  },
+  {
+    "id": "tx_0484",
+    "date": "2026-05-20",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.79,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0490",
+    "date": "2026-05-20",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.5,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0496",
+    "date": "2026-05-20",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 16.08,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0506",
+    "date": "2026-05-20",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 74.69,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0507",
+    "date": "2026-05-22",
+    "merchant": "Amazon",
+    "category": "Shopping",
+    "amount": 66.41,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0488",
+    "date": "2026-05-25",
+    "merchant": "Coffee Shop",
+    "category": "Dining Out",
+    "amount": 12.28,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0498",
+    "date": "2026-05-25",
+    "merchant": "Gas Station",
+    "category": "Transport",
+    "amount": 59.59,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0510",
+    "date": "2026-05-25",
+    "merchant": "Books",
+    "category": "Entertainment",
+    "amount": 22.33,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0492",
+    "date": "2026-05-26",
+    "merchant": "Lunch Out",
+    "category": "Dining Out",
+    "amount": 19.66,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0474",
+    "date": "2026-05-29",
+    "merchant": "Whole Foods",
+    "category": "Groceries",
+    "amount": 197.77,
+    "account": "cc_amex"
+  },
+  {
+    "id": "tx_0478",
+    "date": "2026-05-30",
+    "merchant": "Target \u2013 Grocery",
+    "category": "Groceries",
+    "amount": 69.08,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0503",
+    "date": "2026-05-30",
+    "merchant": "Netflix",
+    "category": "Subscriptions",
+    "amount": 23.53,
+    "account": "cc_chase"
+  },
+  {
+    "id": "tx_0501",
+    "date": "2026-05-31",
+    "merchant": "Uber",
+    "category": "Transport",
+    "amount": 17.37,
+    "account": "cc_amex"
+  }
+]

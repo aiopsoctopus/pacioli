@@ -1,0 +1,93 @@
+{
+  "monthly_income": 12500,
+  "monthly_fixed_expenses": 5200,
+  "monthly_variable_avg": 3100,
+  "monthly_savings_contributions": 2200,
+  "starting_net_worth": 381029,
+  "months": [
+    {
+      "month": "2026-07",
+      "projected_net_worth": 387324.66,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    },
+    {
+      "month": "2026-08",
+      "projected_net_worth": 393654.95,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    },
+    {
+      "month": "2026-09",
+      "projected_net_worth": 400020.05,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    },
+    {
+      "month": "2026-10",
+      "projected_net_worth": 406420.16,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    },
+    {
+      "month": "2026-11",
+      "projected_net_worth": 412855.47,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    },
+    {
+      "month": "2026-12",
+      "projected_net_worth": 419326.18,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    },
+    {
+      "month": "2027-01",
+      "projected_net_worth": 425832.47,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    },
+    {
+      "month": "2027-02",
+      "projected_net_worth": 432374.55,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    },
+    {
+      "month": "2027-03",
+      "projected_net_worth": 438952.61,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    },
+    {
+      "month": "2027-04",
+      "projected_net_worth": 445566.85,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    },
+    {
+      "month": "2027-05",
+      "projected_net_worth": 452217.47,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    },
+    {
+      "month": "2027-06",
+      "projected_net_worth": 458904.67,
+      "projected_savings": 4200,
+      "projected_income": 12500,
+      "projected_expenses": 8300
+    }
+  ]
+}
