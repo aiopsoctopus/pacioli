@@ -2,12 +2,13 @@
 import { useEffect, useState } from "react";
 import {
   fetchJSON, formatCurrency, formatMonth, getNetWorth, getMonthlySpend,
+  loadBudgetEnvelopes, monthProgressFraction,
   AccountData, Transaction, SinkingFund, MonthIncome,
 } from "@/lib/data";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from "recharts";
-import { TrendingUp, TrendingDown, DollarSign, Target } from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, Target, Wallet } from "lucide-react";
 
 const COLORS = ["#6366f1","#10b981","#f59e0b","#ef4444","#ec4899","#3b82f6","#8b5cf6","#14b8a6"];
 
@@ -64,6 +65,15 @@ export default function ZoomOut() {
   const sfTotal = sinkingFunds.reduce((s, f) => s + f.saved, 0);
   const sfTarget = sinkingFunds.reduce((s, f) => s + f.target, 0);
 
+  // Budget health
+  const budgetEnvelopes = loadBudgetEnvelopes();
+  const hasBudget = Object.keys(budgetEnvelopes).length > 0;
+  const totalBudget = Object.values(budgetEnvelopes).reduce((s, e) => s + e.budgetAmount, 0);
+  const budgetRemaining = totalBudget - totalSpend;
+  const budgetPct = totalBudget > 0 ? Math.round((totalSpend / totalBudget) * 100) : 0;
+  const monthPct = Math.round(monthProgressFraction() * 100);
+  const budgetPace = budgetPct < monthPct - 5 ? "ahead" : budgetPct > monthPct + 5 ? "behind" : "on pace";
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -81,13 +91,25 @@ export default function ZoomOut() {
           positive={nwChange >= 0}
           icon={<DollarSign size={18} />}
         />
-        <KpiCard
-          label="Monthly Income"
-          value={formatCurrency(totalIncome)}
-          sub={`${currentMonth}`}
-          positive={true}
-          icon={<TrendingUp size={18} />}
-        />
+        {hasBudget ? (
+          <KpiCard
+            label="Budget Remaining"
+            value={formatCurrency(Math.abs(budgetRemaining))}
+            sub={`${budgetPct}% spent · ${monthPct}% through month · ${budgetPace}`}
+            positive={budgetRemaining >= 0}
+            icon={<Wallet size={18} />}
+            href="/budget"
+          />
+        ) : (
+          <KpiCard
+            label="Monthly Income"
+            value={formatCurrency(totalIncome)}
+            sub={`${formatMonth(currentMonth)} MTD`}
+            positive={true}
+            icon={<TrendingUp size={18} />}
+            href="/budget"
+          />
+        )}
         <KpiCard
           label="Monthly Spend"
           value={formatCurrency(totalSpend)}
@@ -182,17 +204,25 @@ export default function ZoomOut() {
   );
 }
 
-function KpiCard({ label, value, sub, positive, icon }: {
-  label: string; value: string; sub: string; positive: boolean; icon: React.ReactNode;
+function KpiCard({ label, value, sub, positive, icon, href }: {
+  label: string; value: string; sub: string; positive: boolean; icon: React.ReactNode; href?: string;
 }) {
-  return (
-    <div className="vela-bg-surface rounded-2xl p-5 border">
+  const inner = (
+    <>
       <div className="flex justify-between items-start mb-3">
         <p className="text-xs font-medium vela-text-muted uppercase tracking-wide">{label}</p>
         <span className="vela-text-faint">{icon}</span>
       </div>
       <p className="text-2xl font-bold vela-text-primary">{value}</p>
       <p className={`text-xs mt-1 ${positive ? "text-emerald-400" : "text-red-400"}`}>{sub}</p>
-    </div>
+    </>
   );
+  if (href) {
+    return (
+      <a href={href} className="vela-bg-surface rounded-2xl p-5 border block hover:border-indigo-500/40 transition-colors">
+        {inner}
+      </a>
+    );
+  }
+  return <div className="vela-bg-surface rounded-2xl p-5 border">{inner}</div>;
 }
