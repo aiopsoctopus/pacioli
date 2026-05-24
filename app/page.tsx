@@ -19,13 +19,13 @@ export default function ZoomOut() {
   const [income, setIncome] = useState<MonthIncome[]>([]);
 
   useEffect(() => {
-    fetchJSON<AccountData>("accounts.json").then(setAccounts);
-    fetchJSON<Transaction[]>("transactions.json").then(setTransactions);
-    fetchJSON<SinkingFund[]>("sinking_funds.json").then(setSinkingFunds);
-    fetchJSON<MonthIncome[]>("income.json").then(setIncome);
+    fetchJSON<AccountData>("accounts.json").then(setAccounts).catch((e) => console.error("[Vela] accounts.json failed:", e));
+    fetchJSON<Transaction[]>("transactions.json").then(setTransactions).catch((e) => console.error("[Vela] transactions.json failed:", e));
+    fetchJSON<SinkingFund[]>("sinking_funds.json").then(setSinkingFunds).catch((e) => console.error("[Vela] sinking_funds.json failed:", e));
+    fetchJSON<MonthIncome[]>("income.json").then(setIncome).catch((e) => console.error("[Vela] income.json failed:", e));
   }, []);
 
-  if (!accounts || !transactions.length) {
+  if (!accounts || !transactions.length || !income.length || !sinkingFunds.length) {
     return (
       <div className="flex min-h-screen vela-bg-base vela-text-primary">
         <Nav />
@@ -42,8 +42,12 @@ export default function ZoomOut() {
     netWorth: getNetWorth(accounts, m),
   }));
 
-  const currentMonth = months[months.length - 1];
-  const prevMonth = months[months.length - 2];
+  // Use the latest month that has income data — account balance months can run
+  // ahead (e.g. 2026-06 balance exists but no income/transactions yet).
+  const txMonths = new Set(transactions.map((t) => t.date.slice(0, 7)));
+  const incomeMonths = income.map((i) => i.month).filter((m) => txMonths.has(m)).sort();
+  const currentMonth = incomeMonths.length > 0 ? incomeMonths[incomeMonths.length - 1] : months[months.length - 1];
+  const prevMonth = incomeMonths.length > 1 ? incomeMonths[incomeMonths.length - 2] : months[months.length - 2];
   const currentNW = getNetWorth(accounts, currentMonth);
   const prevNW = getNetWorth(accounts, prevMonth);
   const nwChange = currentNW - prevNW;

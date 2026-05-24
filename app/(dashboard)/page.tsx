@@ -23,10 +23,10 @@ export default function ZoomOut() {
   const [income, setIncome] = useState<MonthIncome[]>([]);
 
   useEffect(() => {
-    fetchJSON<AccountData>("accounts.json").then(setAccounts);
-    fetchJSON<Transaction[]>("transactions.json").then(setTransactions);
-    fetchJSON<SinkingFund[]>("sinking_funds.json").then(setSinkingFunds);
-    fetchJSON<MonthIncome[]>("income.json").then(setIncome);
+    fetchJSON<AccountData>("accounts.json").then(setAccounts).catch((e) => console.error("[Vela] accounts.json failed:", e));
+    fetchJSON<Transaction[]>("transactions.json").then(setTransactions).catch((e) => console.error("[Vela] transactions.json failed:", e));
+    fetchJSON<SinkingFund[]>("sinking_funds.json").then(setSinkingFunds).catch((e) => console.error("[Vela] sinking_funds.json failed:", e));
+    fetchJSON<MonthIncome[]>("income.json").then(setIncome).catch((e) => console.error("[Vela] income.json failed:", e));
   }, []);
 
   if (!accounts || !transactions.length || !income.length || !sinkingFunds.length) {

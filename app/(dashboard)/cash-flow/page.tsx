@@ -75,12 +75,15 @@ export default function CashFlow() {
   useEffect(() => {
     setRules(loadRules(ns));
     setOverrides(loadOverrides(ns));
-    fetchJSON<Transaction[]>("transactions.json").then((txs) => {
+    Promise.all([
+      fetchJSON<Transaction[]>("transactions.json"),
+      fetchJSON<MonthIncome[]>("income.json"),
+    ]).then(([txs, inc]) => {
       setRawTransactions(txs);
+      setIncome(inc);
       const months = [...new Set(txs.map((t) => t.date.slice(0, 7)))].sort();
       setSelectedMonth(months[months.length - 1]);
-    });
-    fetchJSON<MonthIncome[]>("income.json").then(setIncome);
+    }).catch((e) => console.error("[Vela] cash-flow fetch failed:", e));
   }, []);
 
   // Apply rules + overrides on top of raw data
@@ -89,7 +92,7 @@ export default function CashFlow() {
     [rawTransactions, rules, overrides]
   );
 
-  if (!transactions.length || !selectedMonth) return <div className="vela-text-muted animate-pulse">Loading cash flow...</div>;
+  if (!transactions.length || !selectedMonth || !income.length) return <div className="vela-text-muted animate-pulse">Loading cash flow...</div>;
 
   const months = [...new Set(rawTransactions.map((t) => t.date.slice(0, 7)))].sort();
 
