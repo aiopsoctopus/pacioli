@@ -134,17 +134,19 @@ export interface BudgetEnvelope {
   suggestedAmount: number;           // AI suggestion at time of setup
 }
 
-const BUDGET_STORAGE_KEY = "vela-budget-envelopes";
+export const BUDGET_STORAGE_KEY = "vela-budget-envelopes";
 
-export function loadBudgetEnvelopes(): Record<string, BudgetEnvelope> {
+export function loadBudgetEnvelopes(ns = ""): Record<string, BudgetEnvelope> {
   if (typeof window === "undefined") return {};
   try {
-    return JSON.parse(localStorage.getItem(BUDGET_STORAGE_KEY) ?? "{}");
+    const key = ns ? `${ns}-${BUDGET_STORAGE_KEY}` : BUDGET_STORAGE_KEY;
+    return JSON.parse(localStorage.getItem(key) ?? "{}");
   } catch { return {}; }
 }
 
-export function saveBudgetEnvelopes(envelopes: Record<string, BudgetEnvelope>) {
-  localStorage.setItem(BUDGET_STORAGE_KEY, JSON.stringify(envelopes));
+export function saveBudgetEnvelopes(envelopes: Record<string, BudgetEnvelope>, ns = "") {
+  const key = ns ? `${ns}-${BUDGET_STORAGE_KEY}` : BUDGET_STORAGE_KEY;
+  localStorage.setItem(key, JSON.stringify(envelopes));
 }
 
 /** Analyse spending per category over the last `windowMonths` completed months */

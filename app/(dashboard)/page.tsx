@@ -9,10 +9,14 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from "recharts";
 import { TrendingUp, TrendingDown, DollarSign, Target, Wallet } from "lucide-react";
+import { useDemo } from "@/components/demo-provider";
 
 const COLORS = ["#6366f1","#10b981","#f59e0b","#ef4444","#ec4899","#3b82f6","#8b5cf6","#14b8a6"];
 
 export default function ZoomOut() {
+  const { isDemo } = useDemo();
+  const ns = isDemo ? "demo" : "";
+
   const [accounts, setAccounts] = useState<AccountData | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [sinkingFunds, setSinkingFunds] = useState<SinkingFund[]>([]);
@@ -66,7 +70,7 @@ export default function ZoomOut() {
   const sfTarget = sinkingFunds.reduce((s, f) => s + f.target, 0);
 
   // Budget health
-  const budgetEnvelopes = loadBudgetEnvelopes();
+  const budgetEnvelopes = loadBudgetEnvelopes(ns);
   const hasBudget = Object.keys(budgetEnvelopes).length > 0;
   const totalBudget = Object.values(budgetEnvelopes).reduce((s, e) => s + e.budgetAmount, 0);
   const budgetRemaining = totalBudget - totalSpend;

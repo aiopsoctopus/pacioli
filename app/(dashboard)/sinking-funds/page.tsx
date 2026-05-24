@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { fetchJSON, formatCurrency, SinkingFund } from "@/lib/data";
+import { useDemo } from "@/components/demo-provider";
 import { Pencil, Plus, Trash2, Check, X } from "lucide-react";
 
 const STORAGE_KEY = "vela-sinking-funds";
@@ -27,26 +28,29 @@ function blankFund(): SinkingFund {
 }
 
 export default function SinkingFunds() {
+  const { isDemo } = useDemo();
+  const storageKey = isDemo ? `demo-${STORAGE_KEY}` : STORAGE_KEY;
+
   const [funds, setFunds] = useState<SinkingFund[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState<SinkingFund | null>(null);
   const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = localStorage.getItem(storageKey);
     if (saved) {
       setFunds(JSON.parse(saved));
     } else {
       fetchJSON<SinkingFund[]>("sinking_funds.json").then((f) => {
         setFunds(f);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(f));
+        localStorage.setItem(storageKey, JSON.stringify(f));
       });
     }
-  }, []);
+  }, [storageKey]);
 
   function save(updated: SinkingFund[]) {
     setFunds(updated);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    localStorage.setItem(storageKey, JSON.stringify(updated));
   }
 
   function startEdit(f: SinkingFund) {

@@ -4,6 +4,7 @@ import {
   fetchJSON, formatCurrency, formatMonth, getMonthlySpend,
   Transaction, MonthIncome,
 } from "@/lib/data";
+import { useDemo } from "@/components/demo-provider";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
@@ -23,19 +24,27 @@ const ALL_CATEGORIES = [
 const RULES_KEY = "vela-category-rules"; // { [merchant]: category }
 const OVERRIDE_KEY = "vela-tx-overrides"; // { [txId]: category }
 
-function loadRules(): Record<string, string> {
+function loadRules(ns = ""): Record<string, string> {
   if (typeof window === "undefined") return {};
-  try { return JSON.parse(localStorage.getItem(RULES_KEY) ?? "{}"); } catch { return {}; }
+  try {
+    const key = ns ? `${ns}-${RULES_KEY}` : RULES_KEY;
+    return JSON.parse(localStorage.getItem(key) ?? "{}");
+  } catch { return {}; }
 }
-function saveRules(rules: Record<string, string>) {
-  localStorage.setItem(RULES_KEY, JSON.stringify(rules));
+function saveRules(rules: Record<string, string>, ns = "") {
+  const key = ns ? `${ns}-${RULES_KEY}` : RULES_KEY;
+  localStorage.setItem(key, JSON.stringify(rules));
 }
-function loadOverrides(): Record<string, string> {
+function loadOverrides(ns = ""): Record<string, string> {
   if (typeof window === "undefined") return {};
-  try { return JSON.parse(localStorage.getItem(OVERRIDE_KEY) ?? "{}"); } catch { return {}; }
+  try {
+    const key = ns ? `${ns}-${OVERRIDE_KEY}` : OVERRIDE_KEY;
+    return JSON.parse(localStorage.getItem(key) ?? "{}");
+  } catch { return {}; }
 }
-function saveOverrides(overrides: Record<string, string>) {
-  localStorage.setItem(OVERRIDE_KEY, JSON.stringify(overrides));
+function saveOverrides(overrides: Record<string, string>, ns = "") {
+  const key = ns ? `${ns}-${OVERRIDE_KEY}` : OVERRIDE_KEY;
+  localStorage.setItem(key, JSON.stringify(overrides));
 }
 
 function applyRulesAndOverrides(txs: Transaction[], rules: Record<string, string>, overrides: Record<string, string>): Transaction[] {
@@ -50,6 +59,9 @@ function applyRulesAndOverrides(txs: Transaction[], rules: Record<string, string
 }
 
 export default function CashFlow() {
+  const { isDemo } = useDemo();
+  const ns = isDemo ? "demo" : "";
+
   const [rawTransactions, setRawTransactions] = useState<Transaction[]>([]);
   const [income, setIncome] = useState<MonthIncome[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>("");
@@ -61,8 +73,8 @@ export default function CashFlow() {
   const [justSaved, setJustSaved] = useState<string | null>(null);
 
   useEffect(() => {
-    setRules(loadRules());
-    setOverrides(loadOverrides());
+    setRules(loadRules(ns));
+    setOverrides(loadOverrides(ns));
     fetchJSON<Transaction[]>("transactions.json").then((txs) => {
       setRawTransactions(txs);
       const months = [...new Set(txs.map((t) => t.date.slice(0, 7)))].sort();
@@ -121,7 +133,7 @@ export default function CashFlow() {
   function recategorize(tx: Transaction, newCat: string) {
     const newOverrides = { ...overrides, [tx.id]: newCat };
     setOverrides(newOverrides);
-    saveOverrides(newOverrides);
+    saveOverrides(newOverrides, ns);
     // Offer to make a rule if this is a fresh override
     if (!overrides[tx.id]) {
       setRulePrompt({ txId: tx.id, merchant: tx.merchant, category: newCat });
@@ -135,7 +147,7 @@ export default function CashFlow() {
     const key = merchant.toLowerCase().trim();
     const newRules = { ...rules, [key]: category };
     setRules(newRules);
-    saveRules(newRules);
+    saveRules(newRules, ns);
     setRulePrompt(null);
   }
 
@@ -143,7 +155,7 @@ export default function CashFlow() {
     const newRules = { ...rules };
     delete newRules[key];
     setRules(newRules);
-    saveRules(newRules);
+    saveRules(newRules, ns);
   }
 
   // ── Rules manager modal ──

@@ -5,6 +5,7 @@ import {
   loadBudgetEnvelopes, saveBudgetEnvelopes, monthProgressFraction, avgMonthlyIncome,
   Transaction, MonthIncome, BudgetAnalysis, BudgetEnvelope,
 } from "@/lib/data";
+import { useDemo } from "@/components/demo-provider";
 import { Sparkles, ChevronRight, Check, Pencil, X, TrendingUp, TrendingDown, Minus, AlertTriangle } from "lucide-react";
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -18,9 +19,11 @@ const CATEGORY_COLORS: Record<string, string> = {
 function SetupFlow({
   analyses,
   onComplete,
+  ns = "",
 }: {
   analyses: BudgetAnalysis[];
   onComplete: (envelopes: Record<string, BudgetEnvelope>) => void;
+  ns?: string;
 }) {
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState<Record<string, number>>(() =>
@@ -34,7 +37,6 @@ function SetupFlow({
     if (step < analyses.length - 1) {
       setStep((s) => s + 1);
     } else {
-      // Build final envelopes
       const envelopes: Record<string, BudgetEnvelope> = {};
       for (const a of analyses) {
         envelopes[a.category] = {
@@ -43,7 +45,7 @@ function SetupFlow({
           suggestedAmount: a.suggestedBudget,
         };
       }
-      saveBudgetEnvelopes(envelopes);
+      saveBudgetEnvelopes(envelopes, ns);
       onComplete(envelopes);
     }
   }
@@ -173,7 +175,7 @@ function SetupFlow({
                 suggestedAmount: a.suggestedBudget,
               };
             }
-            saveBudgetEnvelopes(envelopes);
+            saveBudgetEnvelopes(envelopes, ns);
             onComplete(envelopes);
           }}
           className="hover:vela-text-muted transition-colors underline underline-offset-2"
@@ -319,16 +321,18 @@ function EnvelopeRow({
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function BudgetPage() {
+  const { isDemo } = useDemo();
+  const ns = isDemo ? "demo" : "";
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [income, setIncome] = useState<MonthIncome[]>([]);
   const [envelopes, setEnvelopes] = useState<Record<string, BudgetEnvelope> | null>(null);
   const [showSetup, setShowSetup] = useState(false);
 
   useEffect(() => {
-    setEnvelopes(loadBudgetEnvelopes());
+    setEnvelopes(loadBudgetEnvelopes(ns));
     fetchJSON<Transaction[]>("transactions.json").then(setTransactions);
     fetchJSON<MonthIncome[]>("income.json").then(setIncome);
-  }, []);
+  }, [ns]);
 
   const allMonths = useMemo(() => {
     if (!transactions.length) return [];
@@ -375,7 +379,7 @@ export default function BudgetPage() {
       [cat]: { category: cat, budgetAmount: amount, suggestedAmount: envelopes?.[cat]?.suggestedAmount ?? amount },
     };
     setEnvelopes(updated);
-    saveBudgetEnvelopes(updated);
+    saveBudgetEnvelopes(updated, ns);
   }
 
   if (!transactions.length || !income.length) {
@@ -384,7 +388,7 @@ export default function BudgetPage() {
 
   // First visit — no envelopes set yet
   if (showSetup || (envelopes && Object.keys(envelopes).length === 0)) {
-    return <SetupFlow analyses={analyses} onComplete={handleSetupComplete} />;
+    return <SetupFlow analyses={analyses} onComplete={handleSetupComplete} ns={ns} />;
   }
 
   // First ever visit

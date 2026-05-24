@@ -1,7 +1,8 @@
 "use client";
 import { useState, useRef } from "react";
-import { Upload, Landmark, FileText, CheckCircle2, AlertCircle, Plus, Trash2 } from "lucide-react";
+import { Upload, Landmark, FileText, CheckCircle2, AlertCircle, Plus, Trash2, FlaskConical, ArrowRight } from "lucide-react";
 import { formatCurrency } from "@/lib/data";
+import { useDemo } from "@/components/demo-provider";
 
 const MANUAL_ACCOUNTS_KEY = "vela-manual-accounts";
 
@@ -46,6 +47,7 @@ function parseCSV(text: string): ParsedTransaction[] {
 }
 
 export default function ConnectPage() {
+  const { isDemo, enterDemo, exitDemo } = useDemo();
   const [csvResult, setCsvResult] = useState<{ count: number; preview: ParsedTransaction[] } | null>(null);
   const [csvError, setCsvError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -118,6 +120,54 @@ export default function ConnectPage() {
       <div>
         <p className="vela-text-muted text-sm">Get your real numbers in.</p>
         <h2 className="text-3xl font-bold vela-text-primary mt-1">Connect Data</h2>
+      </div>
+
+      {/* Demo mode toggle */}
+      <div className={`rounded-2xl p-6 border flex items-center justify-between gap-6 ${
+        isDemo
+          ? "bg-indigo-950/30 border-indigo-700/40"
+          : "vela-bg-surface"
+      }`}>
+        <div className="flex items-start gap-4">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+            isDemo ? "bg-indigo-600" : "vela-bg-surface-2"
+          }`}>
+            <FlaskConical size={18} className={isDemo ? "text-white" : "vela-text-muted"} />
+          </div>
+          <div>
+            <p className="text-sm font-semibold vela-text-primary">
+              {isDemo ? "Sandbox / Demo mode is ON" : "Try the sandbox first"}
+            </p>
+            <p className="text-xs vela-text-muted mt-1 max-w-md">
+              {isDemo
+                ? "You're exploring with fictional sample data. Any changes you make (goals, rules, budgets) are sandboxed and won't affect your real data. Share this experience with others using the ?demo=true URL."
+                : "Explore Vela with realistic sample data before connecting your own accounts. Nothing is real — income, transactions, and balances are all fictional."}
+            </p>
+            {isDemo && (
+              <p className="text-xs text-indigo-400 mt-2 font-medium flex items-center gap-1">
+                Shareable link: <span className="font-mono">{typeof window !== "undefined" ? window.location.origin : ""}/?demo=true</span>
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="shrink-0">
+          {isDemo ? (
+            <button
+              onClick={exitDemo}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-colors"
+            >
+              Use my own data <ArrowRight size={14} />
+            </button>
+          ) : (
+            <button
+              onClick={enterDemo}
+              className="flex items-center gap-2 px-4 py-2 vela-bg-surface-2 border vela-text-primary text-sm font-medium rounded-xl hover:border-indigo-500/50 transition-colors"
+            >
+              <FlaskConical size={14} />
+              Enter sandbox
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Three connection options */}
