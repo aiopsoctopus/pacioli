@@ -29,7 +29,7 @@ export default function ZoomOut() {
     fetchJSON<MonthIncome[]>("income.json").then(setIncome);
   }, []);
 
-  if (!accounts || !transactions.length) {
+  if (!accounts || !transactions.length || !income.length || !sinkingFunds.length) {
     return <div className="vela-text-muted animate-pulse">Loading your financial picture...</div>;
   }
 
@@ -40,9 +40,10 @@ export default function ZoomOut() {
     netWorth: getNetWorth(accounts, m),
   }));
 
-  // Use the latest month that has income data (not account balance months,
-  // which can run ahead of the transaction/income data).
-  const incomeMonths = income.map((i) => i.month).sort();
+  // Use the latest month that has BOTH income and transaction data.
+  // Account balance months can run ahead (e.g. 2026-06 balance but no June txns yet).
+  const txMonths = new Set(transactions.map((t) => t.date.slice(0, 7)));
+  const incomeMonths = income.map((i) => i.month).filter((m) => txMonths.has(m)).sort();
   const currentMonth = incomeMonths.length > 0
     ? incomeMonths[incomeMonths.length - 1]
     : months[months.length - 1];

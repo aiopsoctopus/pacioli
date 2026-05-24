@@ -227,7 +227,7 @@ export default function SinkingFunds() {
                       <p className="text-xs vela-text-muted">Target: {targetDate} · {mLeft} months away</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${onTrack ? "bg-emerald-900/40 text-emerald-400" : "bg-red-900/40 text-red-400"}`}>
+                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${onTrack ? "bg-emerald-900/40 text-emerald-400" : "bg-red-500/25 text-red-300"}`}>
                         {onTrack ? "On track ✓" : "Behind ↑"}
                       </span>
                       <button onClick={() => startEdit(f)} className="p-1.5 vela-text-muted hover:vela-text-primary vela-bg-nav-hover rounded-lg transition-all">

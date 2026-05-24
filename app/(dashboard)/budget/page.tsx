@@ -115,7 +115,7 @@ function SetupFlow({
         </div>
 
         {current.isSeasonal && (
-          <div className="flex gap-2 p-3 bg-amber-950/20 border border-amber-800/30 rounded-xl">
+          <div className="flex gap-2 p-3 bg-amber-900/30 border border-amber-700/50 rounded-xl">
             <AlertTriangle size={13} className="text-amber-400 mt-0.5 shrink-0" />
             <p className="text-xs text-amber-300">
               Seasonal spike detected in {formatMonth(current.peakMonth)} ({formatCurrency(current.peakAmount)}).
@@ -565,7 +565,7 @@ export default function BudgetPage() {
                 {nearBudget.map((e) => {
                   const pct = Math.round(((currentSpend[e.category] ?? 0) / e.budgetAmount) * 100);
                   return (
-                    <div key={e.category} className="flex gap-2.5 p-3 bg-amber-950/20 border border-amber-800/30 rounded-xl">
+                    <div key={e.category} className="flex gap-2.5 p-3 bg-amber-900/30 border border-amber-700/50 rounded-xl">
                       <AlertTriangle size={13} className="text-amber-400 mt-0.5 shrink-0" />
                       <div>
                         <p className="text-xs font-medium text-amber-300">{e.category} at {pct}%</p>
