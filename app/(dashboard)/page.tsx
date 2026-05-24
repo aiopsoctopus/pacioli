@@ -35,8 +35,15 @@ export default function ZoomOut() {
     netWorth: getNetWorth(accounts, m),
   }));
 
-  const currentMonth = months[months.length - 1];
-  const prevMonth = months[months.length - 2];
+  // Use the latest month that has income data (not account balance months,
+  // which can run ahead of the transaction/income data).
+  const incomeMonths = income.map((i) => i.month).sort();
+  const currentMonth = incomeMonths.length > 0
+    ? incomeMonths[incomeMonths.length - 1]
+    : months[months.length - 1];
+  const prevMonth = incomeMonths.length > 1
+    ? incomeMonths[incomeMonths.length - 2]
+    : months[months.length - 2];
   const currentNW = getNetWorth(accounts, currentMonth);
   const prevNW = getNetWorth(accounts, prevMonth);
   const nwChange = currentNW - prevNW;

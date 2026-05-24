@@ -171,7 +171,7 @@ export default function CashFlow() {
               {Object.entries(rules).map(([pattern, cat]) => (
                 <div key={pattern} className="flex items-center justify-between py-2.5 px-4 vela-bg-surface-2 rounded-xl">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono vela-text-secondary bg-zinc-700/40 px-2 py-0.5 rounded">{pattern}</span>
+                    <span className="text-xs font-mono vela-text-secondary vela-bg-chip px-2 py-0.5 rounded">{pattern}</span>
                     <span className="text-xs vela-text-muted">→</span>
                     <span className="text-xs font-medium" style={{ color: CATEGORY_COLORS[cat] ?? "#6366f1" }}>{cat}</span>
                   </div>
@@ -396,7 +396,7 @@ function TransactionRow({
             <button
               key={cat}
               onClick={() => { onRecategorize(tx, cat); setOpen(false); }}
-              className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-colors hover:bg-zinc-700/30 ${cat === tx.category ? "vela-text-primary font-semibold" : "vela-text-secondary"}`}
+              className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-colors vela-bg-nav-hover ${cat === tx.category ? "vela-text-primary font-semibold" : "vela-text-secondary"}`}
             >
               <span className="w-2 h-2 rounded-full" style={{ background: CATEGORY_COLORS[cat] ?? "#6366f1" }} />
               {cat}

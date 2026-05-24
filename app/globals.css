@@ -5,44 +5,88 @@ body {
 }
 
 /* Vela theme system — variables swap on data-theme attribute */
-:root, [data-theme="dark"] {
-  --bg-base:       #18181b;
-  --bg-nav:        #09090b;
-  --bg-surface:    rgba(39,39,42,0.5);
-  --bg-surface-2:  rgba(24,24,27,0.6);
-  --bg-input:      #27272a;
-  --border:        rgba(63,63,70,0.5);
-  --border-subtle: rgba(63,63,70,0.4);
-  --border-nav:    #27272a;
-  --text-primary:  #ffffff;
-  --text-secondary:#d4d4d8;
-  --text-muted:    #71717a;
-  --text-faint:    #52525b;
-  --bar-track:     #3f3f46;
+/* Dark theme (default) */
+:root {
+  --bg-base:        #18181b;
+  --bg-nav:         #09090b;
+  --bg-surface:     rgba(39,39,42,0.5);
+  --bg-surface-2:   rgba(24,24,27,0.6);
+  --bg-input:       #27272a;
+  --bg-nav-active:  #3730a3;
+  --bg-nav-hover:   rgba(39,39,42,0.6);
+  --bg-btn-cancel:  #3f3f46;
+  --bg-chip:        rgba(63,63,70,0.4);
+  --border:         rgba(63,63,70,0.5);
+  --border-subtle:  rgba(63,63,70,0.4);
+  --border-nav:     #27272a;
+  --text-primary:   #ffffff;
+  --text-secondary: #d4d4d8;
+  --text-muted:     #71717a;
+  --text-faint:     #52525b;
+  --text-nav-active:#ffffff;
+  --bar-track:      #3f3f46;
+  --icon-muted:     #71717a;
+  --icon-active:    #a5b4fc;
+}
+
+[data-theme="dark"] {
+  --bg-base:        #18181b;
+  --bg-nav:         #09090b;
+  --bg-surface:     rgba(39,39,42,0.5);
+  --bg-surface-2:   rgba(24,24,27,0.6);
+  --bg-input:       #27272a;
+  --bg-nav-active:  #3730a3;
+  --bg-nav-hover:   rgba(39,39,42,0.6);
+  --bg-btn-cancel:  #3f3f46;
+  --bg-chip:        rgba(63,63,70,0.4);
+  --border:         rgba(63,63,70,0.5);
+  --border-subtle:  rgba(63,63,70,0.4);
+  --border-nav:     #27272a;
+  --text-primary:   #ffffff;
+  --text-secondary: #d4d4d8;
+  --text-muted:     #71717a;
+  --text-faint:     #52525b;
+  --text-nav-active:#ffffff;
+  --bar-track:      #3f3f46;
+  --icon-muted:     #71717a;
+  --icon-active:    #a5b4fc;
 }
 
 [data-theme="light"] {
-  --bg-base:       #f4f4f5;
-  --bg-nav:        #ffffff;
-  --bg-surface:    rgba(255,255,255,0.95);
-  --bg-surface-2:  rgba(244,244,245,0.8);
-  --bg-input:      #ffffff;
-  --border:        rgba(212,212,216,0.8);
-  --border-subtle: rgba(212,212,216,0.6);
-  --border-nav:    #e4e4e7;
-  --text-primary:  #18181b;
-  --text-secondary:#3f3f46;
-  --text-muted:    #71717a;
-  --text-faint:    #a1a1aa;
-  --bar-track:     #e4e4e7;
+  --bg-base:        #f4f4f5;
+  --bg-nav:         #ffffff;
+  --bg-surface:     rgba(255,255,255,0.95);
+  --bg-surface-2:   rgba(244,244,245,0.8);
+  --bg-input:       #ffffff;
+  --bg-nav-active:  #4f46e5;
+  --bg-nav-hover:   rgba(228,228,231,0.6);
+  --bg-btn-cancel:  #e4e4e7;
+  --bg-chip:        rgba(212,212,216,0.4);
+  --border:         rgba(212,212,216,0.8);
+  --border-subtle:  rgba(212,212,216,0.6);
+  --border-nav:     #e4e4e7;
+  --text-primary:   #18181b;
+  --text-secondary: #3f3f46;
+  --text-muted:     #71717a;
+  --text-faint:     #a1a1aa;
+  --text-nav-active:#ffffff;
+  --bar-track:      #e4e4e7;
+  --icon-muted:     #a1a1aa;
+  --icon-active:    #ffffff;
 }
 
 /* Apply variables to utility classes used throughout the app */
-.vela-bg-base      { background-color: var(--bg-base); }
-.vela-bg-nav       { background-color: var(--bg-nav); border-color: var(--border-nav); }
-.vela-bg-surface   { background-color: var(--bg-surface); border-color: var(--border); }
-.vela-bg-surface-2 { background-color: var(--bg-surface-2); }
-.vela-bg-input     { background-color: var(--bg-input); border-color: var(--border); color: var(--text-primary); }
+.vela-bg-base        { background-color: var(--bg-base); }
+.vela-bg-nav         { background-color: var(--bg-nav); border-color: var(--border-nav); }
+.vela-bg-surface     { background-color: var(--bg-surface); border-color: var(--border); }
+.vela-bg-surface-2   { background-color: var(--bg-surface-2); }
+.vela-bg-input       { background-color: var(--bg-input); border-color: var(--border); color: var(--text-primary); }
+.vela-bg-nav-active  { background-color: var(--bg-nav-active); color: var(--text-nav-active); }
+.vela-text-nav-active { color: var(--text-nav-active); }
+.vela-icon-active    { color: var(--icon-active); }
+.vela-bg-nav-hover:hover { background-color: var(--bg-nav-hover); }
+.vela-bg-btn-cancel  { background-color: var(--bg-btn-cancel); }
+.vela-bg-chip        { background-color: var(--bg-chip); }
 .vela-text-primary   { color: var(--text-primary); }
 .vela-text-secondary { color: var(--text-secondary); }
 .vela-text-muted     { color: var(--text-muted); }
@@ -50,3 +94,4 @@ body {
 .vela-border         { border-color: var(--border); }
 .vela-border-subtle  { border-color: var(--border-subtle); }
 .vela-bar-track      { background-color: var(--bar-track); }
+.vela-icon-muted     { color: var(--icon-muted); }

@@ -146,11 +146,11 @@ export default function ConnectPage() {
             className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
               isDragging
                 ? "border-indigo-500 bg-indigo-900/20"
-                : "border-zinc-600 hover:border-zinc-500 hover:bg-zinc-800"
+                : "vela-border hover:bg-zinc-500/10"
             }`}
           >
-            <Upload size={24} className="mx-auto mb-3 text-zinc-400" />
-            <p className="text-sm text-zinc-300 font-medium">Drop your CSV here or click to browse</p>
+            <Upload size={24} className="mx-auto mb-3 vela-text-muted" />
+            <p className="text-sm vela-text-secondary font-medium">Drop your CSV here or click to browse</p>
             <p className="text-xs vela-text-faint mt-1">Most banks: Accounts → Download → CSV or Spreadsheet</p>
             <input ref={fileRef} type="file" accept=".csv" className="hidden"
               onChange={(e) => { if (e.target.files?.[0]) handleFile(e.target.files[0]); }} />
@@ -174,7 +174,7 @@ export default function ConnectPage() {
                 {csvResult.preview.map((tx, i) => (
                   <div key={i} className="flex justify-between text-xs">
                     <span className="vela-text-secondary">{tx.date} · {tx.merchant}</span>
-                    <span className="text-white font-medium">{formatCurrency(tx.amount)}</span>
+                    <span className="vela-text-primary font-medium">{formatCurrency(tx.amount)}</span>
                   </div>
                 ))}
               </div>
@@ -185,19 +185,19 @@ export default function ConnectPage() {
         {/* Plaid (coming soon) */}
         <div className="vela-bg-surface rounded-2xl p-6 border flex flex-col">
           <div className="flex items-center gap-3 mb-1">
-            <Landmark size={18} className="text-zinc-500" />
+            <Landmark size={18} className="vela-text-muted" />
             <h3 className="text-sm font-semibold vela-text-primary">Live Bank Connection</h3>
-            <span className="text-[10px] font-semibold px-2 py-0.5 bg-zinc-700 text-zinc-400 rounded-full">Soon</span>
+            <span className="text-[10px] font-semibold px-2 py-0.5 vela-bg-chip vela-text-muted rounded-full">Soon</span>
           </div>
           <p className="text-xs vela-text-muted mb-4 flex-1">
             Automatic transaction sync via Plaid — connects to 12,000+ banks and updates daily. No more manual exports.
           </p>
-          <div className="space-y-2 text-xs text-zinc-500">
-            <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-zinc-600 inline-block" />Chase, BofA, Wells Fargo</p>
-            <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-zinc-600 inline-block" />Amex, Citi, Capital One</p>
-            <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-zinc-600 inline-block" />Fidelity, Vanguard, Schwab</p>
+          <div className="space-y-2 text-xs vela-text-muted">
+            <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full vela-bar-track inline-block" />Chase, BofA, Wells Fargo</p>
+            <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full vela-bar-track inline-block" />Amex, Citi, Capital One</p>
+            <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full vela-bar-track inline-block" />Fidelity, Vanguard, Schwab</p>
           </div>
-          <button disabled className="mt-5 w-full py-2 text-sm font-medium text-zinc-500 bg-zinc-800 border border-zinc-700 rounded-lg cursor-not-allowed">
+          <button disabled className="mt-5 w-full py-2 text-sm font-medium vela-text-muted vela-bg-surface-2 border vela-border rounded-lg cursor-not-allowed">
             Connect a Bank
           </button>
         </div>
@@ -221,7 +221,7 @@ export default function ConnectPage() {
         {/* Add form */}
         {showAddForm && (
           <div className="mb-5 p-4 vela-bg-surface-2 rounded-xl border vela-border space-y-3">
-            <p className="text-xs font-semibold text-zinc-300">New account</p>
+            <p className="text-xs font-semibold vela-text-secondary">New account</p>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-xs vela-text-muted mb-1 block">Name</label>
@@ -251,7 +251,7 @@ export default function ConnectPage() {
             </div>
             <div className="flex gap-2 pt-1">
               <button onClick={addAccount} className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-lg transition-colors">Save</button>
-              <button onClick={() => setShowAddForm(false)} className="px-4 py-1.5 bg-zinc-700 hover:bg-zinc-600 text-white text-xs font-medium rounded-lg transition-colors">Cancel</button>
+              <button onClick={() => setShowAddForm(false)} className="px-4 py-1.5 vela-bg-btn-cancel vela-text-primary text-xs font-medium rounded-lg transition-colors">Cancel</button>
             </div>
           </div>
         )}
@@ -264,7 +264,7 @@ export default function ConnectPage() {
           ].map(({ title, accounts, total, color, bar }) => (
             <div key={title}>
               <div className="flex justify-between items-center mb-3">
-                <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wide">{title}</p>
+                <p className="text-xs font-semibold vela-text-muted uppercase tracking-wide">{title}</p>
                 <span className={`text-sm font-bold ${color}`}>{formatCurrency(total)}</span>
               </div>
               {accounts.length === 0 && (
@@ -286,7 +286,7 @@ export default function ConnectPage() {
                       onChange={(e) => updateBalance(a.id, Number(e.target.value))}
                     />
                     <button onClick={() => deleteAccount(a.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-zinc-500 hover:text-red-400 transition-all">
+                      className="opacity-0 group-hover:opacity-100 p-1 vela-text-muted hover:text-red-400 transition-all">
                       <Trash2 size={13} />
                     </button>
                   </div>

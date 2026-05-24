@@ -156,7 +156,7 @@ export default function SinkingFunds() {
                     <div className="w-20">
                       <label className="text-xs vela-text-muted mb-1 block">Emoji</label>
                       <select
-                        className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-2 text-white text-sm focus:outline-none focus:border-indigo-500"
+                        className="w-full vela-bg-input border rounded-lg px-2 py-2 text-sm focus:outline-none focus:border-indigo-500"
                         value={draft.emoji}
                         onChange={(e) => setDraft({ ...draft, emoji: e.target.value })}
                       >
@@ -187,11 +187,11 @@ export default function SinkingFunds() {
                     </div>
                   </div>
                   <div>
-                    <label className="text-xs text-zinc-400 mb-2 block">Color</label>
+                    <label className="text-xs vela-text-muted mb-2 block">Color</label>
                     <div className="flex gap-2">
                       {COLORS.map((c) => (
                         <button key={c} onClick={() => setDraft({ ...draft, color: c })}
-                          className={`w-6 h-6 rounded-full border-2 transition-all ${draft.color === c ? "border-white scale-110" : "border-transparent"}`}
+                          className={`w-6 h-6 rounded-full border-2 transition-all ${draft.color === c ? "border-indigo-500 scale-110" : "border-transparent"}`}
                           style={{ background: c }} />
                       ))}
                     </div>
@@ -202,7 +202,7 @@ export default function SinkingFunds() {
                       <Check size={13} /> Save
                     </button>
                     <button onClick={cancelEdit}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 text-white text-xs font-medium rounded-lg transition-colors">
+                      className="flex items-center gap-1.5 px-3 py-1.5 vela-bg-btn-cancel vela-text-primary text-xs font-medium rounded-lg transition-colors">
                       <X size={13} /> Cancel
                     </button>
                     {!isAdding && (
@@ -219,14 +219,14 @@ export default function SinkingFunds() {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <span className="text-2xl">{data.emoji}</span>
-                      <h3 className="text-lg font-bold text-white mt-1">{data.name}</h3>
+                      <h3 className="text-lg font-bold vela-text-primary mt-1">{data.name}</h3>
                       <p className="text-xs vela-text-muted">Target: {targetDate} · {mLeft} months away</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${onTrack ? "bg-emerald-900/40 text-emerald-400" : "bg-red-900/40 text-red-400"}`}>
                         {onTrack ? "On track ✓" : "Behind ↑"}
                       </span>
-                      <button onClick={() => startEdit(f)} className="p-1.5 text-zinc-500 hover:text-white hover:bg-zinc-700 rounded-lg transition-all">
+                      <button onClick={() => startEdit(f)} className="p-1.5 vela-text-muted hover:vela-text-primary vela-bg-nav-hover rounded-lg transition-all">
                         <Pencil size={14} />
                       </button>
                     </div>

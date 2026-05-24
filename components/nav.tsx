@@ -47,14 +47,14 @@ export default function Nav() {
               href={href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
                 active
-                  ? "bg-zinc-800 vela-text-primary"
-                  : "vela-text-muted hover:vela-text-primary hover:bg-zinc-900/30"
+                  ? "vela-bg-nav-active vela-text-nav-active"
+                  : "vela-text-muted vela-bg-nav-hover"
               }`}
             >
-              <Icon size={18} className={active ? "text-indigo-400" : "text-zinc-500 group-hover:text-zinc-400"} />
+              <Icon size={18} className={active ? "vela-icon-active" : "vela-icon-muted"} />
               <div>
                 <p className="text-sm font-medium leading-none">{label}</p>
-                <p className="text-[11px] vela-text-muted mt-0.5">{sublabel}</p>
+                <p className={`text-[11px] mt-0.5 ${active ? "opacity-70" : "vela-text-muted"}`}>{sublabel}</p>
               </div>
             </Link>
           );
