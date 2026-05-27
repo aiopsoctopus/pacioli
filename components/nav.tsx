@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Scale, ArrowLeftRight, PiggyBank, TrendingUp, Link2, Sun, Moon, Wallet, List } from "lucide-react";
+import { LayoutDashboard, Scale, ArrowLeftRight, PiggyBank, TrendingUp, Link2, Sun, Moon, Wallet, List, Info } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 
 const links = [
@@ -40,27 +40,42 @@ export default function Nav() {
       </div>
 
       {/* Nav links */}
-      <div className="flex flex-col gap-1 flex-1">
-        {links.map(({ href, label, sublabel, icon: Icon }) => {
-          const active = path === href;
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
-                active
-                  ? "pacioli-bg-nav-active pacioli-text-nav-active"
-                  : "pacioli-text-muted pacioli-bg-nav-hover"
-              }`}
-            >
-              <Icon size={18} className={active ? "pacioli-icon-active" : "pacioli-icon-muted"} />
-              <div>
-                <p className="text-sm font-medium leading-none">{label}</p>
-                <p className={`text-[11px] mt-0.5 ${active ? "opacity-70" : "pacioli-text-muted"}`}>{sublabel}</p>
-              </div>
-            </Link>
-          );
-        })}
+      <div className="flex flex-col gap-1 flex-1 justify-between">
+        <div className="flex flex-col gap-1">
+          {links.map(({ href, label, sublabel, icon: Icon }) => {
+            const active = path === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
+                  active
+                    ? "pacioli-bg-nav-active pacioli-text-nav-active"
+                    : "pacioli-text-muted pacioli-bg-nav-hover"
+                }`}
+              >
+                <Icon size={18} className={active ? "pacioli-icon-active" : "pacioli-icon-muted"} />
+                <div>
+                  <p className="text-sm font-medium leading-none">{label}</p>
+                  <p className={`text-[11px] mt-0.5 ${active ? "opacity-70" : "pacioli-text-muted"}`}>{sublabel}</p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Footer */}
+        <Link
+          href="/about"
+          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors ${
+            path === "/about"
+              ? "pacioli-bg-nav-active pacioli-text-nav-active"
+              : "pacioli-text-faint hover:pacioli-text-muted"
+          }`}
+        >
+          <Info size={13} />
+          About Pacioli
+        </Link>
       </div>
     </nav>
   );
