@@ -107,7 +107,19 @@ export default function AboutPage() {
           paying for a subscription.
         </p>
         <p className="text-sm pacioli-text-secondary leading-relaxed">
-          I built it with{" "}
+          I write about AI, automation, and tools like this one at{" "}
+          <a
+            href="https://aiopsoctopus.substack.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-indigo-400 hover:text-indigo-300 transition-colors inline-flex items-center gap-1"
+          >
+            The AI Ops Octopus <ExternalLink size={11} />
+          </a>
+          {" "}on Substack.
+        </p>
+        <p className="text-sm pacioli-text-secondary leading-relaxed">
+          I built Pacioli with{" "}
           <a
             href="https://claude.ai"
             target="_blank"
