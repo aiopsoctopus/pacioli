@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import { Upload, Landmark, FileText, CheckCircle2, AlertCircle, Plus, Trash2, FlaskConical, ArrowRight } from "lucide-react";
-import { formatCurrency } from "@/lib/data";
+import { formatCurrency, IMPORTED_KEY } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
 
 const MANUAL_ACCOUNTS_KEY = "vela-manual-accounts";
@@ -105,7 +105,7 @@ export default function ConnectPage() {
       }
       setCsvResult({ count: parsed.length, preview: parsed.slice(0, 5) });
       // In a real app, we'd merge these into the transactions store here
-      localStorage.setItem("vela-imported-transactions", JSON.stringify(parsed));
+      localStorage.setItem(IMPORTED_KEY, JSON.stringify(parsed));
     };
     reader.readAsText(file);
   }

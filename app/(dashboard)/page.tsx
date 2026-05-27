@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import {
   fetchJSON, formatCurrency, formatMonth, getNetWorth, getMonthlySpend,
-  loadBudgetEnvelopes, monthProgressFraction,
-  AccountData, Transaction, SinkingFund, MonthIncome,
+  loadBudgetEnvelopes, monthProgressFraction, useTransactions,
+  AccountData, SinkingFund, MonthIncome,
 } from "@/lib/data";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend,
@@ -18,13 +18,13 @@ export default function ZoomOut() {
   const ns = isDemo ? "demo" : "";
 
   const [accounts, setAccounts] = useState<AccountData | null>(null);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [sinkingFunds, setSinkingFunds] = useState<SinkingFund[]>([]);
   const [income, setIncome] = useState<MonthIncome[]>([]);
 
+  const transactions = useTransactions(ns);
+
   useEffect(() => {
     fetchJSON<AccountData>("accounts.json").then(setAccounts).catch((e) => console.error("[Vela] accounts.json failed:", e));
-    fetchJSON<Transaction[]>("transactions.json").then(setTransactions).catch((e) => console.error("[Vela] transactions.json failed:", e));
     fetchJSON<SinkingFund[]>("sinking_funds.json").then(setSinkingFunds).catch((e) => console.error("[Vela] sinking_funds.json failed:", e));
     fetchJSON<MonthIncome[]>("income.json").then(setIncome).catch((e) => console.error("[Vela] income.json failed:", e));
   }, []);

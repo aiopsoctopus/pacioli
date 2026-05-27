@@ -3,7 +3,8 @@ import { useEffect, useState, useMemo } from "react";
 import {
   fetchJSON, formatCurrency, formatMonth, getMonthlySpend, analyseCategorySpend,
   loadBudgetEnvelopes, saveBudgetEnvelopes, monthProgressFraction, avgMonthlyIncome,
-  Transaction, MonthIncome, BudgetAnalysis, BudgetEnvelope,
+  useTransactions,
+  MonthIncome, BudgetAnalysis, BudgetEnvelope,
 } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
 import { Sparkles, ChevronRight, Check, Pencil, X, TrendingUp, TrendingDown, Minus, AlertTriangle } from "lucide-react";
@@ -323,14 +324,18 @@ function EnvelopeRow({
 export default function BudgetPage() {
   const { isDemo } = useDemo();
   const ns = isDemo ? "demo" : "";
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [income, setIncome] = useState<MonthIncome[]>([]);
-  const [envelopes, setEnvelopes] = useState<Record<string, BudgetEnvelope> | null>(null);
+  const [envelopes, setEnvelopes] = useState<Record<string, BudgetEnvelope> | null>(
+    () => loadBudgetEnvelopes()
+  );
   const [showSetup, setShowSetup] = useState(false);
 
+  const transactions = useTransactions(ns);
+
   useEffect(() => {
+    // Re-read envelopes from localStorage when ns (demo mode) changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEnvelopes(loadBudgetEnvelopes(ns));
-    fetchJSON<Transaction[]>("transactions.json").then(setTransactions);
     fetchJSON<MonthIncome[]>("income.json").then(setIncome);
   }, [ns]);
 

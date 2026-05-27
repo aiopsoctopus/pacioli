@@ -1,7 +1,9 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import {
   fetchJSON, formatCurrency, formatMonth, getMonthlySpend,
+  loadRules, saveRules, loadOverrides, saveOverrides,
+  useTransactions,
   Transaction, MonthIncome,
 } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
@@ -21,80 +23,38 @@ const ALL_CATEGORIES = [
   "Health", "Shopping", "Travel", "Entertainment", "Savings", "Other",
 ];
 
-const RULES_KEY = "vela-category-rules"; // { [merchant]: category }
-const OVERRIDE_KEY = "vela-tx-overrides"; // { [txId]: category }
-
-function loadRules(ns = ""): Record<string, string> {
-  if (typeof window === "undefined") return {};
-  try {
-    const key = ns ? `${ns}-${RULES_KEY}` : RULES_KEY;
-    return JSON.parse(localStorage.getItem(key) ?? "{}");
-  } catch { return {}; }
-}
-function saveRules(rules: Record<string, string>, ns = "") {
-  const key = ns ? `${ns}-${RULES_KEY}` : RULES_KEY;
-  localStorage.setItem(key, JSON.stringify(rules));
-}
-function loadOverrides(ns = ""): Record<string, string> {
-  if (typeof window === "undefined") return {};
-  try {
-    const key = ns ? `${ns}-${OVERRIDE_KEY}` : OVERRIDE_KEY;
-    return JSON.parse(localStorage.getItem(key) ?? "{}");
-  } catch { return {}; }
-}
-function saveOverrides(overrides: Record<string, string>, ns = "") {
-  const key = ns ? `${ns}-${OVERRIDE_KEY}` : OVERRIDE_KEY;
-  localStorage.setItem(key, JSON.stringify(overrides));
-}
-
-function applyRulesAndOverrides(txs: Transaction[], rules: Record<string, string>, overrides: Record<string, string>): Transaction[] {
-  return txs.map((tx) => {
-    if (overrides[tx.id]) return { ...tx, category: overrides[tx.id] };
-    const merchant = tx.merchant.toLowerCase().trim();
-    for (const [pattern, cat] of Object.entries(rules)) {
-      if (merchant.includes(pattern.toLowerCase())) return { ...tx, category: cat };
-    }
-    return tx;
-  });
-}
 
 export default function CashFlow() {
   const { isDemo } = useDemo();
   const ns = isDemo ? "demo" : "";
 
-  const [rawTransactions, setRawTransactions] = useState<Transaction[]>([]);
   const [income, setIncome] = useState<MonthIncome[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>("");
   const [drillCategory, setDrillCategory] = useState<string | null>(null);
-  const [rules, setRules] = useState<Record<string, string>>({});
-  const [overrides, setOverrides] = useState<Record<string, string>>({});
+  // rules/overrides kept in local state so the UI reacts immediately when the
+  // user edits them; the hook re-reads from localStorage on its next render.
+  const [rules, setRules] = useState<Record<string, string>>(() => loadRules(ns));
+  const [overrides, setOverrides] = useState<Record<string, string>>(() => loadOverrides(ns));
   const [showRules, setShowRules] = useState(false);
   const [rulePrompt, setRulePrompt] = useState<{ txId: string; merchant: string; category: string } | null>(null);
   const [justSaved, setJustSaved] = useState<string | null>(null);
 
+  // useTransactions merges static JSON + CSV imports and applies rules/overrides.
+  const transactions = useTransactions(ns);
+
   useEffect(() => {
-    setRules(loadRules(ns));
-    setOverrides(loadOverrides(ns));
-    Promise.all([
-      fetchJSON<Transaction[]>("transactions.json"),
-      fetchJSON<MonthIncome[]>("income.json"),
-    ]).then(([txs, inc]) => {
-      setRawTransactions(txs);
-      setIncome(inc);
-      const months = [...new Set(txs.map((t) => t.date.slice(0, 7)))].sort();
-      setSelectedMonth(months[months.length - 1]);
-    }).catch((e) => console.error("[Vela] cash-flow fetch failed:", e));
-  }, []);
+    fetchJSON<MonthIncome[]>("income.json")
+      .then(setIncome)
+      .catch((e) => console.error("[Vela] cash-flow fetch failed:", e));
+  }, [ns]);
 
-  // Apply rules + overrides on top of raw data
-  const transactions = useMemo(
-    () => applyRulesAndOverrides(rawTransactions, rules, overrides),
-    [rawTransactions, rules, overrides]
-  );
+  // Derive available months from transactions; let user override via selectedMonth
+  const allTxMonths = [...new Set(transactions.map((t) => t.date.slice(0, 7)))].sort();
+  const activeMonth = selectedMonth || allTxMonths[allTxMonths.length - 1] || "";
 
-  if (!transactions.length || !selectedMonth || !income.length) return <div className="vela-text-muted animate-pulse">Loading cash flow...</div>;
+  if (!transactions.length || !activeMonth || !income.length) return <div className="vela-text-muted animate-pulse">Loading cash flow...</div>;
 
-  const months = [...new Set(rawTransactions.map((t) => t.date.slice(0, 7)))].sort();
+  const months = allTxMonths;
 
   // Monthly summary for bar chart
   const monthlyData = months.map((m) => {
@@ -110,12 +70,12 @@ export default function CashFlow() {
   });
 
   // Selected month breakdown
-  const spendByCat = getMonthlySpend(transactions, selectedMonth);
+  const spendByCat = getMonthlySpend(transactions, activeMonth);
   const catBreakdown = Object.entries(spendByCat)
     .map(([cat, amount]) => ({ cat, amount: Math.round(amount) }))
     .sort((a, b) => b.amount - a.amount);
 
-  const thisIncome = income.find((i) => i.month === selectedMonth);
+  const thisIncome = income.find((i) => i.month === activeMonth);
   const totalIncome = thisIncome?.sources.reduce((s, src) => s + src.amount, 0) ?? 0;
   const totalSpend = Object.values(spendByCat).reduce((s, v) => s + v, 0);
   const net = totalIncome - totalSpend;
@@ -123,13 +83,13 @@ export default function CashFlow() {
   // Drill-down: all transactions for the selected category + month
   const drillTxs = drillCategory
     ? transactions
-        .filter((t) => t.date.startsWith(selectedMonth) && t.category === drillCategory)
+        .filter((t) => t.date.startsWith(activeMonth) && t.category === drillCategory)
         .sort((a, b) => b.date.localeCompare(a.date))
     : [];
 
   // Recent transactions (no drill)
   const recentTx = transactions
-    .filter((t) => t.date.startsWith(selectedMonth))
+    .filter((t) => t.date.startsWith(activeMonth))
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 15);
 
@@ -213,7 +173,7 @@ export default function CashFlow() {
             <ChevronLeft size={18} />
           </button>
           <div>
-            <p className="vela-text-muted text-sm">{formatMonth(selectedMonth)} · {drillTxs.length} transactions</p>
+            <p className="vela-text-muted text-sm">{formatMonth(activeMonth)} · {drillTxs.length} transactions</p>
             <h2 className="text-2xl font-bold vela-text-primary" style={{ color: catColor }}>{drillCategory}</h2>
           </div>
           <span className="ml-auto text-2xl font-bold vela-text-primary">{formatCurrency(catTotal)}</span>
@@ -273,7 +233,7 @@ export default function CashFlow() {
             {Object.keys(rules).length > 0 ? `${Object.keys(rules).length} rules` : "Rules"}
           </button>
           <select
-            value={selectedMonth}
+            value={activeMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
             className="vela-bg-input border rounded-lg px-3 py-2 text-sm"
           >

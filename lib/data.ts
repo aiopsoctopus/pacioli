@@ -1,6 +1,13 @@
 // Data loader — reads from /public/data JSON files
 // When you're ready to connect Plaid, swap these loaders for API calls
 
+// ─── React hook (client-only) ─────────────────────────────────────────────────
+// Imported at the top to keep the "use client" boundary clear for consumers.
+// This file has no "use client" directive — pages that use the hook are already
+// client components. The hook itself uses React APIs so it must only be called
+// inside client components.
+import { useEffect, useState, useMemo } from "react";
+
 export async function fetchJSON<T>(file: string): Promise<T> {
   const res = await fetch(`/data/${file}`);
   if (!res.ok) throw new Error(`Failed to load ${file}`);
@@ -267,4 +274,127 @@ export function avgMonthlyIncome(income: MonthIncome[], currentMonth: string, wi
     (s, i) => s + i.sources.reduce((ss, src) => ss + src.amount, 0), 0
   );
   return Math.round(total / completed.length);
+}
+
+// ─── Category rules & overrides ──────────────────────────────────────────────
+// Shared constants and helpers used by the hook and by cash-flow/page.tsx.
+
+export const RULES_KEY    = "vela-category-rules";  // { [merchantPattern]: category }
+export const OVERRIDE_KEY = "vela-tx-overrides";    // { [txId]: category }
+export const IMPORTED_KEY = "vela-imported-transactions";
+
+export function loadRules(ns = ""): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  try {
+    const key = ns ? `${ns}-${RULES_KEY}` : RULES_KEY;
+    return JSON.parse(localStorage.getItem(key) ?? "{}");
+  } catch { return {}; }
+}
+
+export function saveRules(rules: Record<string, string>, ns = "") {
+  const key = ns ? `${ns}-${RULES_KEY}` : RULES_KEY;
+  localStorage.setItem(key, JSON.stringify(rules));
+}
+
+export function loadOverrides(ns = ""): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  try {
+    const key = ns ? `${ns}-${OVERRIDE_KEY}` : OVERRIDE_KEY;
+    return JSON.parse(localStorage.getItem(key) ?? "{}");
+  } catch { return {}; }
+}
+
+export function saveOverrides(overrides: Record<string, string>, ns = "") {
+  const key = ns ? `${ns}-${OVERRIDE_KEY}` : OVERRIDE_KEY;
+  localStorage.setItem(key, JSON.stringify(overrides));
+}
+
+/**
+ * Apply category rules then per-transaction overrides to a transaction list.
+ * Order: rules (merchant pattern match) → override (explicit per-id) wins on top.
+ */
+export function applyRulesAndOverrides(
+  txs: Transaction[],
+  rules: Record<string, string>,
+  overrides: Record<string, string>,
+): Transaction[] {
+  return txs.map((tx) => {
+    // Per-transaction override wins unconditionally
+    if (overrides[tx.id]) return { ...tx, category: overrides[tx.id] };
+    // Merchant pattern rules (case-insensitive substring match)
+    const merchant = tx.merchant.toLowerCase().trim();
+    for (const [pattern, cat] of Object.entries(rules)) {
+      if (merchant.includes(pattern.toLowerCase())) return { ...tx, category: cat };
+    }
+    return tx;
+  });
+}
+
+// ─── useTransactions hook ─────────────────────────────────────────────────────
+/**
+ * Loads transactions from two sources and merges them:
+ *   1. /data/transactions.json  — static seed data
+ *   2. localStorage[IMPORTED_KEY] — rows saved by the CSV importer
+ *
+ * Imported rows are keyed by a synthetic id (`imp_<date>_<merchant>_<amount>`)
+ * so re-uploading the same file is idempotent (duplicates are deduplicated by id).
+ *
+ * Category rules and per-transaction overrides are applied at read time, so
+ * changing a rule instantly affects all pages without re-importing.
+ *
+ * Pass `ns` (namespace) to scope localStorage keys to demo mode.
+ */
+export function useTransactions(ns = ""): Transaction[] {
+  const [staticTxs, setStaticTxs]     = useState<Transaction[]>([]);
+  const [importedTxs, setImportedTxs] = useState<Transaction[]>([]);
+  // Lazy-initialise from localStorage so no synchronous setState-in-effect
+  const [rules, setRules]     = useState<Record<string, string>>(() => loadRules(ns));
+  const [overrides, setOverrides] = useState<Record<string, string>>(() => loadOverrides(ns));
+
+  // Load static JSON once on mount
+  useEffect(() => {
+    fetchJSON<Transaction[]>("transactions.json")
+      .then(setStaticTxs)
+      .catch((e) => console.error("[Vela] transactions.json failed:", e));
+  }, []);
+
+  // Re-sync rules, overrides, and imports whenever ns changes (demo toggle).
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setRules(loadRules(ns));
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setOverrides(loadOverrides(ns));
+
+    try {
+      const importKey = ns ? `${ns}-${IMPORTED_KEY}` : IMPORTED_KEY;
+      const raw = localStorage.getItem(importKey);
+      if (!raw) { setImportedTxs([]); return; }
+
+      // Imported rows may lack an `id` or `account` field — normalise them.
+      const parsed: Partial<Transaction>[] = JSON.parse(raw);
+      const normalised: Transaction[] = parsed.map((t) => ({
+        id:       t.id ?? `imp_${t.date}_${t.merchant}_${t.amount}`,
+        date:     t.date    ?? "",
+        merchant: t.merchant ?? "Unknown",
+        category: t.category ?? "Uncategorized",
+        amount:   t.amount  ?? 0,
+        account:  t.account ?? "Imported",
+      }));
+      setImportedTxs(normalised);
+    } catch { setImportedTxs([]); }
+  }, [ns]);
+
+  // Merge: static first, then imported. Deduplicate by id (imported wins on conflict).
+  const merged = useMemo(() => {
+    const map = new Map<string, Transaction>();
+    for (const tx of staticTxs)   map.set(tx.id, tx);
+    for (const tx of importedTxs) map.set(tx.id, tx); // imported overwrites on same id
+    return Array.from(map.values()).sort((a, b) => a.date < b.date ? 1 : -1);
+  }, [staticTxs, importedTxs]);
+
+  // Apply rules + overrides
+  return useMemo(
+    () => applyRulesAndOverrides(merged, rules, overrides),
+    [merged, rules, overrides],
+  );
 }
