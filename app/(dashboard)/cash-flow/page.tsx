@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   fetchJSON, formatCurrency, formatMonth, getMonthlySpend,
   loadRules, saveRules, loadOverrides, saveOverrides,
@@ -7,6 +7,7 @@ import {
   Transaction, MonthIncome,
 } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
+import { useTheme } from "@/components/theme-provider";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
@@ -27,6 +28,17 @@ const ALL_CATEGORIES = [
 export default function CashFlow() {
   const { isDemo } = useDemo();
   const ns = isDemo ? "demo" : "";
+  const { theme } = useTheme();
+
+  const chartTheme = useMemo(() => {
+    const s = getComputedStyle(document.documentElement);
+    return {
+      tooltipBg:     s.getPropertyValue("--bg-surface").trim()    || "#18181b",
+      tooltipBorder: s.getPropertyValue("--border").trim()         || "rgba(63,63,70,0.5)",
+      textMuted:     s.getPropertyValue("--text-muted").trim()     || "#71717a",
+      textSecondary: s.getPropertyValue("--text-secondary").trim() || "#d4d4d8",
+    };
+  }, [theme]);
 
   const [income, setIncome] = useState<MonthIncome[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>("");
@@ -259,7 +271,7 @@ export default function CashFlow() {
       </div>
 
       {/* Summary cards */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           { label: "Income", value: totalIncome, color: "pacioli-text-success" },
           { label: "Spending", value: totalSpend, color: "pacioli-text-danger" },
@@ -277,13 +289,14 @@ export default function CashFlow() {
         <h3 className="text-sm font-semibold pacioli-text-secondary mb-4">Income vs. Spending — 12 Months</h3>
         <ResponsiveContainer width="100%" height={240}>
           <BarChart data={monthlyData} barGap={4}>
-            <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} width={50} />
+            <XAxis dataKey="month" tick={{ fill: chartTheme.textMuted, fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} tick={{ fill: chartTheme.textMuted, fontSize: 11 }} axisLine={false} tickLine={false} width={50} />
             <Tooltip
-              formatter={(v: any, name: any) => [formatCurrency(Number(v)), name]}
-              contentStyle={{ background: "#18181b", border: "1px solid #3f3f46", borderRadius: 8 }}
+              formatter={(v: unknown, name: unknown) => [formatCurrency(Number(v)), String(name)]}
+              contentStyle={{ background: chartTheme.tooltipBg, border: `1px solid ${chartTheme.tooltipBorder}`, borderRadius: 8 }}
+              labelStyle={{ color: chartTheme.textMuted }}
             />
-            <Legend wrapperStyle={{ color: "#a1a1aa", fontSize: 12 }} />
+            <Legend wrapperStyle={{ color: chartTheme.textSecondary, fontSize: 12 }} />
             <Bar dataKey="Income" fill="#10b981" radius={[4, 4, 0, 0]} />
             <Bar dataKey="Spending" fill="#6366f1" radius={[4, 4, 0, 0]} />
           </BarChart>
@@ -407,7 +420,7 @@ function TransactionRow({
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 top-full mt-1 z-50 pacioli-bg-nav border pacioli-border rounded-xl shadow-xl p-1.5 min-w-44">
+        <div className="absolute right-0 top-full mt-1 z-50 pacioli-bg-nav border pacioli-border rounded-xl shadow-xl p-1.5 min-w-44 max-h-64 overflow-y-auto">
           <p className="text-[10px] pacioli-text-faint px-2 py-1 uppercase tracking-wide">Move to category</p>
           {allCategories.map((cat) => (
             <button

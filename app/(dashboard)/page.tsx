@@ -102,7 +102,7 @@ export default function ZoomOut() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
         <KpiCard
           label="Net Worth"
           value={formatCurrency(currentNW)}
@@ -229,20 +229,20 @@ function KpiCard({ label, value, sub, positive, icon, href }: {
 }) {
   const inner = (
     <>
-      <div className="flex justify-between items-start mb-3">
-        <p className="text-xs font-medium pacioli-text-muted uppercase tracking-wide">{label}</p>
-        <span className="pacioli-text-faint">{icon}</span>
+      <div className="flex justify-between items-start mb-3 min-w-0">
+        <p className="text-[11px] sm:text-xs font-medium pacioli-text-muted uppercase tracking-wide leading-tight pr-1">{label}</p>
+        <span className="pacioli-text-faint shrink-0">{icon}</span>
       </div>
-      <p className="text-2xl font-bold pacioli-text-primary">{value}</p>
-      <p className={`text-xs mt-1 ${positive ? "pacioli-text-success" : "pacioli-text-danger"}`}>{sub}</p>
+      <p className="text-xl sm:text-2xl font-bold pacioli-text-primary truncate">{value}</p>
+      <p className={`text-[11px] sm:text-xs mt-1 truncate ${positive ? "pacioli-text-success" : "pacioli-text-danger"}`}>{sub}</p>
     </>
   );
   if (href) {
     return (
-      <a href={href} className="pacioli-bg-surface rounded-2xl p-5 border block hover:border-indigo-500/40 transition-colors">
+      <a href={href} className="pacioli-bg-surface rounded-2xl p-4 sm:p-5 border block hover:border-indigo-500/40 transition-colors min-w-0">
         {inner}
       </a>
     );
   }
-  return <div className="pacioli-bg-surface rounded-2xl p-5 border">{inner}</div>;
+  return <div className="pacioli-bg-surface rounded-2xl p-4 sm:p-5 border min-w-0">{inner}</div>;
 }

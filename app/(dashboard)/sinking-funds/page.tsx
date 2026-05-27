@@ -5,7 +5,8 @@ import { useDemo } from "@/components/demo-provider";
 import { Pencil, Plus, Trash2, Check, X } from "lucide-react";
 
 const STORAGE_KEY = "pacioli-sinking-funds";
-const COLORS = ["#6366f1","#10b981","#f59e0b","#f97316","#ec4899","#3b82f6","#8b5cf6","#14b8a6"];
+// Reds (#ef4444, #dc2626, etc.) are intentionally excluded — they're reserved for danger/over-budget states.
+const COLORS = ["#6366f1","#10b981","#f59e0b","#f97316","#ec4899","#3b82f6","#8b5cf6","#14b8a6","#a78bfa","#22d3ee"];
 const EMOJIS = ["✈️","🛡️","🚗","🏠","🎁","📚","💻","🌴","💍","🏋️"];
 
 function monthsUntil(dateStr: string): number {
@@ -116,7 +117,7 @@ export default function SinkingFunds() {
       </div>
 
       {/* Summary */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="pacioli-bg-surface rounded-2xl p-5 border">
           <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">Total Saved</p>
           <p className="text-2xl font-bold pacioli-text-success">{formatCurrency(totalSaved)}</p>
@@ -192,13 +193,14 @@ export default function SinkingFunds() {
                   </div>
                   <div>
                     <label className="text-xs pacioli-text-muted mb-2 block">Color</label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       {COLORS.map((c) => (
                         <button key={c} onClick={() => setDraft({ ...draft, color: c })}
                           className={`w-6 h-6 rounded-full border-2 transition-all ${draft.color === c ? "border-indigo-500 scale-110" : "border-transparent"}`}
                           style={{ background: c }} />
                       ))}
                     </div>
+                    <p className="text-[10px] pacioli-text-faint mt-2">Red shades are reserved for over-budget alerts.</p>
                   </div>
                   <div className="flex gap-2 pt-1">
                     <button onClick={isAdding ? commitAdd : commitEdit}
