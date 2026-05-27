@@ -285,9 +285,9 @@ export default function CashFlow() {
       {/* Summary cards */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Income", value: totalIncome, color: "text-emerald-400" },
-          { label: "Spending", value: totalSpend, color: "text-red-400" },
-          { label: "Net Cash Flow", value: net, color: net >= 0 ? "text-emerald-400" : "text-red-400" },
+          { label: "Income", value: totalIncome, color: "vela-text-success" },
+          { label: "Spending", value: totalSpend, color: "vela-text-danger" },
+          { label: "Net Cash Flow", value: net, color: net >= 0 ? "vela-text-success" : "vela-text-danger" },
         ].map(({ label, value, color }) => (
           <div key={label} className="vela-bg-surface rounded-2xl p-5 border">
             <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">{label}</p>

@@ -27,6 +27,14 @@ body {
   --bar-track:      #3f3f46;
   --icon-muted:     #71717a;
   --icon-active:    #a5b4fc;
+  /* Semantic status colors */
+  --text-warning:   #fbbf24;
+  --text-danger:    #f87171;
+  --text-success:   #34d399;
+  --bg-warning:     rgba(120,53,15,0.35);
+  --bg-danger:      rgba(127,29,29,0.35);
+  --border-warning: rgba(180,83,9,0.5);
+  --border-danger:  rgba(185,28,28,0.5);
 }
 
 [data-theme="dark"] {
@@ -50,6 +58,14 @@ body {
   --bar-track:      #3f3f46;
   --icon-muted:     #71717a;
   --icon-active:    #a5b4fc;
+  /* Semantic status colors */
+  --text-warning:   #fbbf24;
+  --text-danger:    #f87171;
+  --text-success:   #34d399;
+  --bg-warning:     rgba(120,53,15,0.35);
+  --bg-danger:      rgba(127,29,29,0.35);
+  --border-warning: rgba(180,83,9,0.5);
+  --border-danger:  rgba(185,28,28,0.5);
 }
 
 [data-theme="light"] {
@@ -73,6 +89,14 @@ body {
   --bar-track:      #e4e4e7;
   --icon-muted:     #a1a1aa;
   --icon-active:    #ffffff;
+  /* Semantic status colors — darker shades for light mode legibility */
+  --text-warning:   #b45309;
+  --text-danger:    #dc2626;
+  --text-success:   #059669;
+  --bg-warning:     rgba(253,230,138,0.5);
+  --bg-danger:      rgba(254,202,202,0.5);
+  --border-warning: rgba(180,83,9,0.3);
+  --border-danger:  rgba(220,38,38,0.3);
 }
 
 /* Apply variables to utility classes used throughout the app */
@@ -95,3 +119,13 @@ body {
 .vela-border-subtle  { border-color: var(--border-subtle); }
 .vela-bar-track      { background-color: var(--bar-track); }
 .vela-icon-muted     { color: var(--icon-muted); }
+/* Semantic status utilities */
+.vela-text-warning   { color: var(--text-warning); }
+.vela-text-danger    { color: var(--text-danger); }
+.vela-text-success   { color: var(--text-success); }
+.vela-alert-warning  { background-color: var(--bg-warning); border-color: var(--border-warning); }
+.vela-alert-danger   { background-color: var(--bg-danger); border-color: var(--border-danger); }
+.vela-badge-warning  { background-color: var(--bg-warning); color: var(--text-warning); }
+.vela-badge-danger   { background-color: var(--bg-danger); color: var(--text-danger); }
+.vela-badge-success  { background-color: rgba(6,78,59,0.3); color: var(--text-success); }
+[data-theme="light"] .vela-badge-success { background-color: rgba(209,250,229,0.7); }

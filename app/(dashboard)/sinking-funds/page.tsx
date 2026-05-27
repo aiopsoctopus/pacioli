@@ -5,7 +5,7 @@ import { useDemo } from "@/components/demo-provider";
 import { Pencil, Plus, Trash2, Check, X } from "lucide-react";
 
 const STORAGE_KEY = "vela-sinking-funds";
-const COLORS = ["#6366f1","#10b981","#f59e0b","#ef4444","#ec4899","#3b82f6","#8b5cf6","#14b8a6"];
+const COLORS = ["#6366f1","#10b981","#f59e0b","#f97316","#ec4899","#3b82f6","#8b5cf6","#14b8a6"];
 const EMOJIS = ["✈️","🛡️","🚗","🏠","🎁","📚","💻","🌴","💍","🏋️"];
 
 function monthsUntil(dateStr: string): number {
@@ -211,7 +211,7 @@ export default function SinkingFunds() {
                     </button>
                     {!isAdding && (
                       <button onClick={() => { cancelEdit(); deleteFund(f.id); }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-red-900/40 hover:bg-red-900/70 text-red-400 text-xs font-medium rounded-lg transition-colors ml-auto">
+                        className="flex items-center gap-1.5 px-3 py-1.5 vela-alert-danger border hover:opacity-80 vela-text-danger text-xs font-medium rounded-lg transition-colors ml-auto">
                         <Trash2 size={13} /> Delete
                       </button>
                     )}
@@ -227,7 +227,7 @@ export default function SinkingFunds() {
                       <p className="text-xs vela-text-muted">Target: {targetDate} · {mLeft} months away</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${onTrack ? "bg-emerald-900/40 text-emerald-400" : "bg-red-500/25 text-red-300"}`}>
+                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${onTrack ? "vela-badge-success" : "vela-badge-danger"}`}>
                         {onTrack ? "On track ✓" : "Behind ↑"}
                       </span>
                       <button onClick={() => startEdit(f)} className="p-1.5 vela-text-muted hover:vela-text-primary vela-bg-nav-hover rounded-lg transition-all">
@@ -247,7 +247,7 @@ export default function SinkingFunds() {
                   <div className="grid grid-cols-3 gap-3 text-center">
                     <Stat label="Remaining" value={formatCurrency(remaining)} />
                     <Stat label="Contributing" value={`${formatCurrency(data.monthly_contribution)}/mo`} />
-                    <Stat label="Need / mo" value={neededPerMonth > 0 ? `${formatCurrency(neededPerMonth)}/mo` : "Done!"} highlight={!onTrack ? "text-amber-400" : undefined} />
+                    <Stat label="Need / mo" value={neededPerMonth > 0 ? `${formatCurrency(neededPerMonth)}/mo` : "Done!"} highlight={!onTrack ? "vela-text-warning" : undefined} />
                   </div>
                 </>
               )}

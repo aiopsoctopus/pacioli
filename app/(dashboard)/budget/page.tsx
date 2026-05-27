@@ -58,7 +58,7 @@ function SetupFlow({
   if (!current) return null;
 
   const TrendIcon = current.trend === "rising" ? TrendingUp : current.trend === "falling" ? TrendingDown : Minus;
-  const trendColor = current.trend === "rising" ? "text-amber-400" : current.trend === "falling" ? "text-emerald-400" : "text-zinc-400";
+  const trendColor = current.trend === "rising" ? "vela-text-warning" : current.trend === "falling" ? "vela-text-success" : "vela-text-muted";
   const color = CATEGORY_COLORS[current.category] ?? "#6366f1";
 
   return (
@@ -115,9 +115,9 @@ function SetupFlow({
         </div>
 
         {current.isSeasonal && (
-          <div className="flex gap-2 p-3 bg-amber-900/30 border border-amber-700/50 rounded-xl">
-            <AlertTriangle size={13} className="text-amber-400 mt-0.5 shrink-0" />
-            <p className="text-xs text-amber-300">
+          <div className="flex gap-2 p-3 vela-alert-warning border rounded-xl">
+            <AlertTriangle size={13} className="vela-text-warning mt-0.5 shrink-0" />
+            <p className="text-xs vela-text-warning">
               Seasonal spike detected in {formatMonth(current.peakMonth)} ({formatCurrency(current.peakAmount)}).
               Consider a sinking fund for one-off costs in this category.
             </p>
@@ -243,7 +243,7 @@ function EnvelopeRow({
   const isOver = spent > envelope.budgetAmount;
   const isWarning = pct >= 80 && !isOver;
 
-  const barColor = isOver ? "#f87171" : isWarning ? "#fbbf24" : color;
+  const barColor = isOver ? "var(--text-danger)" : isWarning ? "var(--text-warning)" : color;
 
   function commit() {
     onUpdate(envelope.category, draft);
@@ -272,7 +272,7 @@ function EnvelopeRow({
           </div>
         ) : (
           <div className="flex items-center gap-2 text-sm">
-            <span className={`font-medium ${isOver ? "text-red-400" : isWarning ? "text-amber-400" : "vela-text-primary"}`}>
+            <span className={`font-medium ${isOver ? "vela-text-danger" : isWarning ? "vela-text-warning" : "vela-text-primary"}`}>
               {formatCurrency(spent)}
             </span>
             <span className="vela-text-muted">/</span>
@@ -296,7 +296,7 @@ function EnvelopeRow({
       </div>
 
       <div className="flex justify-between mt-1.5 text-xs">
-        <span className={isOver ? "text-red-400 font-medium" : isWarning ? "text-amber-400" : "vela-text-muted"}>
+        <span className={isOver ? "vela-text-danger font-medium" : isWarning ? "vela-text-warning" : "vela-text-muted"}>
           {isOver
             ? `${formatCurrency(Math.abs(remaining))} over budget`
             : `${formatCurrency(remaining)} remaining`}
@@ -455,14 +455,14 @@ export default function BudgetPage() {
         </div>
         <div className="vela-bg-surface rounded-2xl p-5 border">
           <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">Remaining</p>
-          <p className={`text-2xl font-bold ${totalRemaining >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+          <p className={`text-2xl font-bold ${totalRemaining >= 0 ? "vela-text-success" : "vela-text-danger"}`}>
             {formatCurrency(Math.abs(totalRemaining))}
           </p>
           <p className="text-xs vela-text-muted mt-1">{totalRemaining >= 0 ? "left to spend" : "over budget"}</p>
         </div>
         <div className="vela-bg-surface rounded-2xl p-5 border">
           <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">Budget Pace</p>
-          <p className={`text-2xl font-bold ${isAheadOfPace ? "text-emerald-400" : isBehindPace ? "text-red-400" : "text-amber-400"}`}>
+          <p className={`text-2xl font-bold ${isAheadOfPace ? "vela-text-success" : isBehindPace ? "vela-text-danger" : "vela-text-warning"}`}>
             {isAheadOfPace ? "Ahead" : isBehindPace ? "Behind" : "On pace"}
           </p>
           <p className="text-xs vela-text-muted mt-1">
@@ -500,7 +500,7 @@ export default function BudgetPage() {
                 className="h-2.5 rounded-full transition-all duration-500"
                 style={{
                   width: `${Math.min(100, budgetPct)}%`,
-                  background: isBehindPace ? "#f87171" : isAheadOfPace ? "#34d399" : "#6366f1",
+                  background: isBehindPace ? "var(--text-danger)" : isAheadOfPace ? "var(--text-success)" : "#6366f1",
                 }}
               />
             </div>
@@ -549,10 +549,10 @@ export default function BudgetPage() {
                 {overBudget.map((e) => {
                   const over = (currentSpend[e.category] ?? 0) - e.budgetAmount;
                   return (
-                    <div key={e.category} className="flex gap-2.5 p-3 bg-red-950/20 border border-red-800/30 rounded-xl">
-                      <AlertTriangle size={13} className="text-red-400 mt-0.5 shrink-0" />
+                    <div key={e.category} className="flex gap-2.5 p-3 vela-alert-danger border rounded-xl">
+                      <AlertTriangle size={13} className="vela-text-danger mt-0.5 shrink-0" />
                       <div>
-                        <p className="text-xs font-medium text-red-300">{e.category} over by {formatCurrency(over)}</p>
+                        <p className="text-xs font-medium vela-text-danger">{e.category} over by {formatCurrency(over)}</p>
                         {/* LLM_HOOK: anomaly explanation — look at merchant names for this
                             category this month and explain what drove the overage in 1 sentence. */}
                         <p className="text-xs vela-text-muted mt-0.5">
@@ -565,10 +565,10 @@ export default function BudgetPage() {
                 {nearBudget.map((e) => {
                   const pct = Math.round(((currentSpend[e.category] ?? 0) / e.budgetAmount) * 100);
                   return (
-                    <div key={e.category} className="flex gap-2.5 p-3 bg-amber-900/30 border border-amber-700/50 rounded-xl">
-                      <AlertTriangle size={13} className="text-amber-400 mt-0.5 shrink-0" />
+                    <div key={e.category} className="flex gap-2.5 p-3 vela-alert-warning border rounded-xl">
+                      <AlertTriangle size={13} className="vela-text-warning mt-0.5 shrink-0" />
                       <div>
-                        <p className="text-xs font-medium text-amber-300">{e.category} at {pct}%</p>
+                        <p className="text-xs font-medium vela-text-warning">{e.category} at {pct}%</p>
                         <p className="text-xs vela-text-muted mt-0.5">
                           {formatCurrency(e.budgetAmount - (currentSpend[e.category] ?? 0))} remaining
                         </p>
@@ -594,7 +594,7 @@ export default function BudgetPage() {
                   <div className="space-y-3">
                     <div>
                       <p className="text-xs vela-text-muted">Projected total spend</p>
-                      <p className={`text-lg font-bold ${projectedOver > 0 ? "text-red-400" : "text-emerald-400"}`}>
+                      <p className={`text-lg font-bold ${projectedOver > 0 ? "vela-text-danger" : "vela-text-success"}`}>
                         {formatCurrency(projectedSpend)}
                       </p>
                       <p className="text-xs vela-text-muted">
@@ -606,7 +606,7 @@ export default function BudgetPage() {
                     {projectedSavings > 0 && (
                       <div>
                         <p className="text-xs vela-text-muted">Projected savings</p>
-                        <p className="text-lg font-bold text-emerald-400">{formatCurrency(Math.round(projectedSavings))}</p>
+                        <p className="text-lg font-bold vela-text-success">{formatCurrency(Math.round(projectedSavings))}</p>
                       </div>
                     )}
                   </div>

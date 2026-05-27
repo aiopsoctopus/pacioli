@@ -219,7 +219,7 @@ function KpiCard({ label, value, sub, positive, icon, href }: {
         <span className="vela-text-faint">{icon}</span>
       </div>
       <p className="text-2xl font-bold vela-text-primary">{value}</p>
-      <p className={`text-xs mt-1 ${positive ? "text-emerald-400" : "text-red-400"}`}>{sub}</p>
+      <p className={`text-xs mt-1 ${positive ? "vela-text-success" : "vela-text-danger"}`}>{sub}</p>
     </>
   );
   if (href) {

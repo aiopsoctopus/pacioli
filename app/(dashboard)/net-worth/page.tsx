@@ -40,11 +40,11 @@ export default function NetWorth() {
         <div className="flex gap-6 mt-4 text-sm">
           <div>
             <p className="vela-text-muted">Total Assets</p>
-            <p className="text-emerald-400 font-semibold">{formatCurrency(totalAssets)}</p>
+            <p className="vela-text-success font-semibold">{formatCurrency(totalAssets)}</p>
           </div>
           <div>
             <p className="vela-text-muted">Total Liabilities</p>
-            <p className="text-red-400 font-semibold">−{formatCurrency(totalLiabilities)}</p>
+            <p className="vela-text-danger font-semibold">−{formatCurrency(totalLiabilities)}</p>
           </div>
         </div>
       </div>
@@ -74,8 +74,8 @@ export default function NetWorth() {
 
       {/* Assets & Liabilities side by side */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <AccountTable title="Assets" accounts={accounts.assets} month={currentMonth} color="text-emerald-400" />
-        <AccountTable title="Liabilities" accounts={accounts.liabilities} month={currentMonth} color="text-red-400" negative />
+        <AccountTable title="Assets" accounts={accounts.assets} month={currentMonth} color="vela-text-success" />
+        <AccountTable title="Liabilities" accounts={accounts.liabilities} month={currentMonth} color="vela-text-danger" negative />
       </div>
     </div>
   );

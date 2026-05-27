@@ -38,9 +38,9 @@ export default function ForecastView() {
       {/* Key metrics */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         <MetricCard label="Today's Net Worth" value={formatCurrency(forecast.starting_net_worth)} sub="current baseline" />
-        <MetricCard label="In 12 Months" value={formatCurrency(endNW)} sub={`+${formatCurrency(gain)} projected`} highlight="text-emerald-400" />
+        <MetricCard label="In 12 Months" value={formatCurrency(endNW)} sub={`+${formatCurrency(gain)} projected`} highlight="vela-text-success" />
         <MetricCard label="Monthly Savings" value={formatCurrency(monthlySavings)} sub={`after all expenses`} />
-        <MetricCard label="Savings Rate" value={`${savingsRate}%`} sub="of gross income" highlight={savingsRate >= 20 ? "text-emerald-400" : "text-amber-400"} />
+        <MetricCard label="Savings Rate" value={`${savingsRate}%`} sub="of gross income" highlight={savingsRate >= 20 ? "vela-text-success" : "vela-text-warning"} />
       </div>
 
       {/* Forecast chart */}
@@ -78,10 +78,10 @@ export default function ForecastView() {
         <h3 className="text-sm font-semibold vela-text-secondary mb-4">Monthly Assumptions</h3>
         <div className="space-y-3">
           {[
-            { label: "Monthly Income", value: forecast.monthly_income, color: "text-emerald-400" },
-            { label: "Fixed Expenses (mortgage, loans, subscriptions)", value: -forecast.monthly_fixed_expenses, color: "text-red-400" },
-            { label: "Variable Expenses (groceries, dining, shopping)", value: -forecast.monthly_variable_avg, color: "text-amber-400" },
-            { label: "Net Monthly Cash Flow", value: monthlySavings, color: monthlySavings >= 0 ? "text-emerald-400" : "text-red-400" },
+            { label: "Monthly Income", value: forecast.monthly_income, color: "vela-text-success" },
+            { label: "Fixed Expenses (mortgage, loans, subscriptions)", value: -forecast.monthly_fixed_expenses, color: "vela-text-danger" },
+            { label: "Variable Expenses (groceries, dining, shopping)", value: -forecast.monthly_variable_avg, color: "vela-text-warning" },
+            { label: "Net Monthly Cash Flow", value: monthlySavings, color: monthlySavings >= 0 ? "vela-text-success" : "vela-text-danger" },
           ].map(({ label, value, color }) => (
             <div key={label} className="flex justify-between items-center py-2 border-b vela-border-subtle last:border-0">
               <span className="text-sm vela-text-secondary">{label}</span>
