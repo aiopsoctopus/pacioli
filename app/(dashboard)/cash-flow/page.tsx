@@ -38,14 +38,23 @@ export default function CashFlow() {
   const [showRules, setShowRules] = useState(false);
   const [rulePrompt, setRulePrompt] = useState<{ txId: string; merchant: string; category: string } | null>(null);
   const [justSaved, setJustSaved] = useState<string | null>(null);
+  // true when the user arrived from the import flow — shows an uncategorized banner
+  const [reviewMode, setReviewMode] = useState(false);
 
-  // useTransactions merges static JSON + CSV imports and applies rules/overrides.
-  const transactions = useTransactions(ns);
+  // Pass our own rules/overrides into the hook so edits apply immediately
+  // without waiting for a localStorage round-trip inside the hook.
+  const transactions = useTransactions(ns, rules, overrides);
 
   useEffect(() => {
     fetchJSON<MonthIncome[]>("income.json")
       .then(setIncome)
       .catch((e) => console.error("[Vela] cash-flow fetch failed:", e));
+    // Check if we were sent here from an import to review uncategorized items
+    if (sessionStorage.getItem("vela-review-uncategorized")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setReviewMode(true);
+      sessionStorage.removeItem("vela-review-uncategorized");
+    }
   }, [ns]);
 
   // Derive available months from transactions; let user override via selectedMonth
@@ -87,11 +96,18 @@ export default function CashFlow() {
         .sort((a, b) => b.date.localeCompare(a.date))
     : [];
 
-  // Recent transactions (no drill)
-  const recentTx = transactions
-    .filter((t) => t.date.startsWith(activeMonth))
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 15);
+  // Uncategorized across all months (for review mode)
+  const uncategorizedTxs = transactions
+    .filter((t) => t.category === "Uncategorized")
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  // Recent transactions (no drill) — in review mode, show uncategorized only
+  const recentTx = reviewMode
+    ? uncategorizedTxs.slice(0, 50)
+    : transactions
+        .filter((t) => t.date.startsWith(activeMonth))
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .slice(0, 15);
 
   function recategorize(tx: Transaction, newCat: string) {
     const newOverrides = { ...overrides, [tx.id]: newCat };
@@ -306,7 +322,33 @@ export default function CashFlow() {
         </div>
 
         <div className="vela-bg-surface rounded-2xl p-6 border">
-          <h3 className="text-sm font-semibold vela-text-secondary mb-4">Recent Transactions</h3>
+          {/* Review mode banner — shown when arriving from CSV import */}
+          {reviewMode && (
+            <div className="flex items-center justify-between gap-3 mb-4 px-3 py-2.5 bg-amber-900/20 border border-amber-700/30 rounded-xl">
+              <div className="flex items-center gap-2">
+                <Tag size={13} className="text-amber-400 shrink-0" />
+                <p className="text-xs text-amber-300">
+                  {uncategorizedTxs.length > 0
+                    ? <><span className="font-semibold">{uncategorizedTxs.length}</span> uncategorized transaction{uncategorizedTxs.length !== 1 ? "s" : ""} — tap a category badge to fix</>
+                    : <span className="text-emerald-300 font-medium">All transactions categorized!</span>
+                  }
+                </p>
+              </div>
+              <button
+                onClick={() => setReviewMode(false)}
+                className="text-xs vela-text-muted hover:vela-text-primary transition-colors shrink-0"
+              >
+                Show all
+              </button>
+            </div>
+          )}
+
+          <h3 className="text-sm font-semibold vela-text-secondary mb-4">
+            {reviewMode ? "Uncategorized Transactions" : "Recent Transactions"}
+          </h3>
+          {recentTx.length === 0 && reviewMode && (
+            <p className="text-sm vela-text-muted text-center py-4">Nothing left to categorize.</p>
+          )}
           <div className="space-y-1">
             {recentTx.map((tx) => (
               <TransactionRow

@@ -339,17 +339,28 @@ export function applyRulesAndOverrides(
  * Imported rows are keyed by a synthetic id (`imp_<date>_<merchant>_<amount>`)
  * so re-uploading the same file is idempotent (duplicates are deduplicated by id).
  *
- * Category rules and per-transaction overrides are applied at read time, so
- * changing a rule instantly affects all pages without re-importing.
+ * Category rules and per-transaction overrides are applied at read time.
+ *
+ * `rulesOverride` / `overridesOverride` — when a page owns its own rules/overrides
+ * state (e.g. cash-flow, which lets the user edit them live), pass them here so the
+ * hook always uses the caller's copy instead of re-reading from localStorage.
+ * Pages that don't write rules/overrides can omit these and the hook manages them.
  *
  * Pass `ns` (namespace) to scope localStorage keys to demo mode.
  */
-export function useTransactions(ns = ""): Transaction[] {
+export function useTransactions(
+  ns = "",
+  rulesOverride?: Record<string, string>,
+  overridesOverride?: Record<string, string>,
+): Transaction[] {
   const [staticTxs, setStaticTxs]     = useState<Transaction[]>([]);
   const [importedTxs, setImportedTxs] = useState<Transaction[]>([]);
-  // Lazy-initialise from localStorage so no synchronous setState-in-effect
-  const [rules, setRules]     = useState<Record<string, string>>(() => loadRules(ns));
-  const [overrides, setOverrides] = useState<Record<string, string>>(() => loadOverrides(ns));
+  // Internal state used only when the caller doesn't pass its own rules/overrides
+  const [internalRules, setInternalRules]         = useState<Record<string, string>>(() => loadRules(ns));
+  const [internalOverrides, setInternalOverrides] = useState<Record<string, string>>(() => loadOverrides(ns));
+
+  const rules     = rulesOverride     ?? internalRules;
+  const overrides = overridesOverride ?? internalOverrides;
 
   // Load static JSON once on mount
   useEffect(() => {
@@ -358,12 +369,12 @@ export function useTransactions(ns = ""): Transaction[] {
       .catch((e) => console.error("[Vela] transactions.json failed:", e));
   }, []);
 
-  // Re-sync rules, overrides, and imports whenever ns changes (demo toggle).
+  // Re-sync internal state and imports whenever ns changes (demo toggle).
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setRules(loadRules(ns));
+    setInternalRules(loadRules(ns));
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setOverrides(loadOverrides(ns));
+    setInternalOverrides(loadOverrides(ns));
 
     try {
       const importKey = ns ? `${ns}-${IMPORTED_KEY}` : IMPORTED_KEY;

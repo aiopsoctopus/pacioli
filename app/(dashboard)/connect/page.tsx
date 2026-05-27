@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
-import { Upload, Landmark, FileText, CheckCircle2, AlertCircle, Plus, Trash2, FlaskConical, ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Upload, Landmark, FileText, CheckCircle2, AlertCircle, Plus, Trash2, FlaskConical, ArrowRight, Tag } from "lucide-react";
 import { formatCurrency, IMPORTED_KEY } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
 
@@ -48,7 +49,8 @@ function parseCSV(text: string): ParsedTransaction[] {
 
 export default function ConnectPage() {
   const { isDemo, enterDemo, exitDemo } = useDemo();
-  const [csvResult, setCsvResult] = useState<{ count: number; preview: ParsedTransaction[] } | null>(null);
+  const [csvResult, setCsvResult] = useState<{ count: number; uncategorized: number; preview: ParsedTransaction[] } | null>(null);
+  const router = useRouter();
   const [csvError, setCsvError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -103,9 +105,11 @@ export default function ConnectPage() {
         setCsvError("Couldn't parse this CSV. Make sure it has Date, Description, and Amount columns. Try exporting directly from your bank's website.");
         return;
       }
-      setCsvResult({ count: parsed.length, preview: parsed.slice(0, 5) });
-      // In a real app, we'd merge these into the transactions store here
+      const uncategorized = parsed.filter((t) => t.category === "Uncategorized").length;
+      setCsvResult({ count: parsed.length, uncategorized, preview: parsed.slice(0, 5) });
       localStorage.setItem(IMPORTED_KEY, JSON.stringify(parsed));
+      // Signal to Cash Flow that there are uncategorized items to review
+      if (uncategorized > 0) sessionStorage.setItem("vela-review-uncategorized", "1");
     };
     reader.readAsText(file);
   }
@@ -214,19 +218,46 @@ export default function ConnectPage() {
             </div>
           )}
           {csvResult && (
-            <div className="mt-4 p-4 bg-emerald-900/20 border border-emerald-800/40 rounded-xl">
-              <div className="flex items-center gap-2 mb-3">
-                <CheckCircle2 size={15} className="text-emerald-400" />
-                <p className="text-sm font-medium text-emerald-300">{csvResult.count} transactions imported successfully</p>
+            <div className="mt-4 p-4 bg-emerald-900/20 border border-emerald-800/40 rounded-xl space-y-3">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
+                <p className="text-sm font-medium text-emerald-300">
+                  {csvResult.count} transaction{csvResult.count !== 1 ? "s" : ""} imported
+                </p>
               </div>
-              <p className="text-xs vela-text-muted mb-2">Preview (first 5):</p>
-              <div className="space-y-1.5">
-                {csvResult.preview.map((tx, i) => (
-                  <div key={i} className="flex justify-between text-xs">
-                    <span className="vela-text-secondary">{tx.date} · {tx.merchant}</span>
-                    <span className="vela-text-primary font-medium">{formatCurrency(tx.amount)}</span>
+
+              {/* Uncategorized prompt */}
+              {csvResult.uncategorized > 0 && (
+                <div className="flex items-center justify-between gap-3 px-3 py-2.5 bg-amber-900/20 border border-amber-700/30 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Tag size={13} className="text-amber-400 shrink-0" />
+                    <p className="text-xs text-amber-300">
+                      <span className="font-semibold">{csvResult.uncategorized}</span> transaction{csvResult.uncategorized !== 1 ? "s" : ""} need a category
+                    </p>
                   </div>
-                ))}
+                  <button
+                    onClick={() => router.push("/cash-flow")}
+                    className="flex items-center gap-1 text-xs font-semibold text-amber-300 hover:text-amber-200 transition-colors shrink-0"
+                  >
+                    Review now <ArrowRight size={12} />
+                  </button>
+                </div>
+              )}
+
+              {csvResult.uncategorized === 0 && (
+                <p className="text-xs text-emerald-400/70">All transactions were auto-categorized.</p>
+              )}
+
+              <div>
+                <p className="text-xs vela-text-muted mb-1.5">Preview (first 5):</p>
+                <div className="space-y-1.5">
+                  {csvResult.preview.map((tx, i) => (
+                    <div key={i} className="flex justify-between text-xs">
+                      <span className="vela-text-secondary">{tx.date} · {tx.merchant}</span>
+                      <span className="vela-text-primary font-medium">{formatCurrency(tx.amount)}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
