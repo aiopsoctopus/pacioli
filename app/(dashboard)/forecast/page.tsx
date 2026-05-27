@@ -1,61 +1,256 @@
 "use client";
-import { useEffect, useState } from "react";
-import { fetchJSON, formatCurrency, formatMonth, Forecast } from "@/lib/data";
+import { useEffect, useState, useMemo } from "react";
+import {
+  fetchJSON, formatCurrency, formatMonth,
+  AccountData, MonthIncome, getNetWorth, getMonthlySpend,
+  avgMonthlyIncome,
+} from "@/lib/data";
+import { useTransactions } from "@/lib/data";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  ReferenceLine, CartesianGrid,
+  ReferenceLine, CartesianGrid, Legend,
 } from "recharts";
 
+// ─── Constants ────────────────────────────────────────────────────────────────
+const WINDOW_MONTHS = 6;
+const INVESTMENT_ANNUAL_RETURN = 0.066; // 6.6% per year
+const MONTHLY_RETURN = INVESTMENT_ANNUAL_RETURN / 12;
+const PROJECTION_MONTHS = 12;
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function nextMonthKey(yyyyMM: string): string {
+  const [y, m] = yyyyMM.split("-").map(Number);
+  const d = new Date(y, m); // month is 0-based, so this is already next month
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function projectNetWorth(
+  startingNW: number,
+  monthlyCashFlow: number,
+  months: number,
+  scenarioDelta = 0,
+): { month: string; base: number; scenario: number }[] {
+  const today = new Date();
+  const startMonthStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
+
+  const rows: { month: string; base: number; scenario: number }[] = [];
+  let baseNW = startingNW;
+  let scenarioNW = startingNW;
+  let current = startMonthStr;
+
+  for (let i = 0; i < months; i++) {
+    current = nextMonthKey(current);
+    baseNW = baseNW * (1 + MONTHLY_RETURN) + monthlyCashFlow;
+    scenarioNW = scenarioNW * (1 + MONTHLY_RETURN) + monthlyCashFlow + scenarioDelta;
+    rows.push({
+      month: formatMonth(current),
+      base: Math.round(baseNW),
+      scenario: Math.round(scenarioNW),
+    });
+  }
+  return rows;
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 export default function ForecastView() {
-  const [forecast, setForecast] = useState<Forecast | null>(null);
+  const [accounts, setAccounts] = useState<AccountData | null>(null);
+  const [income, setIncome] = useState<MonthIncome[] | null>(null);
+  const [scenarioDelta, setScenarioDelta] = useState(0); // extra $ saved per month
+  const transactions = useTransactions();
 
   useEffect(() => {
-    fetchJSON<Forecast>("forecast.json").then(setForecast);
+    fetchJSON<AccountData>("accounts.json").then(setAccounts);
+    fetchJSON<MonthIncome[]>("income.json").then(setIncome);
   }, []);
 
-  if (!forecast) return <div className="pacioli-text-muted animate-pulse">Loading forecast...</div>;
+  const derived = useMemo(() => {
+    if (!accounts || !income || transactions.length === 0) return null;
 
-  const chartData = [
-    { month: "Now", projected_net_worth: forecast.starting_net_worth },
-    ...forecast.months.map((m) => ({
-      month: formatMonth(m.month),
-      projected_net_worth: m.projected_net_worth,
-    })),
-  ];
+    // Current month = latest month with income data
+    const sortedIncomeMonths = income.map((i) => i.month).sort();
+    const currentMonth = sortedIncomeMonths[sortedIncomeMonths.length - 1];
 
-  const endNW = forecast.months[forecast.months.length - 1].projected_net_worth;
-  const gain = endNW - forecast.starting_net_worth;
-  const monthlySavings = forecast.monthly_income - forecast.monthly_fixed_expenses - forecast.monthly_variable_avg;
-  const savingsRate = Math.round((monthlySavings / forecast.monthly_income) * 100);
+    // Starting net worth = latest account balance month
+    const allAccountMonths = [
+      ...accounts.assets.flatMap((a) => Object.keys(a.balances)),
+      ...accounts.liabilities.flatMap((l) => Object.keys(l.balances)),
+    ].sort();
+    const latestAccountMonth = allAccountMonths[allAccountMonths.length - 1];
+    const startingNW = getNetWorth(accounts, latestAccountMonth);
+
+    // All transaction months (sorted)
+    const txMonths = [...new Set(transactions.map((t) => t.date.slice(0, 7)))].sort();
+
+    // Last N completed months before currentMonth
+    const completedMonths = txMonths.filter((m) => m < currentMonth).slice(-WINDOW_MONTHS);
+
+    // Average monthly income
+    const avgIncome = avgMonthlyIncome(income, currentMonth, WINDOW_MONTHS);
+
+    // Average monthly spend per completed month (exclude Savings category)
+    let totalSpend = 0;
+    let monthsWithData = 0;
+    for (const m of completedMonths) {
+      const spend = getMonthlySpend(transactions, m);
+      const monthTotal = Object.values(spend).reduce((s, v) => s + v, 0);
+      if (monthTotal > 0) {
+        totalSpend += monthTotal;
+        monthsWithData++;
+      }
+    }
+    const avgSpend = monthsWithData > 0 ? Math.round(totalSpend / monthsWithData) : 0;
+
+    // Try to split fixed vs variable from category averages
+    // "Fixed" heuristics: Housing, Utilities, Insurance, Subscriptions, Loan Payment, Savings
+    const FIXED_CATEGORIES = new Set([
+      "Housing", "Mortgage", "Rent", "Utilities", "Insurance",
+      "Subscriptions", "Loan Payment", "Phone", "Internet",
+    ]);
+    let totalFixed = 0;
+    let totalVariable = 0;
+    for (const m of completedMonths) {
+      const spend = getMonthlySpend(transactions, m);
+      for (const [cat, amt] of Object.entries(spend)) {
+        if (FIXED_CATEGORIES.has(cat)) totalFixed += amt;
+        else totalVariable += amt;
+      }
+    }
+    const avgFixed = monthsWithData > 0 ? Math.round(totalFixed / monthsWithData) : 0;
+    const avgVariable = monthsWithData > 0 ? Math.round(totalVariable / monthsWithData) : 0;
+
+    const monthlyCashFlow = avgIncome - avgSpend;
+    const savingsRate = avgIncome > 0 ? Math.round((monthlyCashFlow / avgIncome) * 100) : 0;
+
+    // Build projection
+    const chartRows = [
+      { month: "Now", base: startingNW, scenario: startingNW },
+      ...projectNetWorth(startingNW, monthlyCashFlow, PROJECTION_MONTHS, scenarioDelta),
+    ];
+
+    const endBase = chartRows[chartRows.length - 1].base;
+    const endScenario = chartRows[chartRows.length - 1].scenario;
+    const gainBase = endBase - startingNW;
+    const gainScenario = endScenario - startingNW;
+
+    return {
+      startingNW,
+      avgIncome,
+      avgFixed,
+      avgVariable,
+      avgSpend,
+      monthlyCashFlow,
+      savingsRate,
+      endBase,
+      endScenario,
+      gainBase,
+      gainScenario,
+      chartRows,
+      windowMonths: completedMonths.length,
+    };
+  }, [accounts, income, transactions, scenarioDelta]);
+
+  if (!derived) {
+    return <div className="pacioli-text-muted animate-pulse">Calculating forecast from your data...</div>;
+  }
+
+  const {
+    startingNW, avgIncome, avgFixed, avgVariable, avgSpend,
+    monthlyCashFlow, savingsRate, endBase, endScenario,
+    gainBase, gainScenario, chartRows, windowMonths,
+  } = derived;
+
+  const showScenario = scenarioDelta !== 0;
 
   return (
     <div className="space-y-8">
       <div>
-        <p className="pacioli-text-muted text-sm">If things keep going the way they're going...</p>
+        <p className="pacioli-text-muted text-sm">Based on your last {windowMonths} months of actual data</p>
         <h2 className="text-3xl font-bold pacioli-text-primary mt-1">What the Future Looks Like</h2>
       </div>
 
       {/* Key metrics */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-        <MetricCard label="Today's Net Worth" value={formatCurrency(forecast.starting_net_worth)} sub="current baseline" />
-        <MetricCard label="In 12 Months" value={formatCurrency(endNW)} sub={`+${formatCurrency(gain)} projected`} highlight="pacioli-text-success" />
-        <MetricCard label="Monthly Savings" value={formatCurrency(monthlySavings)} sub={`after all expenses`} />
-        <MetricCard label="Savings Rate" value={`${savingsRate}%`} sub="of gross income" highlight={savingsRate >= 20 ? "pacioli-text-success" : "pacioli-text-warning"} />
+        <MetricCard
+          label="Today's Net Worth"
+          value={formatCurrency(startingNW)}
+          sub="current baseline"
+        />
+        <MetricCard
+          label={showScenario ? "Base (12 mo)" : "In 12 Months"}
+          value={formatCurrency(endBase)}
+          sub={`+${formatCurrency(gainBase)} projected`}
+          highlight="pacioli-text-success"
+        />
+        {showScenario ? (
+          <MetricCard
+            label="With Scenario (12 mo)"
+            value={formatCurrency(endScenario)}
+            sub={`+${formatCurrency(gainScenario)} projected`}
+            highlight="pacioli-text-success"
+          />
+        ) : (
+          <MetricCard
+            label="Monthly Cash Flow"
+            value={formatCurrency(monthlyCashFlow)}
+            sub="after all expenses"
+            highlight={monthlyCashFlow >= 0 ? "pacioli-text-success" : "pacioli-text-danger"}
+          />
+        )}
+        <MetricCard
+          label="Savings Rate"
+          value={`${savingsRate}%`}
+          sub="of gross income"
+          highlight={savingsRate >= 20 ? "pacioli-text-success" : "pacioli-text-warning"}
+        />
+      </div>
+
+      {/* Scenario toggle */}
+      <div className="pacioli-bg-surface rounded-2xl p-5 border">
+        <h3 className="text-sm font-semibold pacioli-text-secondary mb-1">Scenario: What if I save more?</h3>
+        <p className="text-xs pacioli-text-muted mb-4">
+          Drag to add extra monthly savings on top of your current cash flow and see how it changes your 12-month projection.
+        </p>
+        <div className="flex items-center gap-4">
+          <input
+            type="range"
+            min={0}
+            max={1000}
+            step={50}
+            value={scenarioDelta}
+            onChange={(e) => setScenarioDelta(Number(e.target.value))}
+            className="flex-1 accent-indigo-500"
+          />
+          <span className="text-sm font-semibold pacioli-text-primary w-24 text-right">
+            {scenarioDelta === 0 ? "Off" : `+${formatCurrency(scenarioDelta)}/mo`}
+          </span>
+        </div>
+        {showScenario && (
+          <p className="text-xs pacioli-text-success mt-3">
+            Saving an extra {formatCurrency(scenarioDelta)}/mo adds{" "}
+            <span className="font-semibold">{formatCurrency(gainScenario - gainBase)}</span> over 12 months.
+          </p>
+        )}
       </div>
 
       {/* Forecast chart */}
       <div className="pacioli-bg-surface rounded-2xl p-6 border">
         <h3 className="text-sm font-semibold pacioli-text-secondary mb-1">Projected Net Worth</h3>
-        <p className="text-xs pacioli-text-muted mb-4">Based on current income, fixed costs, average variable spending, and ~6.6% annualized investment return</p>
+        <p className="text-xs pacioli-text-muted mb-4">
+          Calculated from your {windowMonths}-month average income ({formatCurrency(avgIncome)}/mo) and spending ({formatCurrency(avgSpend)}/mo), with ~6.6% annualized investment return
+        </p>
         <ResponsiveContainer width="100%" height={280}>
-          <AreaChart data={chartData}>
+          <AreaChart data={chartRows}>
             <defs>
-              <linearGradient id="fcGrad" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
                 <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
               </linearGradient>
+              <linearGradient id="scenGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.25} />
+                <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+              </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle, #27272a)" />
             <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis
               tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
@@ -63,25 +258,41 @@ export default function ForecastView() {
               axisLine={false} tickLine={false} width={60}
             />
             <Tooltip
-              formatter={(v: any) => [formatCurrency(Number(v)), "Projected Net Worth"]}
-              contentStyle={{ background: "#18181b", border: "1px solid #3f3f46", borderRadius: 8 }}
-              labelStyle={{ color: "#a1a1aa" }}
+              formatter={(v: unknown, name: unknown) => [
+                formatCurrency(Number(v)),
+                name === "base" ? "Base projection" : "With scenario",
+              ]}
+              contentStyle={{
+                background: "var(--bg-surface, #18181b)",
+                border: "1px solid var(--border-subtle, #3f3f46)",
+                borderRadius: 8,
+              }}
+              labelStyle={{ color: "var(--text-secondary, #a1a1aa)" }}
             />
+            {showScenario && <Legend formatter={(v) => v === "base" ? "Base" : "Scenario"} />}
             <ReferenceLine x="Now" stroke="#6366f1" strokeDasharray="4 4" label={{ value: "Today", fill: "#6366f1", fontSize: 11 }} />
-            <Area type="monotone" dataKey="projected_net_worth" stroke="#10b981" strokeWidth={2} fill="url(#fcGrad)" />
+            <Area type="monotone" dataKey="base" stroke="#10b981" strokeWidth={2} fill="url(#baseGrad)" dot={false} />
+            {showScenario && (
+              <Area type="monotone" dataKey="scenario" stroke="#6366f1" strokeWidth={2} fill="url(#scenGrad)" dot={false} />
+            )}
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
       {/* Monthly assumptions */}
       <div className="pacioli-bg-surface rounded-2xl p-6 border">
-        <h3 className="text-sm font-semibold pacioli-text-secondary mb-4">Monthly Assumptions</h3>
+        <h3 className="text-sm font-semibold pacioli-text-secondary mb-1">Monthly Averages</h3>
+        <p className="text-xs pacioli-text-muted mb-4">Derived from your last {windowMonths} completed months of actual transactions</p>
         <div className="space-y-3">
           {[
-            { label: "Monthly Income", value: forecast.monthly_income, color: "pacioli-text-success" },
-            { label: "Fixed Expenses (mortgage, loans, subscriptions)", value: -forecast.monthly_fixed_expenses, color: "pacioli-text-danger" },
-            { label: "Variable Expenses (groceries, dining, shopping)", value: -forecast.monthly_variable_avg, color: "pacioli-text-warning" },
-            { label: "Net Monthly Cash Flow", value: monthlySavings, color: monthlySavings >= 0 ? "pacioli-text-success" : "pacioli-text-danger" },
+            { label: "Average Monthly Income", value: avgIncome, color: "pacioli-text-success" },
+            { label: "Fixed Expenses (housing, utilities, insurance, subscriptions)", value: -avgFixed, color: "pacioli-text-danger" },
+            { label: "Variable Expenses (groceries, dining, shopping, etc.)", value: -avgVariable, color: "pacioli-text-warning" },
+            {
+              label: "Net Monthly Cash Flow",
+              value: monthlyCashFlow,
+              color: monthlyCashFlow >= 0 ? "pacioli-text-success" : "pacioli-text-danger",
+            },
           ].map(({ label, value, color }) => (
             <div key={label} className="flex justify-between items-center py-2 border-b pacioli-border-subtle last:border-0">
               <span className="text-sm pacioli-text-secondary">{label}</span>
@@ -92,7 +303,7 @@ export default function ForecastView() {
           ))}
         </div>
         <p className="text-xs pacioli-text-muted mt-4">
-          * Investment accounts grow at an assumed 6.6% annual return (~0.55%/mo). Adjust assumptions when you connect real data.
+          * Investment accounts grow at an assumed 6.6% annual return (~0.55%/mo). Import more months of transactions to improve accuracy.
         </p>
       </div>
     </div>
