@@ -1,13 +1,14 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Scale, ArrowLeftRight, PiggyBank, TrendingUp, Link2, Sun, Moon, Wallet } from "lucide-react";
+import { LayoutDashboard, Scale, ArrowLeftRight, PiggyBank, TrendingUp, Link2, Sun, Moon, Wallet, List } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 
 const links = [
   { href: "/",              label: "Zoom Out",                   sublabel: "Summary",        icon: LayoutDashboard },
   { href: "/net-worth",     label: "My Net Worth",               sublabel: "Balance Sheet",  icon: Scale },
   { href: "/cash-flow",     label: "How My Money Moves",         sublabel: "Cash Flow",      icon: ArrowLeftRight },
+  { href: "/transactions",  label: "All Transactions",           sublabel: "Search & Filter", icon: List },
   { href: "/budget",        label: "My Budget",                  sublabel: "Envelopes & AI", icon: Wallet },
   { href: "/sinking-funds", label: "Achieve My Goals",           sublabel: "Sinking Funds",  icon: PiggyBank },
   { href: "/forecast",      label: "What the Future Looks Like", sublabel: "12-Mo Forecast", icon: TrendingUp },
