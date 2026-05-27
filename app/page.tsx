@@ -19,18 +19,18 @@ export default function ZoomOut() {
   const [income, setIncome] = useState<MonthIncome[]>([]);
 
   useEffect(() => {
-    fetchJSON<AccountData>("accounts.json").then(setAccounts).catch((e) => console.error("[Vela] accounts.json failed:", e));
-    fetchJSON<Transaction[]>("transactions.json").then(setTransactions).catch((e) => console.error("[Vela] transactions.json failed:", e));
-    fetchJSON<SinkingFund[]>("sinking_funds.json").then(setSinkingFunds).catch((e) => console.error("[Vela] sinking_funds.json failed:", e));
-    fetchJSON<MonthIncome[]>("income.json").then(setIncome).catch((e) => console.error("[Vela] income.json failed:", e));
+    fetchJSON<AccountData>("accounts.json").then(setAccounts).catch((e) => console.error("[Pacioli] accounts.json failed:", e));
+    fetchJSON<Transaction[]>("transactions.json").then(setTransactions).catch((e) => console.error("[Pacioli] transactions.json failed:", e));
+    fetchJSON<SinkingFund[]>("sinking_funds.json").then(setSinkingFunds).catch((e) => console.error("[Pacioli] sinking_funds.json failed:", e));
+    fetchJSON<MonthIncome[]>("income.json").then(setIncome).catch((e) => console.error("[Pacioli] income.json failed:", e));
   }, []);
 
   if (!accounts || !transactions.length || !income.length || !sinkingFunds.length) {
     return (
-      <div className="flex min-h-screen vela-bg-base vela-text-primary">
+      <div className="flex min-h-screen pacioli-bg-base pacioli-text-primary">
         <Nav />
         <main className="flex-1 p-8 flex items-center">
-          <div className="vela-text-muted animate-pulse">Loading your financial picture...</div>
+          <div className="pacioli-text-muted animate-pulse">Loading your financial picture...</div>
         </main>
       </div>
     );
@@ -66,13 +66,13 @@ export default function ZoomOut() {
   const sfTarget = sinkingFunds.reduce((s, f) => s + f.target, 0);
 
   return (
-    <div className="flex min-h-screen vela-bg-base vela-text-primary">
+    <div className="flex min-h-screen pacioli-bg-base pacioli-text-primary">
       <Nav />
       <main className="flex-1 p-8 overflow-y-auto">
         <div className="space-y-8">
           <div>
-            <p className="vela-text-muted text-sm">Good morning — here's where things stand.</p>
-            <h2 className="text-3xl font-bold vela-text-primary mt-1">Zoom Out</h2>
+            <p className="pacioli-text-muted text-sm">Good morning — here's where things stand.</p>
+            <h2 className="text-3xl font-bold pacioli-text-primary mt-1">Zoom Out</h2>
           </div>
 
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
@@ -83,8 +83,8 @@ export default function ZoomOut() {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            <div className="vela-bg-surface rounded-2xl p-6 border">
-              <h3 className="text-sm font-semibold vela-text-secondary mb-4">Net Worth Trend</h3>
+            <div className="pacioli-bg-surface rounded-2xl p-6 border">
+              <h3 className="text-sm font-semibold pacioli-text-secondary mb-4">Net Worth Trend</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <AreaChart data={nwHistory}>
                   <defs>
@@ -101,8 +101,8 @@ export default function ZoomOut() {
               </ResponsiveContainer>
             </div>
 
-            <div className="vela-bg-surface rounded-2xl p-6 border">
-              <h3 className="text-sm font-semibold vela-text-secondary mb-4">Spending This Month</h3>
+            <div className="pacioli-bg-surface rounded-2xl p-6 border">
+              <h3 className="text-sm font-semibold pacioli-text-secondary mb-4">Spending This Month</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
                   <Pie data={pieData} cx="40%" cy="50%" innerRadius={55} outerRadius={90} paddingAngle={2} dataKey="value">
@@ -121,21 +121,21 @@ export default function ZoomOut() {
             </div>
           </div>
 
-          <div className="vela-bg-surface rounded-2xl p-6 border">
-            <h3 className="text-sm font-semibold vela-text-secondary mb-4">Goals at a Glance</h3>
+          <div className="pacioli-bg-surface rounded-2xl p-6 border">
+            <h3 className="text-sm font-semibold pacioli-text-secondary mb-4">Goals at a Glance</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
               {sinkingFunds.map((f) => {
                 const pct = Math.min(100, Math.round((f.saved / f.target) * 100));
                 return (
-                  <div key={f.id} className="vela-bg-surface-2 rounded-xl p-4">
+                  <div key={f.id} className="pacioli-bg-surface-2 rounded-xl p-4">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium vela-text-primary">{f.emoji} {f.name}</span>
-                      <span className="text-xs vela-text-muted">{pct}%</span>
+                      <span className="text-sm font-medium pacioli-text-primary">{f.emoji} {f.name}</span>
+                      <span className="text-xs pacioli-text-muted">{pct}%</span>
                     </div>
-                    <div className="w-full h-1.5 vela-bar-track rounded-full">
+                    <div className="w-full h-1.5 pacioli-bar-track rounded-full">
                       <div className="h-1.5 rounded-full" style={{ width: `${pct}%`, background: f.color }} />
                     </div>
-                    <div className="flex justify-between mt-2 text-xs vela-text-muted">
+                    <div className="flex justify-between mt-2 text-xs pacioli-text-muted">
                       <span>{formatCurrency(f.saved)}</span>
                       <span>{formatCurrency(f.target)}</span>
                     </div>
@@ -154,12 +154,12 @@ function KpiCard({ label, value, sub, positive, icon }: {
   label: string; value: string; sub: string; positive: boolean; icon: React.ReactNode;
 }) {
   return (
-    <div className="vela-bg-surface rounded-2xl p-5 border">
+    <div className="pacioli-bg-surface rounded-2xl p-5 border">
       <div className="flex justify-between items-start mb-3">
-        <p className="text-xs font-medium vela-text-muted uppercase tracking-wide">{label}</p>
-        <span className="vela-text-faint">{icon}</span>
+        <p className="text-xs font-medium pacioli-text-muted uppercase tracking-wide">{label}</p>
+        <span className="pacioli-text-faint">{icon}</span>
       </div>
-      <p className="text-2xl font-bold vela-text-primary">{value}</p>
+      <p className="text-2xl font-bold pacioli-text-primary">{value}</p>
       <p className={`text-xs mt-1 ${positive ? "text-emerald-400" : "text-red-400"}`}>{sub}</p>
     </div>
   );

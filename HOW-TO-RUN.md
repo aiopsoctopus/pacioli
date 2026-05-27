@@ -1,4 +1,4 @@
-# Household Financial OS — How to Run
+# Pacioli — How to Run
 
 ## First time setup
 

@@ -141,7 +141,7 @@ export interface BudgetEnvelope {
   suggestedAmount: number;           // AI suggestion at time of setup
 }
 
-export const BUDGET_STORAGE_KEY = "vela-budget-envelopes";
+export const BUDGET_STORAGE_KEY = "pacioli-budget-envelopes";
 
 export function loadBudgetEnvelopes(ns = ""): Record<string, BudgetEnvelope> {
   if (typeof window === "undefined") return {};
@@ -279,9 +279,9 @@ export function avgMonthlyIncome(income: MonthIncome[], currentMonth: string, wi
 // ─── Category rules & overrides ──────────────────────────────────────────────
 // Shared constants and helpers used by the hook and by cash-flow/page.tsx.
 
-export const RULES_KEY    = "vela-category-rules";  // { [merchantPattern]: category }
-export const OVERRIDE_KEY = "vela-tx-overrides";    // { [txId]: category }
-export const IMPORTED_KEY = "vela-imported-transactions";
+export const RULES_KEY    = "pacioli-category-rules";  // { [merchantPattern]: category }
+export const OVERRIDE_KEY = "pacioli-tx-overrides";    // { [txId]: category }
+export const IMPORTED_KEY = "pacioli-imported-transactions";
 
 export function loadRules(ns = ""): Record<string, string> {
   if (typeof window === "undefined") return {};
@@ -366,7 +366,7 @@ export function useTransactions(
   useEffect(() => {
     fetchJSON<Transaction[]>("transactions.json")
       .then(setStaticTxs)
-      .catch((e) => console.error("[Vela] transactions.json failed:", e));
+      .catch((e) => console.error("[Pacioli] transactions.json failed:", e));
   }, []);
 
   // Re-sync internal state and imports whenever ns changes (demo toggle).

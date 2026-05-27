@@ -7,7 +7,7 @@ import { DemoProvider } from "@/components/demo-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Vela",
+  title: "Pacioli",
   description: "Your household, run like a business.",
 };
 

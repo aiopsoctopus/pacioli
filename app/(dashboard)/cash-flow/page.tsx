@@ -48,12 +48,12 @@ export default function CashFlow() {
   useEffect(() => {
     fetchJSON<MonthIncome[]>("income.json")
       .then(setIncome)
-      .catch((e) => console.error("[Vela] cash-flow fetch failed:", e));
+      .catch((e) => console.error("[Pacioli] cash-flow fetch failed:", e));
     // Check if we were sent here from an import to review uncategorized items
-    if (sessionStorage.getItem("vela-review-uncategorized")) {
+    if (sessionStorage.getItem("pacioli-review-uncategorized")) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setReviewMode(true);
-      sessionStorage.removeItem("vela-review-uncategorized");
+      sessionStorage.removeItem("pacioli-review-uncategorized");
     }
   }, [ns]);
 
@@ -61,7 +61,7 @@ export default function CashFlow() {
   const allTxMonths = [...new Set(transactions.map((t) => t.date.slice(0, 7)))].sort();
   const activeMonth = selectedMonth || allTxMonths[allTxMonths.length - 1] || "";
 
-  if (!transactions.length || !activeMonth || !income.length) return <div className="vela-text-muted animate-pulse">Loading cash flow...</div>;
+  if (!transactions.length || !activeMonth || !income.length) return <div className="pacioli-text-muted animate-pulse">Loading cash flow...</div>;
 
   const months = allTxMonths;
 
@@ -142,31 +142,31 @@ export default function CashFlow() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <button onClick={() => setShowRules(false)} className="p-1.5 vela-text-muted hover:vela-text-primary rounded-lg transition-colors">
+          <button onClick={() => setShowRules(false)} className="p-1.5 pacioli-text-muted hover:pacioli-text-primary rounded-lg transition-colors">
             <ChevronLeft size={18} />
           </button>
           <div>
-            <p className="vela-text-muted text-sm">Merchant → Category mappings</p>
-            <h2 className="text-2xl font-bold vela-text-primary">Auto-Categorization Rules</h2>
+            <p className="pacioli-text-muted text-sm">Merchant → Category mappings</p>
+            <h2 className="text-2xl font-bold pacioli-text-primary">Auto-Categorization Rules</h2>
           </div>
         </div>
-        <div className="vela-bg-surface rounded-2xl p-6 border">
-          <p className="text-sm vela-text-muted mb-4">
+        <div className="pacioli-bg-surface rounded-2xl p-6 border">
+          <p className="text-sm pacioli-text-muted mb-4">
             When a transaction's merchant name contains any of these patterns, it's automatically placed in that category.
             Rules apply to new CSV imports and future Plaid transactions.
           </p>
           {Object.keys(rules).length === 0 ? (
-            <p className="text-sm vela-text-faint italic">No rules yet. Re-categorize a transaction and choose "Always" to create your first rule.</p>
+            <p className="text-sm pacioli-text-faint italic">No rules yet. Re-categorize a transaction and choose "Always" to create your first rule.</p>
           ) : (
             <div className="space-y-2">
               {Object.entries(rules).map(([pattern, cat]) => (
-                <div key={pattern} className="flex items-center justify-between py-2.5 px-4 vela-bg-surface-2 rounded-xl">
+                <div key={pattern} className="flex items-center justify-between py-2.5 px-4 pacioli-bg-surface-2 rounded-xl">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono vela-text-secondary vela-bg-chip px-2 py-0.5 rounded">{pattern}</span>
-                    <span className="text-xs vela-text-muted">→</span>
+                    <span className="text-xs font-mono pacioli-text-secondary pacioli-bg-chip px-2 py-0.5 rounded">{pattern}</span>
+                    <span className="text-xs pacioli-text-muted">→</span>
                     <span className="text-xs font-medium" style={{ color: CATEGORY_COLORS[cat] ?? "#6366f1" }}>{cat}</span>
                   </div>
-                  <button onClick={() => deleteRule(pattern)} className="p-1 vela-text-faint hover:vela-text-danger transition-colors">
+                  <button onClick={() => deleteRule(pattern)} className="p-1 pacioli-text-faint hover:pacioli-text-danger transition-colors">
                     <Trash2 size={13} />
                   </button>
                 </div>
@@ -185,22 +185,22 @@ export default function CashFlow() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <button onClick={() => setDrillCategory(null)} className="p-1.5 vela-text-muted hover:vela-text-primary rounded-lg transition-colors">
+          <button onClick={() => setDrillCategory(null)} className="p-1.5 pacioli-text-muted hover:pacioli-text-primary rounded-lg transition-colors">
             <ChevronLeft size={18} />
           </button>
           <div>
-            <p className="vela-text-muted text-sm">{formatMonth(activeMonth)} · {drillTxs.length} transactions</p>
-            <h2 className="text-2xl font-bold vela-text-primary" style={{ color: catColor }}>{drillCategory}</h2>
+            <p className="pacioli-text-muted text-sm">{formatMonth(activeMonth)} · {drillTxs.length} transactions</p>
+            <h2 className="text-2xl font-bold pacioli-text-primary" style={{ color: catColor }}>{drillCategory}</h2>
           </div>
-          <span className="ml-auto text-2xl font-bold vela-text-primary">{formatCurrency(catTotal)}</span>
+          <span className="ml-auto text-2xl font-bold pacioli-text-primary">{formatCurrency(catTotal)}</span>
         </div>
 
         {/* Rule prompt banner */}
         {rulePrompt && (
           <div className="p-4 bg-indigo-900/20 border border-indigo-700/40 rounded-xl flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-medium vela-text-primary">Always categorize "{rulePrompt.merchant}" as {rulePrompt.category}?</p>
-              <p className="text-xs vela-text-muted mt-0.5">This creates a rule that applies to future imports too.</p>
+              <p className="text-sm font-medium pacioli-text-primary">Always categorize "{rulePrompt.merchant}" as {rulePrompt.category}?</p>
+              <p className="text-xs pacioli-text-muted mt-0.5">This creates a rule that applies to future imports too.</p>
             </div>
             <div className="flex gap-2 shrink-0">
               <button onClick={() => addRule(rulePrompt.merchant, rulePrompt.category)}
@@ -208,14 +208,14 @@ export default function CashFlow() {
                 Always
               </button>
               <button onClick={() => setRulePrompt(null)}
-                className="px-3 py-1.5 vela-bg-surface-2 vela-text-secondary text-xs font-medium rounded-lg transition-colors">
+                className="px-3 py-1.5 pacioli-bg-surface-2 pacioli-text-secondary text-xs font-medium rounded-lg transition-colors">
                 Just this once
               </button>
             </div>
           </div>
         )}
 
-        <div className="vela-bg-surface rounded-2xl p-6 border">
+        <div className="pacioli-bg-surface rounded-2xl p-6 border">
           <div className="space-y-1">
             {drillTxs.map((tx) => (
               <TransactionRow
@@ -237,13 +237,13 @@ export default function CashFlow() {
     <div className="space-y-8">
       <div className="flex justify-between items-end">
         <div>
-          <p className="vela-text-muted text-sm">Where it comes from, where it goes.</p>
-          <h2 className="text-3xl font-bold vela-text-primary mt-1">How My Money Moves</h2>
+          <p className="pacioli-text-muted text-sm">Where it comes from, where it goes.</p>
+          <h2 className="text-3xl font-bold pacioli-text-primary mt-1">How My Money Moves</h2>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowRules(true)}
-            className="flex items-center gap-1.5 text-xs font-medium vela-text-muted hover:vela-text-primary transition-colors"
+            className="flex items-center gap-1.5 text-xs font-medium pacioli-text-muted hover:pacioli-text-primary transition-colors"
           >
             <BookOpen size={13} />
             {Object.keys(rules).length > 0 ? `${Object.keys(rules).length} rules` : "Rules"}
@@ -251,7 +251,7 @@ export default function CashFlow() {
           <select
             value={activeMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
-            className="vela-bg-input border rounded-lg px-3 py-2 text-sm"
+            className="pacioli-bg-input border rounded-lg px-3 py-2 text-sm"
           >
             {months.map((m) => <option key={m} value={m}>{formatMonth(m)}</option>)}
           </select>
@@ -261,20 +261,20 @@ export default function CashFlow() {
       {/* Summary cards */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Income", value: totalIncome, color: "vela-text-success" },
-          { label: "Spending", value: totalSpend, color: "vela-text-danger" },
-          { label: "Net Cash Flow", value: net, color: net >= 0 ? "vela-text-success" : "vela-text-danger" },
+          { label: "Income", value: totalIncome, color: "pacioli-text-success" },
+          { label: "Spending", value: totalSpend, color: "pacioli-text-danger" },
+          { label: "Net Cash Flow", value: net, color: net >= 0 ? "pacioli-text-success" : "pacioli-text-danger" },
         ].map(({ label, value, color }) => (
-          <div key={label} className="vela-bg-surface rounded-2xl p-5 border">
-            <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">{label}</p>
+          <div key={label} className="pacioli-bg-surface rounded-2xl p-5 border">
+            <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">{label}</p>
             <p className={`text-2xl font-bold ${color}`}>{value >= 0 ? "" : "−"}{formatCurrency(Math.abs(value))}</p>
           </div>
         ))}
       </div>
 
       {/* Income vs Spending bar chart */}
-      <div className="vela-bg-surface rounded-2xl p-6 border">
-        <h3 className="text-sm font-semibold vela-text-secondary mb-4">Income vs. Spending — 12 Months</h3>
+      <div className="pacioli-bg-surface rounded-2xl p-6 border">
+        <h3 className="text-sm font-semibold pacioli-text-secondary mb-4">Income vs. Spending — 12 Months</h3>
         <ResponsiveContainer width="100%" height={240}>
           <BarChart data={monthlyData} barGap={4}>
             <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} />
@@ -292,9 +292,9 @@ export default function CashFlow() {
 
       {/* Category breakdown + recent transactions */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <div className="vela-bg-surface rounded-2xl p-6 border">
-          <h3 className="text-sm font-semibold vela-text-secondary mb-1">Spending by Category</h3>
-          <p className="text-xs vela-text-muted mb-4">Click any category to drill in and re-categorize.</p>
+        <div className="pacioli-bg-surface rounded-2xl p-6 border">
+          <h3 className="text-sm font-semibold pacioli-text-secondary mb-1">Spending by Category</h3>
+          <p className="text-xs pacioli-text-muted mb-4">Click any category to drill in and re-categorize.</p>
           <div className="space-y-3">
             {catBreakdown.map(({ cat, amount }) => {
               const pct = (amount / totalSpend) * 100;
@@ -306,13 +306,13 @@ export default function CashFlow() {
                   className="w-full text-left group"
                 >
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="vela-text-secondary group-hover:vela-text-primary transition-colors flex items-center gap-1.5">
+                    <span className="pacioli-text-secondary group-hover:pacioli-text-primary transition-colors flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full inline-block" style={{ background: color }} />
                       {cat}
                     </span>
-                    <span className="vela-text-primary font-medium">{formatCurrency(amount)}</span>
+                    <span className="pacioli-text-primary font-medium">{formatCurrency(amount)}</span>
                   </div>
-                  <div className="w-full h-1.5 vela-bar-track rounded-full">
+                  <div className="w-full h-1.5 pacioli-bar-track rounded-full">
                     <div className="h-1.5 rounded-full transition-all" style={{ width: `${pct}%`, background: color }} />
                   </div>
                 </button>
@@ -321,33 +321,33 @@ export default function CashFlow() {
           </div>
         </div>
 
-        <div className="vela-bg-surface rounded-2xl p-6 border">
+        <div className="pacioli-bg-surface rounded-2xl p-6 border">
           {/* Review mode banner — shown when arriving from CSV import */}
           {reviewMode && (
-            <div className="flex items-center justify-between gap-3 mb-4 px-3 py-2.5 vela-alert-warning border rounded-xl">
+            <div className="flex items-center justify-between gap-3 mb-4 px-3 py-2.5 pacioli-alert-warning border rounded-xl">
               <div className="flex items-center gap-2">
-                <Tag size={13} className="vela-text-warning shrink-0" />
-                <p className="text-xs vela-text-warning">
+                <Tag size={13} className="pacioli-text-warning shrink-0" />
+                <p className="text-xs pacioli-text-warning">
                   {uncategorizedTxs.length > 0
                     ? <><span className="font-semibold">{uncategorizedTxs.length}</span> uncategorized transaction{uncategorizedTxs.length !== 1 ? "s" : ""} — tap a category badge to fix</>
-                    : <span className="vela-text-success font-medium">All transactions categorized!</span>
+                    : <span className="pacioli-text-success font-medium">All transactions categorized!</span>
                   }
                 </p>
               </div>
               <button
                 onClick={() => setReviewMode(false)}
-                className="text-xs vela-text-muted hover:vela-text-primary transition-colors shrink-0"
+                className="text-xs pacioli-text-muted hover:pacioli-text-primary transition-colors shrink-0"
               >
                 Show all
               </button>
             </div>
           )}
 
-          <h3 className="text-sm font-semibold vela-text-secondary mb-4">
+          <h3 className="text-sm font-semibold pacioli-text-secondary mb-4">
             {reviewMode ? "Uncategorized Transactions" : "Recent Transactions"}
           </h3>
           {recentTx.length === 0 && reviewMode && (
-            <p className="text-sm vela-text-muted text-center py-4">Nothing left to categorize.</p>
+            <p className="text-sm pacioli-text-muted text-center py-4">Nothing left to categorize.</p>
           )}
           <div className="space-y-1">
             {recentTx.map((tx) => (
@@ -385,10 +385,10 @@ function TransactionRow({
   const color = CATEGORY_COLORS[tx.category] ?? "#6366f1";
 
   return (
-    <div className={`flex items-center gap-3 py-2 border-b vela-border-subtle last:border-0 group relative ${compact ? "" : "py-2.5"}`}>
+    <div className={`flex items-center gap-3 py-2 border-b pacioli-border-subtle last:border-0 group relative ${compact ? "" : "py-2.5"}`}>
       <div className="flex-1 min-w-0">
-        <p className="text-sm vela-text-primary truncate">{tx.merchant}</p>
-        <p className="text-xs vela-text-muted">{tx.date}</p>
+        <p className="text-sm pacioli-text-primary truncate">{tx.merchant}</p>
+        <p className="text-xs pacioli-text-muted">{tx.date}</p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         {/* Category badge — click to change */}
@@ -401,23 +401,23 @@ function TransactionRow({
           <Tag size={10} />
           {tx.category}
         </button>
-        {justSaved && <CheckCircle2 size={13} className="vela-text-success" />}
-        <span className="text-sm font-medium vela-text-primary">{formatCurrency(tx.amount)}</span>
+        {justSaved && <CheckCircle2 size={13} className="pacioli-text-success" />}
+        <span className="text-sm font-medium pacioli-text-primary">{formatCurrency(tx.amount)}</span>
       </div>
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 top-full mt-1 z-50 vela-bg-nav border vela-border rounded-xl shadow-xl p-1.5 min-w-44">
-          <p className="text-[10px] vela-text-faint px-2 py-1 uppercase tracking-wide">Move to category</p>
+        <div className="absolute right-0 top-full mt-1 z-50 pacioli-bg-nav border pacioli-border rounded-xl shadow-xl p-1.5 min-w-44">
+          <p className="text-[10px] pacioli-text-faint px-2 py-1 uppercase tracking-wide">Move to category</p>
           {allCategories.map((cat) => (
             <button
               key={cat}
               onClick={() => { onRecategorize(tx, cat); setOpen(false); }}
-              className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-colors vela-bg-nav-hover ${cat === tx.category ? "vela-text-primary font-semibold" : "vela-text-secondary"}`}
+              className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-colors pacioli-bg-nav-hover ${cat === tx.category ? "pacioli-text-primary font-semibold" : "pacioli-text-secondary"}`}
             >
               <span className="w-2 h-2 rounded-full" style={{ background: CATEGORY_COLORS[cat] ?? "#6366f1" }} />
               {cat}
-              {cat === tx.category && <span className="ml-auto vela-text-faint">✓</span>}
+              {cat === tx.category && <span className="ml-auto pacioli-text-faint">✓</span>}
             </button>
           ))}
         </div>

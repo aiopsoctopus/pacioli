@@ -59,7 +59,7 @@ function SetupFlow({
   if (!current) return null;
 
   const TrendIcon = current.trend === "rising" ? TrendingUp : current.trend === "falling" ? TrendingDown : Minus;
-  const trendColor = current.trend === "rising" ? "vela-text-warning" : current.trend === "falling" ? "vela-text-success" : "vela-text-muted";
+  const trendColor = current.trend === "rising" ? "pacioli-text-warning" : current.trend === "falling" ? "pacioli-text-success" : "pacioli-text-muted";
   const color = CATEGORY_COLORS[current.category] ?? "#6366f1";
 
   return (
@@ -70,31 +70,31 @@ function SetupFlow({
           <Sparkles size={16} className="text-indigo-400" />
           <p className="text-xs font-semibold text-indigo-400 uppercase tracking-wide">AI Budget Setup</p>
         </div>
-        <h2 className="text-3xl font-bold vela-text-primary">Set Your Budget</h2>
-        <p className="vela-text-muted text-sm mt-1">
+        <h2 className="text-3xl font-bold pacioli-text-primary">Set Your Budget</h2>
+        <p className="pacioli-text-muted text-sm mt-1">
           Review each category — AI has analysed your last 6 months and suggested a target. Accept or adjust.
         </p>
       </div>
 
       {/* Progress bar */}
       <div className="space-y-1">
-        <div className="flex justify-between text-xs vela-text-muted">
+        <div className="flex justify-between text-xs pacioli-text-muted">
           <span>{step + 1} of {analyses.length} categories</span>
           <span>{Math.round(progress)}% done</span>
         </div>
-        <div className="w-full h-1.5 vela-bar-track rounded-full">
+        <div className="w-full h-1.5 pacioli-bar-track rounded-full">
           <div className="h-1.5 rounded-full bg-indigo-500 transition-all duration-500"
             style={{ width: `${progress}%` }} />
         </div>
       </div>
 
       {/* Category card */}
-      <div className="vela-bg-surface rounded-2xl p-6 border space-y-5">
+      <div className="pacioli-bg-surface rounded-2xl p-6 border space-y-5">
         {/* Category name + trend */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="w-3 h-3 rounded-full" style={{ background: color }} />
-            <h3 className="text-xl font-bold vela-text-primary">{current.category}</h3>
+            <h3 className="text-xl font-bold pacioli-text-primary">{current.category}</h3>
           </div>
           <div className={`flex items-center gap-1.5 text-xs font-medium ${trendColor}`}>
             <TrendIcon size={14} />
@@ -112,13 +112,13 @@ function SetupFlow({
             Display as a typing animation while streaming. */}
         <div className="flex gap-2.5 p-3.5 bg-indigo-950/30 border border-indigo-800/30 rounded-xl">
           <Sparkles size={14} className="text-indigo-400 mt-0.5 shrink-0" />
-          <p className="text-sm vela-text-secondary leading-relaxed">{current.rationale}</p>
+          <p className="text-sm pacioli-text-secondary leading-relaxed">{current.rationale}</p>
         </div>
 
         {current.isSeasonal && (
-          <div className="flex gap-2 p-3 vela-alert-warning border rounded-xl">
-            <AlertTriangle size={13} className="vela-text-warning mt-0.5 shrink-0" />
-            <p className="text-xs vela-text-warning">
+          <div className="flex gap-2 p-3 pacioli-alert-warning border rounded-xl">
+            <AlertTriangle size={13} className="pacioli-text-warning mt-0.5 shrink-0" />
+            <p className="text-xs pacioli-text-warning">
               Seasonal spike detected in {formatMonth(current.peakMonth)} ({formatCurrency(current.peakAmount)}).
               Consider a sinking fund for one-off costs in this category.
             </p>
@@ -127,19 +127,19 @@ function SetupFlow({
 
         {/* Amount input */}
         <div>
-          <label className="text-xs vela-text-muted mb-2 block">Monthly budget target</label>
+          <label className="text-xs pacioli-text-muted mb-2 block">Monthly budget target</label>
           <div className="flex items-center gap-3">
             <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 vela-text-muted text-sm">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 pacioli-text-muted text-sm">$</span>
               <input
                 type="number"
-                className="w-full vela-bg-input border rounded-xl pl-7 pr-4 py-3 text-lg font-bold focus:outline-none focus:border-indigo-500 vela-text-primary"
+                className="w-full pacioli-bg-input border rounded-xl pl-7 pr-4 py-3 text-lg font-bold focus:outline-none focus:border-indigo-500 pacioli-text-primary"
                 value={draft[current.category] ?? current.suggestedBudget}
                 onChange={(e) => setDraft((d) => ({ ...d, [current.category]: Number(e.target.value) }))}
               />
             </div>
             <div className="text-right shrink-0">
-              <p className="text-xs vela-text-muted">AI suggested</p>
+              <p className="text-xs pacioli-text-muted">AI suggested</p>
               <p className="text-sm font-semibold text-indigo-400">{formatCurrency(current.suggestedBudget)}</p>
             </div>
           </div>
@@ -156,7 +156,7 @@ function SetupFlow({
           </button>
           <button
             onClick={handleNext}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 vela-bg-surface-2 vela-text-primary text-sm font-medium rounded-xl border transition-colors hover:border-indigo-500/50"
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 pacioli-bg-surface-2 pacioli-text-primary text-sm font-medium rounded-xl border transition-colors hover:border-indigo-500/50"
           >
             Use {formatCurrency(draft[current.category] ?? current.suggestedBudget)}
             <ChevronRight size={15} />
@@ -165,7 +165,7 @@ function SetupFlow({
       </div>
 
       {/* Skip all */}
-      <p className="text-center text-xs vela-text-faint">
+      <p className="text-center text-xs pacioli-text-faint">
         <button
           onClick={() => {
             const envelopes: Record<string, BudgetEnvelope> = {};
@@ -179,7 +179,7 @@ function SetupFlow({
             saveBudgetEnvelopes(envelopes, ns);
             onComplete(envelopes);
           }}
-          className="hover:vela-text-muted transition-colors underline underline-offset-2"
+          className="hover:pacioli-text-muted transition-colors underline underline-offset-2"
         >
           Accept all AI suggestions and finish
         </button>
@@ -204,7 +204,7 @@ function MiniSparkline({ amounts, color }: { amounts: number[]; color: string })
 
   return (
     <div>
-      <p className="text-xs vela-text-muted mb-1">Last {amounts.length} months</p>
+      <p className="text-xs pacioli-text-muted mb-1">Last {amounts.length} months</p>
       <svg viewBox={`0 0 ${w} ${h + 4}`} className="w-full h-10">
         <polyline
           points={points}
@@ -252,34 +252,34 @@ function EnvelopeRow({
   }
 
   return (
-    <div className="py-3 border-b vela-border-subtle last:border-0">
+    <div className="py-3 border-b pacioli-border-subtle last:border-0">
       <div className="flex items-center gap-3 mb-2">
         <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: color }} />
-        <span className="flex-1 text-sm font-medium vela-text-primary">{envelope.category}</span>
+        <span className="flex-1 text-sm font-medium pacioli-text-primary">{envelope.category}</span>
 
         {editing ? (
           <div className="flex items-center gap-1.5">
-            <span className="text-xs vela-text-muted">$</span>
+            <span className="text-xs pacioli-text-muted">$</span>
             <input
               type="number"
               autoFocus
-              className="w-24 vela-bg-input border rounded-lg px-2 py-1 text-sm text-right focus:outline-none focus:border-indigo-500"
+              className="w-24 pacioli-bg-input border rounded-lg px-2 py-1 text-sm text-right focus:outline-none focus:border-indigo-500"
               value={draft}
               onChange={(e) => setDraft(Number(e.target.value))}
               onKeyDown={(e) => { if (e.key === "Enter") commit(); if (e.key === "Escape") setEditing(false); }}
             />
-            <button onClick={commit} className="p-1 vela-text-success hover:opacity-80"><Check size={13} /></button>
-            <button onClick={() => setEditing(false)} className="p-1 vela-text-muted hover:vela-text-primary"><X size={13} /></button>
+            <button onClick={commit} className="p-1 pacioli-text-success hover:opacity-80"><Check size={13} /></button>
+            <button onClick={() => setEditing(false)} className="p-1 pacioli-text-muted hover:pacioli-text-primary"><X size={13} /></button>
           </div>
         ) : (
           <div className="flex items-center gap-2 text-sm">
-            <span className={`font-medium ${isOver ? "vela-text-danger" : isWarning ? "vela-text-warning" : "vela-text-primary"}`}>
+            <span className={`font-medium ${isOver ? "pacioli-text-danger" : isWarning ? "pacioli-text-warning" : "pacioli-text-primary"}`}>
               {formatCurrency(spent)}
             </span>
-            <span className="vela-text-muted">/</span>
+            <span className="pacioli-text-muted">/</span>
             <button
               onClick={() => { setDraft(envelope.budgetAmount); setEditing(true); }}
-              className="flex items-center gap-1 vela-text-muted hover:vela-text-primary transition-colors group"
+              className="flex items-center gap-1 pacioli-text-muted hover:pacioli-text-primary transition-colors group"
             >
               <span>{formatCurrency(envelope.budgetAmount)}</span>
               <Pencil size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -289,7 +289,7 @@ function EnvelopeRow({
       </div>
 
       {/* Progress bar */}
-      <div className="w-full h-2 vela-bar-track rounded-full overflow-hidden">
+      <div className="w-full h-2 pacioli-bar-track rounded-full overflow-hidden">
         <div
           className="h-2 rounded-full transition-all duration-500"
           style={{ width: `${Math.min(100, pct)}%`, background: barColor }}
@@ -297,12 +297,12 @@ function EnvelopeRow({
       </div>
 
       <div className="flex justify-between mt-1.5 text-xs">
-        <span className={isOver ? "vela-text-danger font-medium" : isWarning ? "vela-text-warning" : "vela-text-muted"}>
+        <span className={isOver ? "pacioli-text-danger font-medium" : isWarning ? "pacioli-text-warning" : "pacioli-text-muted"}>
           {isOver
             ? `${formatCurrency(Math.abs(remaining))} over budget`
             : `${formatCurrency(remaining)} remaining`}
         </span>
-        <span className="vela-text-faint">{Math.round(pct)}%</span>
+        <span className="pacioli-text-faint">{Math.round(pct)}%</span>
       </div>
 
       {/* Inline AI suggestion if different from current budget */}
@@ -388,7 +388,7 @@ export default function BudgetPage() {
   }
 
   if (!transactions.length || !income.length) {
-    return <div className="vela-text-muted animate-pulse">Loading budget data...</div>;
+    return <div className="pacioli-text-muted animate-pulse">Loading budget data...</div>;
   }
 
   // First visit — no envelopes set yet
@@ -404,8 +404,8 @@ export default function BudgetPage() {
           <Sparkles size={28} className="text-indigo-400" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold vela-text-primary">Set Up Your Budget</h2>
-          <p className="vela-text-muted text-sm mt-2 leading-relaxed">
+          <h2 className="text-2xl font-bold pacioli-text-primary">Set Up Your Budget</h2>
+          <p className="pacioli-text-muted text-sm mt-2 leading-relaxed">
             I'll analyse your last 6 months of spending and recommend a monthly target for each category.
             You can accept, adjust, or skip any suggestion.
           </p>
@@ -432,8 +432,8 @@ export default function BudgetPage() {
       {/* Header */}
       <div className="flex justify-between items-end">
         <div>
-          <p className="vela-text-muted text-sm">How you're tracking against your plan.</p>
-          <h2 className="text-3xl font-bold vela-text-primary mt-1">My Monthly Budget</h2>
+          <p className="pacioli-text-muted text-sm">How you're tracking against your plan.</p>
+          <h2 className="text-3xl font-bold pacioli-text-primary mt-1">My Monthly Budget</h2>
         </div>
         <button
           onClick={() => setShowSetup(true)}
@@ -446,31 +446,31 @@ export default function BudgetPage() {
 
       {/* Top summary cards */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-        <div className="vela-bg-surface rounded-2xl p-5 border">
-          <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">MTD Income</p>
-          <p className="text-2xl font-bold vela-text-primary">{formatCurrency(mtdIncome)}</p>
-          <p className="text-xs vela-text-muted mt-1">
+        <div className="pacioli-bg-surface rounded-2xl p-5 border">
+          <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">MTD Income</p>
+          <p className="text-2xl font-bold pacioli-text-primary">{formatCurrency(mtdIncome)}</p>
+          <p className="text-xs pacioli-text-muted mt-1">
             {avgIncome > 0 ? `${Math.round((mtdIncome / avgIncome) * 100)}% of typical ${formatCurrency(avgIncome)}/mo` : ""}
           </p>
         </div>
-        <div className="vela-bg-surface rounded-2xl p-5 border">
-          <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">Spent This Month</p>
-          <p className="text-2xl font-bold vela-text-primary">{formatCurrency(totalSpent)}</p>
-          <p className="text-xs vela-text-muted mt-1">of {formatCurrency(totalBudget)} budget</p>
+        <div className="pacioli-bg-surface rounded-2xl p-5 border">
+          <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">Spent This Month</p>
+          <p className="text-2xl font-bold pacioli-text-primary">{formatCurrency(totalSpent)}</p>
+          <p className="text-xs pacioli-text-muted mt-1">of {formatCurrency(totalBudget)} budget</p>
         </div>
-        <div className="vela-bg-surface rounded-2xl p-5 border">
-          <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">Remaining</p>
-          <p className={`text-2xl font-bold ${totalRemaining >= 0 ? "vela-text-success" : "vela-text-danger"}`}>
+        <div className="pacioli-bg-surface rounded-2xl p-5 border">
+          <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">Remaining</p>
+          <p className={`text-2xl font-bold ${totalRemaining >= 0 ? "pacioli-text-success" : "pacioli-text-danger"}`}>
             {formatCurrency(Math.abs(totalRemaining))}
           </p>
-          <p className="text-xs vela-text-muted mt-1">{totalRemaining >= 0 ? "left to spend" : "over budget"}</p>
+          <p className="text-xs pacioli-text-muted mt-1">{totalRemaining >= 0 ? "left to spend" : "over budget"}</p>
         </div>
-        <div className="vela-bg-surface rounded-2xl p-5 border">
-          <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">Budget Pace</p>
-          <p className={`text-2xl font-bold ${isAheadOfPace ? "vela-text-success" : isBehindPace ? "vela-text-danger" : "vela-text-warning"}`}>
+        <div className="pacioli-bg-surface rounded-2xl p-5 border">
+          <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">Budget Pace</p>
+          <p className={`text-2xl font-bold ${isAheadOfPace ? "pacioli-text-success" : isBehindPace ? "pacioli-text-danger" : "pacioli-text-warning"}`}>
             {isAheadOfPace ? "Ahead" : isBehindPace ? "Behind" : "On pace"}
           </p>
-          <p className="text-xs vela-text-muted mt-1">
+          <p className="text-xs pacioli-text-muted mt-1">
             {Math.round(budgetPct)}% spent · {Math.round(monthPct)}% through {formatMonth(currentMonth)}
           </p>
         </div>
@@ -486,15 +486,15 @@ export default function BudgetPage() {
       {/* Two-column layout: envelopes + mini chart */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Envelope list */}
-        <div className="xl:col-span-2 vela-bg-surface rounded-2xl p-6 border">
+        <div className="xl:col-span-2 pacioli-bg-surface rounded-2xl p-6 border">
           <div className="flex justify-between items-center mb-1">
-            <h3 className="text-sm font-semibold vela-text-secondary">Category Envelopes</h3>
-            <p className="text-xs vela-text-muted">Click any budget amount to edit</p>
+            <h3 className="text-sm font-semibold pacioli-text-secondary">Category Envelopes</h3>
+            <p className="text-xs pacioli-text-muted">Click any budget amount to edit</p>
           </div>
 
           {/* Overall progress bar */}
           <div className="mb-5 mt-3">
-            <div className="w-full h-2.5 vela-bar-track rounded-full overflow-hidden relative">
+            <div className="w-full h-2.5 pacioli-bar-track rounded-full overflow-hidden relative">
               {/* Month progress ghost */}
               <div
                 className="absolute top-0 left-0 h-2.5 rounded-full opacity-20 bg-zinc-400"
@@ -509,7 +509,7 @@ export default function BudgetPage() {
                 }}
               />
             </div>
-            <div className="flex justify-between text-xs vela-text-muted mt-1">
+            <div className="flex justify-between text-xs pacioli-text-muted mt-1">
               <span>{Math.round(budgetPct)}% of budget used</span>
               <span>{Math.round(monthPct)}% through month</span>
             </div>
@@ -540,27 +540,27 @@ export default function BudgetPage() {
               return pct >= 80 && pct < 100;
             });
             if (overBudget.length === 0 && nearBudget.length === 0) return (
-              <div className="vela-bg-surface rounded-2xl p-5 border">
-                <p className="text-xs font-semibold vela-text-secondary mb-1">Budget Status</p>
-                <p className="text-sm vela-text-success font-medium mt-2">✓ All categories on track</p>
-                <p className="text-xs vela-text-muted mt-1">
+              <div className="pacioli-bg-surface rounded-2xl p-5 border">
+                <p className="text-xs font-semibold pacioli-text-secondary mb-1">Budget Status</p>
+                <p className="text-sm pacioli-text-success font-medium mt-2">✓ All categories on track</p>
+                <p className="text-xs pacioli-text-muted mt-1">
                   You're {Math.round(monthPct)}% through {formatMonth(currentMonth)} with no categories over budget.
                 </p>
               </div>
             );
             return (
-              <div className="vela-bg-surface rounded-2xl p-5 border space-y-3">
-                <p className="text-xs font-semibold vela-text-secondary">Alerts</p>
+              <div className="pacioli-bg-surface rounded-2xl p-5 border space-y-3">
+                <p className="text-xs font-semibold pacioli-text-secondary">Alerts</p>
                 {overBudget.map((e) => {
                   const over = (currentSpend[e.category] ?? 0) - e.budgetAmount;
                   return (
-                    <div key={e.category} className="flex gap-2.5 p-3 vela-alert-danger border rounded-xl">
-                      <AlertTriangle size={13} className="vela-text-danger mt-0.5 shrink-0" />
+                    <div key={e.category} className="flex gap-2.5 p-3 pacioli-alert-danger border rounded-xl">
+                      <AlertTriangle size={13} className="pacioli-text-danger mt-0.5 shrink-0" />
                       <div>
-                        <p className="text-xs font-medium vela-text-danger">{e.category} over by {formatCurrency(over)}</p>
+                        <p className="text-xs font-medium pacioli-text-danger">{e.category} over by {formatCurrency(over)}</p>
                         {/* LLM_HOOK: anomaly explanation — look at merchant names for this
                             category this month and explain what drove the overage in 1 sentence. */}
-                        <p className="text-xs vela-text-muted mt-0.5">
+                        <p className="text-xs pacioli-text-muted mt-0.5">
                           {Math.round(monthPct)}% through month · {formatCurrency(currentSpend[e.category] ?? 0)} spent
                         </p>
                       </div>
@@ -570,11 +570,11 @@ export default function BudgetPage() {
                 {nearBudget.map((e) => {
                   const pct = Math.round(((currentSpend[e.category] ?? 0) / e.budgetAmount) * 100);
                   return (
-                    <div key={e.category} className="flex gap-2.5 p-3 vela-alert-warning border rounded-xl">
-                      <AlertTriangle size={13} className="vela-text-warning mt-0.5 shrink-0" />
+                    <div key={e.category} className="flex gap-2.5 p-3 pacioli-alert-warning border rounded-xl">
+                      <AlertTriangle size={13} className="pacioli-text-warning mt-0.5 shrink-0" />
                       <div>
-                        <p className="text-xs font-medium vela-text-warning">{e.category} at {pct}%</p>
-                        <p className="text-xs vela-text-muted mt-0.5">
+                        <p className="text-xs font-medium pacioli-text-warning">{e.category} at {pct}%</p>
+                        <p className="text-xs pacioli-text-muted mt-0.5">
                           {formatCurrency(e.budgetAmount - (currentSpend[e.category] ?? 0))} remaining
                         </p>
                       </div>
@@ -586,8 +586,8 @@ export default function BudgetPage() {
           })()}
 
           {/* Projection card */}
-          <div className="vela-bg-surface rounded-2xl p-5 border">
-            <p className="text-xs font-semibold vela-text-secondary mb-3">Month-End Projection</p>
+          <div className="pacioli-bg-surface rounded-2xl p-5 border">
+            <p className="text-xs font-semibold pacioli-text-secondary mb-3">Month-End Projection</p>
             {monthProgress > 0 && (
               (() => {
                 const projectedSpend = monthProgress > 0 ? Math.round(totalSpent / monthProgress) : totalSpent;
@@ -598,11 +598,11 @@ export default function BudgetPage() {
                 return (
                   <div className="space-y-3">
                     <div>
-                      <p className="text-xs vela-text-muted">Projected total spend</p>
-                      <p className={`text-lg font-bold ${projectedOver > 0 ? "vela-text-danger" : "vela-text-success"}`}>
+                      <p className="text-xs pacioli-text-muted">Projected total spend</p>
+                      <p className={`text-lg font-bold ${projectedOver > 0 ? "pacioli-text-danger" : "pacioli-text-success"}`}>
                         {formatCurrency(projectedSpend)}
                       </p>
-                      <p className="text-xs vela-text-muted">
+                      <p className="text-xs pacioli-text-muted">
                         {projectedOver > 0
                           ? `${formatCurrency(projectedOver)} over budget`
                           : `${formatCurrency(Math.abs(projectedOver))} under budget`}
@@ -610,8 +610,8 @@ export default function BudgetPage() {
                     </div>
                     {projectedSavings > 0 && (
                       <div>
-                        <p className="text-xs vela-text-muted">Projected savings</p>
-                        <p className="text-lg font-bold vela-text-success">{formatCurrency(Math.round(projectedSavings))}</p>
+                        <p className="text-xs pacioli-text-muted">Projected savings</p>
+                        <p className="text-lg font-bold pacioli-text-success">{formatCurrency(Math.round(projectedSavings))}</p>
                       </div>
                     )}
                   </div>
@@ -621,20 +621,20 @@ export default function BudgetPage() {
           </div>
 
           {/* AI insight teaser */}
-          <div className="vela-bg-surface rounded-2xl p-5 border border-indigo-800/20 bg-indigo-950/10">
+          <div className="pacioli-bg-surface rounded-2xl p-5 border border-indigo-800/20 bg-indigo-950/10">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles size={13} className="text-indigo-400" />
               <p className="text-xs font-semibold text-indigo-400">AI Insight</p>
               <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/30">Soon</span>
             </div>
             {/* LLM_HOOK: monthly narrative — the CFO memo.
-                Generate once per month, cache in localStorage["vela-narrative-YYYY-MM"].
+                Generate once per month, cache in localStorage["pacioli-narrative-YYYY-MM"].
                 Prompt includes: category actuals vs budgets, income vs avg, net savings,
                 top merchant changes, sinking fund progress.
                 Example output: "May is shaping up as a lean month — spending is tracking
                 18% below pace despite the grocery bump. Your $10k surplus could accelerate
                 the Emergency Fund by 2 months if directed there." */}
-            <p className="text-xs vela-text-muted leading-relaxed">
+            <p className="text-xs pacioli-text-muted leading-relaxed">
               Your monthly CFO memo — a plain-English summary of where you stand, what changed, and what to watch. Coming once LLM integration is wired up.
             </p>
           </div>

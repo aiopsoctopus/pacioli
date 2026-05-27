@@ -20,17 +20,17 @@ export default function Nav() {
   const isDark = theme === "dark";
 
   return (
-    <nav className="vela-bg-nav border-r w-64 min-h-screen flex flex-col py-8 px-4 shrink-0">
+    <nav className="pacioli-bg-nav border-r w-64 min-h-screen flex flex-col py-8 px-4 shrink-0">
       {/* Brand */}
       <div className="mb-8 px-3 flex items-center justify-between">
         <div>
-          <h1 className="vela-text-primary font-bold text-xl tracking-tight">Vela</h1>
-          <p className="text-[11px] vela-text-muted mt-0.5">Household Financial OS</p>
+          <h1 className="pacioli-text-primary font-bold text-xl tracking-tight">Pacioli</h1>
+          <p className="text-[11px] pacioli-text-muted mt-0.5">Household Financial OS</p>
         </div>
         {/* Theme toggle */}
         <button
           onClick={toggle}
-          className="p-1.5 rounded-lg vela-text-muted hover:vela-text-primary transition-all"
+          className="p-1.5 rounded-lg pacioli-text-muted hover:pacioli-text-primary transition-all"
           style={{ transition: "color 0.15s" }}
           title={isDark ? "Switch to light mode" : "Switch to dark mode"}
         >
@@ -48,14 +48,14 @@ export default function Nav() {
               href={href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
                 active
-                  ? "vela-bg-nav-active vela-text-nav-active"
-                  : "vela-text-muted vela-bg-nav-hover"
+                  ? "pacioli-bg-nav-active pacioli-text-nav-active"
+                  : "pacioli-text-muted pacioli-bg-nav-hover"
               }`}
             >
-              <Icon size={18} className={active ? "vela-icon-active" : "vela-icon-muted"} />
+              <Icon size={18} className={active ? "pacioli-icon-active" : "pacioli-icon-muted"} />
               <div>
                 <p className="text-sm font-medium leading-none">{label}</p>
-                <p className={`text-[11px] mt-0.5 ${active ? "opacity-70" : "vela-text-muted"}`}>{sublabel}</p>
+                <p className={`text-[11px] mt-0.5 ${active ? "opacity-70" : "pacioli-text-muted"}`}>{sublabel}</p>
               </div>
             </Link>
           );

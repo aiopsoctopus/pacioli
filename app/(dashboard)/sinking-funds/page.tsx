@@ -4,7 +4,7 @@ import { fetchJSON, formatCurrency, SinkingFund } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
 import { Pencil, Plus, Trash2, Check, X } from "lucide-react";
 
-const STORAGE_KEY = "vela-sinking-funds";
+const STORAGE_KEY = "pacioli-sinking-funds";
 const COLORS = ["#6366f1","#10b981","#f59e0b","#f97316","#ec4899","#3b82f6","#8b5cf6","#14b8a6"];
 const EMOJIS = ["✈️","🛡️","🚗","🏠","🎁","📚","💻","🌴","💍","🏋️"];
 
@@ -94,7 +94,7 @@ export default function SinkingFunds() {
     setIsAdding(false);
   }
 
-  if (!funds.length) return <div className="vela-text-muted animate-pulse">Loading goals...</div>;
+  if (!funds.length) return <div className="pacioli-text-muted animate-pulse">Loading goals...</div>;
 
   const totalSaved = funds.reduce((s, f) => s + f.saved, 0);
   const totalTarget = funds.reduce((s, f) => s + f.target, 0);
@@ -104,8 +104,8 @@ export default function SinkingFunds() {
     <div className="space-y-8">
       <div className="flex justify-between items-end">
         <div>
-          <p className="vela-text-muted text-sm">Named buckets, real targets, clear timelines.</p>
-          <h2 className="text-3xl font-bold vela-text-primary mt-1">Achieve My Goals</h2>
+          <p className="pacioli-text-muted text-sm">Named buckets, real targets, clear timelines.</p>
+          <h2 className="text-3xl font-bold pacioli-text-primary mt-1">Achieve My Goals</h2>
         </div>
         <button
           onClick={addFund}
@@ -117,16 +117,16 @@ export default function SinkingFunds() {
 
       {/* Summary */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="vela-bg-surface rounded-2xl p-5 border">
-          <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">Total Saved</p>
-          <p className="text-2xl font-bold vela-text-success">{formatCurrency(totalSaved)}</p>
+        <div className="pacioli-bg-surface rounded-2xl p-5 border">
+          <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">Total Saved</p>
+          <p className="text-2xl font-bold pacioli-text-success">{formatCurrency(totalSaved)}</p>
         </div>
-        <div className="vela-bg-surface rounded-2xl p-5 border">
-          <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">Total Goal</p>
-          <p className="text-2xl font-bold vela-text-primary">{formatCurrency(totalTarget)}</p>
+        <div className="pacioli-bg-surface rounded-2xl p-5 border">
+          <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">Total Goal</p>
+          <p className="text-2xl font-bold pacioli-text-primary">{formatCurrency(totalTarget)}</p>
         </div>
-        <div className="vela-bg-surface rounded-2xl p-5 border">
-          <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">Setting Aside Monthly</p>
+        <div className="pacioli-bg-surface rounded-2xl p-5 border">
+          <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">Setting Aside Monthly</p>
           <p className="text-2xl font-bold text-indigo-400">{formatCurrency(totalMonthly)}</p>
         </div>
       </div>
@@ -144,23 +144,23 @@ export default function SinkingFunds() {
           const targetDate = new Date(data.target_date).toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
           return (
-            <div key={f.id} className={`vela-bg-surface rounded-2xl p-6 border transition-all ${isEdit ? "border-indigo-600/60 ring-1 ring-indigo-600/30" : ""}`}>
+            <div key={f.id} className={`pacioli-bg-surface rounded-2xl p-6 border transition-all ${isEdit ? "border-indigo-600/60 ring-1 ring-indigo-600/30" : ""}`}>
               {isEdit && draft ? (
                 /* ── Edit mode ── */
                 <div className="space-y-4">
                   <div className="flex gap-3">
                     <div className="flex-1">
-                      <label className="text-xs vela-text-muted mb-1 block">Goal name</label>
+                      <label className="text-xs pacioli-text-muted mb-1 block">Goal name</label>
                       <input
-                        className="w-full vela-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                        className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
                         value={draft.name}
                         onChange={(e) => setDraft({ ...draft, name: e.target.value })}
                       />
                     </div>
                     <div className="w-20">
-                      <label className="text-xs vela-text-muted mb-1 block">Emoji</label>
+                      <label className="text-xs pacioli-text-muted mb-1 block">Emoji</label>
                       <select
-                        className="w-full vela-bg-input border rounded-lg px-2 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                        className="w-full pacioli-bg-input border rounded-lg px-2 py-2 text-sm focus:outline-none focus:border-indigo-500"
                         value={draft.emoji}
                         onChange={(e) => setDraft({ ...draft, emoji: e.target.value })}
                       >
@@ -170,28 +170,28 @@ export default function SinkingFunds() {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs vela-text-muted mb-1 block">Target amount ($)</label>
-                      <input type="number" className="w-full vela-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                      <label className="text-xs pacioli-text-muted mb-1 block">Target amount ($)</label>
+                      <input type="number" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
                         value={draft.target} onChange={(e) => setDraft({ ...draft, target: Number(e.target.value) })} />
                     </div>
                     <div>
-                      <label className="text-xs vela-text-muted mb-1 block">Already saved ($)</label>
-                      <input type="number" className="w-full vela-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                      <label className="text-xs pacioli-text-muted mb-1 block">Already saved ($)</label>
+                      <input type="number" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
                         value={draft.saved} onChange={(e) => setDraft({ ...draft, saved: Number(e.target.value) })} />
                     </div>
                     <div>
-                      <label className="text-xs vela-text-muted mb-1 block">Monthly contribution ($)</label>
-                      <input type="number" className="w-full vela-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                      <label className="text-xs pacioli-text-muted mb-1 block">Monthly contribution ($)</label>
+                      <input type="number" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
                         value={draft.monthly_contribution} onChange={(e) => setDraft({ ...draft, monthly_contribution: Number(e.target.value) })} />
                     </div>
                     <div>
-                      <label className="text-xs vela-text-muted mb-1 block">Target date</label>
-                      <input type="date" className="w-full vela-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                      <label className="text-xs pacioli-text-muted mb-1 block">Target date</label>
+                      <input type="date" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
                         value={draft.target_date.slice(0,10)} onChange={(e) => setDraft({ ...draft, target_date: e.target.value })} />
                     </div>
                   </div>
                   <div>
-                    <label className="text-xs vela-text-muted mb-2 block">Color</label>
+                    <label className="text-xs pacioli-text-muted mb-2 block">Color</label>
                     <div className="flex gap-2">
                       {COLORS.map((c) => (
                         <button key={c} onClick={() => setDraft({ ...draft, color: c })}
@@ -206,12 +206,12 @@ export default function SinkingFunds() {
                       <Check size={13} /> Save
                     </button>
                     <button onClick={cancelEdit}
-                      className="flex items-center gap-1.5 px-3 py-1.5 vela-bg-btn-cancel vela-text-primary text-xs font-medium rounded-lg transition-colors">
+                      className="flex items-center gap-1.5 px-3 py-1.5 pacioli-bg-btn-cancel pacioli-text-primary text-xs font-medium rounded-lg transition-colors">
                       <X size={13} /> Cancel
                     </button>
                     {!isAdding && (
                       <button onClick={() => { cancelEdit(); deleteFund(f.id); }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 vela-alert-danger border hover:opacity-80 vela-text-danger text-xs font-medium rounded-lg transition-colors ml-auto">
+                        className="flex items-center gap-1.5 px-3 py-1.5 pacioli-alert-danger border hover:opacity-80 pacioli-text-danger text-xs font-medium rounded-lg transition-colors ml-auto">
                         <Trash2 size={13} /> Delete
                       </button>
                     )}
@@ -223,31 +223,31 @@ export default function SinkingFunds() {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <span className="text-2xl">{data.emoji}</span>
-                      <h3 className="text-lg font-bold vela-text-primary mt-1">{data.name}</h3>
-                      <p className="text-xs vela-text-muted">Target: {targetDate} · {mLeft} months away</p>
+                      <h3 className="text-lg font-bold pacioli-text-primary mt-1">{data.name}</h3>
+                      <p className="text-xs pacioli-text-muted">Target: {targetDate} · {mLeft} months away</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${onTrack ? "vela-badge-success" : "vela-badge-danger"}`}>
+                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${onTrack ? "pacioli-badge-success" : "pacioli-badge-danger"}`}>
                         {onTrack ? "On track ✓" : "Behind ↑"}
                       </span>
-                      <button onClick={() => startEdit(f)} className="p-1.5 vela-text-muted hover:vela-text-primary vela-bg-nav-hover rounded-lg transition-all">
+                      <button onClick={() => startEdit(f)} className="p-1.5 pacioli-text-muted hover:pacioli-text-primary pacioli-bg-nav-hover rounded-lg transition-all">
                         <Pencil size={14} />
                       </button>
                     </div>
                   </div>
                   <div className="mb-4">
                     <div className="flex justify-between text-sm mb-1.5">
-                      <span className="vela-text-secondary">{formatCurrency(data.saved)} saved</span>
-                      <span className="vela-text-muted">{pct}% of {formatCurrency(data.target)}</span>
+                      <span className="pacioli-text-secondary">{formatCurrency(data.saved)} saved</span>
+                      <span className="pacioli-text-muted">{pct}% of {formatCurrency(data.target)}</span>
                     </div>
-                    <div className="w-full h-3 vela-bar-track rounded-full overflow-hidden">
+                    <div className="w-full h-3 pacioli-bar-track rounded-full overflow-hidden">
                       <div className="h-3 rounded-full transition-all" style={{ width: `${pct}%`, background: data.color }} />
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-3 text-center">
                     <Stat label="Remaining" value={formatCurrency(remaining)} />
                     <Stat label="Contributing" value={`${formatCurrency(data.monthly_contribution)}/mo`} />
-                    <Stat label="Need / mo" value={neededPerMonth > 0 ? `${formatCurrency(neededPerMonth)}/mo` : "Done!"} highlight={!onTrack ? "vela-text-warning" : undefined} />
+                    <Stat label="Need / mo" value={neededPerMonth > 0 ? `${formatCurrency(neededPerMonth)}/mo` : "Done!"} highlight={!onTrack ? "pacioli-text-warning" : undefined} />
                   </div>
                 </>
               )}
@@ -261,9 +261,9 @@ export default function SinkingFunds() {
 
 function Stat({ label, value, highlight }: { label: string; value: string; highlight?: string }) {
   return (
-    <div className="vela-bg-surface-2 rounded-lg p-3">
-      <p className="text-xs vela-text-muted mb-1">{label}</p>
-      <p className={`text-sm font-semibold ${highlight ?? "vela-text-primary"}`}>{value}</p>
+    <div className="pacioli-bg-surface-2 rounded-lg p-3">
+      <p className="text-xs pacioli-text-muted mb-1">{label}</p>
+      <p className={`text-sm font-semibold ${highlight ?? "pacioli-text-primary"}`}>{value}</p>
     </div>
   );
 }

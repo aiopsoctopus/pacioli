@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 
-const DEMO_STORAGE_KEY = "vela-demo-mode";
+const DEMO_STORAGE_KEY = "pacioli-demo-mode";
 
 interface DemoContextValue {
   isDemo: boolean;
