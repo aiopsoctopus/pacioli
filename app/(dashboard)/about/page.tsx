@@ -72,26 +72,29 @@ export default function AboutPage() {
         <SectionTitle icon={<Shield size={18} />}>Your data never leaves your device</SectionTitle>
         <p className="text-sm pacioli-text-secondary leading-relaxed">
           This is the thing I'm most deliberate about. Pacioli has no backend, no database, no user accounts,
-          and no telemetry. When you import a CSV, it goes into <code className="text-xs bg-zinc-500/20 px-1.5 py-0.5 rounded font-mono pacioli-text-primary">localStorage</code> in
-          your browser — on your device, nowhere else. The static account and transaction data that comes
-          pre-loaded lives entirely in the app bundle.
+          and no telemetry. Your financial data — CSV imports, category rules, budget amounts, everything you
+          add or change — is written to your browser's local storage and never sent anywhere.
         </p>
         <p className="text-sm pacioli-text-secondary leading-relaxed">
-          Nobody can see your financial data because there is literally nowhere for it to go. There are no
-          servers receiving it, no API calls phoning home, no analytics collecting it. You can verify this
-          by opening DevTools → Network while using the app — you'll see no outbound requests to any external
-          service.
+          I know "local storage" can sound technical, so here's the clearest way I can put it: the app code
+          is hosted on Vercel and loads in your browser like any website. But there's a meaningful difference
+          between the <span className="font-medium pacioli-text-primary">code</span> (which downloads once, like a webpage)
+          and your <span className="font-medium pacioli-text-primary">data</span> (which never goes back up).
+          Think of it like downloading a spreadsheet template — the template came from the internet, but your
+          numbers stay on your computer. Pacioli works the same way.
         </p>
         <div className="p-4 bg-indigo-950/30 border border-indigo-800/30 rounded-xl">
           <p className="text-xs pacioli-text-secondary leading-relaxed">
-            <span className="font-semibold text-indigo-400">Compare this to apps like Mint, YNAB, or Copilot</span> —
-            those apps store your transaction history, spending patterns, and sometimes bank credentials on
-            their servers. That's a meaningful privacy tradeoff. Pacioli makes the opposite choice.
+            <span className="font-semibold text-indigo-400">You can verify this yourself.</span> Open
+            DevTools → Network tab, then import a CSV. You'll see zero outbound requests carrying your data —
+            because none are made. Compare that to apps like Mint, YNAB, or Copilot, which store your
+            transaction history and spending patterns on their servers. That's a real tradeoff. Pacioli
+            makes the opposite choice.
           </p>
         </div>
         <p className="text-xs pacioli-text-muted leading-relaxed">
           <span className="font-medium pacioli-text-secondary">A note on Plaid:</span> A future version of Pacioli
-          will optionally support live bank connections via Plaid. That will change the privacy story — Plaid
+          will optionally support live bank connections via Plaid. That will change this story — Plaid
           connects to your accounts through their servers. I'll make that tradeoff explicit and opt-in when
           the time comes. For now, everything stays local.
         </p>
