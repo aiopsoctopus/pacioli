@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   fetchJSON, formatCurrency, formatMonth, getNetWorth, getMonthlySpend,
   loadBudgetEnvelopes, monthProgressFraction, useTransactions,
@@ -10,12 +10,14 @@ import {
 } from "recharts";
 import { TrendingUp, TrendingDown, DollarSign, Target, Wallet } from "lucide-react";
 import { useDemo } from "@/components/demo-provider";
+import { useTheme } from "@/components/theme-provider";
 
 const COLORS = ["#6366f1","#10b981","#f59e0b","#ef4444","#ec4899","#3b82f6","#8b5cf6","#14b8a6"];
 
 export default function ZoomOut() {
   const { isDemo } = useDemo();
   const ns = isDemo ? "demo" : "";
+  const { theme } = useTheme();
 
   const [accounts, setAccounts] = useState<AccountData | null>(null);
   const [sinkingFunds, setSinkingFunds] = useState<SinkingFund[]>([]);
@@ -32,6 +34,18 @@ export default function ZoomOut() {
   if (!accounts || !transactions.length || !income.length || !sinkingFunds.length) {
     return <div className="pacioli-text-muted animate-pulse">Loading your financial picture...</div>;
   }
+
+  // ── Theme-aware chart styles (reads live CSS variables so tooltips adapt to light/dark) ──
+  const chartTheme = useMemo(() => {
+    const s = getComputedStyle(document.documentElement);
+    return {
+      tooltipBg:     s.getPropertyValue("--bg-surface").trim()    || "#18181b",
+      tooltipBorder: s.getPropertyValue("--border").trim()         || "rgba(63,63,70,0.5)",
+      textMuted:     s.getPropertyValue("--text-muted").trim()     || "#71717a",
+      textPrimary:   s.getPropertyValue("--text-primary").trim()   || "#ffffff",
+      textSecondary: s.getPropertyValue("--text-secondary").trim() || "#d4d4d8",
+    };
+  }, [theme]); // re-read CSS vars whenever theme toggles
 
   // Net worth over time (last 12 months)
   const months = Object.keys(accounts.assets[0].balances).sort();
@@ -144,12 +158,12 @@ export default function ZoomOut() {
                   <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} width={50} />
+              <XAxis dataKey="month" tick={{ fill: chartTheme.textMuted, fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} tick={{ fill: chartTheme.textMuted, fontSize: 11 }} axisLine={false} tickLine={false} width={50} />
               <Tooltip
-                formatter={(v: any) => [formatCurrency(Number(v)), "Net Worth"]}
-                contentStyle={{ background: "#18181b", border: "1px solid #3f3f46", borderRadius: 8 }}
-                labelStyle={{ color: "#a1a1aa" }}
+                formatter={(v: unknown) => [formatCurrency(Number(v)), "Net Worth"]}
+                contentStyle={{ background: chartTheme.tooltipBg, border: `1px solid ${chartTheme.tooltipBorder}`, borderRadius: 8 }}
+                labelStyle={{ color: chartTheme.textMuted }}
               />
               <Area type="monotone" dataKey="netWorth" stroke="#6366f1" strokeWidth={2} fill="url(#nwGrad)" />
             </AreaChart>
@@ -167,14 +181,15 @@ export default function ZoomOut() {
               <Legend
                 layout="vertical" align="right" verticalAlign="middle"
                 formatter={(v, entry: any) => (
-                  <span style={{ color: "#a1a1aa", fontSize: 12 }}>
-                    {v} <span style={{ color: "#fff" }}>{formatCurrency(entry.payload.value)}</span>
+                  <span style={{ color: chartTheme.textMuted, fontSize: 12 }}>
+                    {v} <span style={{ color: chartTheme.textPrimary }}>{formatCurrency(entry.payload.value)}</span>
                   </span>
                 )}
               />
               <Tooltip
-                formatter={(v: any) => [formatCurrency(Number(v))]}
-                contentStyle={{ background: "#18181b", border: "1px solid #3f3f46", borderRadius: 8 }}
+                formatter={(v: unknown) => [formatCurrency(Number(v))]}
+                contentStyle={{ background: chartTheme.tooltipBg, border: `1px solid ${chartTheme.tooltipBorder}`, borderRadius: 8 }}
+                labelStyle={{ color: chartTheme.textMuted }}
               />
             </PieChart>
           </ResponsiveContainer>
