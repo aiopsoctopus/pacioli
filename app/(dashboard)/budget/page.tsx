@@ -268,7 +268,7 @@ function EnvelopeRow({
               onChange={(e) => setDraft(Number(e.target.value))}
               onKeyDown={(e) => { if (e.key === "Enter") commit(); if (e.key === "Escape") setEditing(false); }}
             />
-            <button onClick={commit} className="p-1 text-emerald-400 hover:text-emerald-300"><Check size={13} /></button>
+            <button onClick={commit} className="p-1 vela-text-success hover:opacity-80"><Check size={13} /></button>
             <button onClick={() => setEditing(false)} className="p-1 vela-text-muted hover:vela-text-primary"><X size={13} /></button>
           </div>
         ) : (
@@ -542,7 +542,7 @@ export default function BudgetPage() {
             if (overBudget.length === 0 && nearBudget.length === 0) return (
               <div className="vela-bg-surface rounded-2xl p-5 border">
                 <p className="text-xs font-semibold vela-text-secondary mb-1">Budget Status</p>
-                <p className="text-sm text-emerald-400 font-medium mt-2">✓ All categories on track</p>
+                <p className="text-sm vela-text-success font-medium mt-2">✓ All categories on track</p>
                 <p className="text-xs vela-text-muted mt-1">
                   You're {Math.round(monthPct)}% through {formatMonth(currentMonth)} with no categories over budget.
                 </p>

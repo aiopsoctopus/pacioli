@@ -119,7 +119,7 @@ export default function SinkingFunds() {
       <div className="grid grid-cols-3 gap-4">
         <div className="vela-bg-surface rounded-2xl p-5 border">
           <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">Total Saved</p>
-          <p className="text-2xl font-bold text-emerald-400">{formatCurrency(totalSaved)}</p>
+          <p className="text-2xl font-bold vela-text-success">{formatCurrency(totalSaved)}</p>
         </div>
         <div className="vela-bg-surface rounded-2xl p-5 border">
           <p className="text-xs vela-text-muted uppercase tracking-wide mb-2">Total Goal</p>

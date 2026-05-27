@@ -33,8 +33,10 @@ body {
   --text-success:   #34d399;
   --bg-warning:     rgba(120,53,15,0.35);
   --bg-danger:      rgba(127,29,29,0.35);
+  --bg-success:     rgba(6,78,59,0.3);
   --border-warning: rgba(180,83,9,0.5);
   --border-danger:  rgba(185,28,28,0.5);
+  --border-success: rgba(16,185,129,0.4);
 }
 
 [data-theme="dark"] {
@@ -64,8 +66,10 @@ body {
   --text-success:   #34d399;
   --bg-warning:     rgba(120,53,15,0.35);
   --bg-danger:      rgba(127,29,29,0.35);
+  --bg-success:     rgba(6,78,59,0.3);
   --border-warning: rgba(180,83,9,0.5);
   --border-danger:  rgba(185,28,28,0.5);
+  --border-success: rgba(16,185,129,0.4);
 }
 
 [data-theme="light"] {
@@ -95,8 +99,10 @@ body {
   --text-success:   #059669;
   --bg-warning:     rgba(253,230,138,0.5);
   --bg-danger:      rgba(254,202,202,0.5);
+  --bg-success:     rgba(209,250,229,0.6);
   --border-warning: rgba(180,83,9,0.3);
   --border-danger:  rgba(220,38,38,0.3);
+  --border-success: rgba(5,150,105,0.35);
 }
 
 /* Apply variables to utility classes used throughout the app */
@@ -127,5 +133,5 @@ body {
 .vela-alert-danger   { background-color: var(--bg-danger); border-color: var(--border-danger); }
 .vela-badge-warning  { background-color: var(--bg-warning); color: var(--text-warning); }
 .vela-badge-danger   { background-color: var(--bg-danger); color: var(--text-danger); }
-.vela-badge-success  { background-color: rgba(6,78,59,0.3); color: var(--text-success); }
-[data-theme="light"] .vela-badge-success { background-color: rgba(209,250,229,0.7); }
+.vela-alert-success  { background-color: var(--bg-success); border-color: var(--border-success); }
+.vela-badge-success  { background-color: var(--bg-success); color: var(--text-success); }

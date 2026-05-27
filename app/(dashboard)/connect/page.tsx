@@ -212,32 +212,32 @@ export default function ConnectPage() {
 
           {/* Result */}
           {csvError && (
-            <div className="mt-4 flex items-start gap-2 p-3 bg-red-900/20 border border-red-800/40 rounded-lg">
-              <AlertCircle size={15} className="text-red-400 mt-0.5 shrink-0" />
-              <p className="text-xs text-red-300">{csvError}</p>
+            <div className="mt-4 flex items-start gap-2 p-3 vela-alert-danger border rounded-lg">
+              <AlertCircle size={15} className="vela-text-danger mt-0.5 shrink-0" />
+              <p className="text-xs vela-text-danger">{csvError}</p>
             </div>
           )}
           {csvResult && (
-            <div className="mt-4 p-4 bg-emerald-900/20 border border-emerald-800/40 rounded-xl space-y-3">
+            <div className="mt-4 p-4 vela-alert-success border rounded-xl space-y-3">
               <div className="flex items-center gap-2">
-                <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
-                <p className="text-sm font-medium text-emerald-300">
+                <CheckCircle2 size={15} className="vela-text-success shrink-0" />
+                <p className="text-sm font-medium vela-text-success">
                   {csvResult.count} transaction{csvResult.count !== 1 ? "s" : ""} imported
                 </p>
               </div>
 
               {/* Uncategorized prompt */}
               {csvResult.uncategorized > 0 && (
-                <div className="flex items-center justify-between gap-3 px-3 py-2.5 bg-amber-900/20 border border-amber-700/30 rounded-lg">
+                <div className="flex items-center justify-between gap-3 px-3 py-2.5 vela-alert-warning border rounded-lg">
                   <div className="flex items-center gap-2">
-                    <Tag size={13} className="text-amber-400 shrink-0" />
-                    <p className="text-xs text-amber-300">
+                    <Tag size={13} className="vela-text-warning shrink-0" />
+                    <p className="text-xs vela-text-warning">
                       <span className="font-semibold">{csvResult.uncategorized}</span> transaction{csvResult.uncategorized !== 1 ? "s" : ""} need a category
                     </p>
                   </div>
                   <button
                     onClick={() => router.push("/cash-flow")}
-                    className="flex items-center gap-1 text-xs font-semibold text-amber-300 hover:text-amber-200 transition-colors shrink-0"
+                    className="flex items-center gap-1 text-xs font-semibold vela-text-warning hover:opacity-80 transition-opacity shrink-0"
                   >
                     Review now <ArrowRight size={12} />
                   </button>
@@ -245,7 +245,7 @@ export default function ConnectPage() {
               )}
 
               {csvResult.uncategorized === 0 && (
-                <p className="text-xs text-emerald-400/70">All transactions were auto-categorized.</p>
+                <p className="text-xs vela-text-success opacity-70">All transactions were auto-categorized.</p>
               )}
 
               <div>
@@ -340,13 +340,13 @@ export default function ConnectPage() {
         {/* Account list */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {[
-            { title: "Assets", accounts: assets, total: totalAssets, color: "text-emerald-400", bar: "#34d399" },
-            { title: "Liabilities", accounts: liabilities, total: totalLiabilities, color: "text-red-400", bar: "#f87171" },
-          ].map(({ title, accounts, total, color, bar }) => (
+            { title: "Assets", accounts: assets, total: totalAssets, colorClass: "vela-text-success" },
+            { title: "Liabilities", accounts: liabilities, total: totalLiabilities, colorClass: "vela-text-danger" },
+          ].map(({ title, accounts, total, colorClass }) => (
             <div key={title}>
               <div className="flex justify-between items-center mb-3">
                 <p className="text-xs font-semibold vela-text-muted uppercase tracking-wide">{title}</p>
-                <span className={`text-sm font-bold ${color}`}>{formatCurrency(total)}</span>
+                <span className={`text-sm font-bold ${colorClass}`}>{formatCurrency(total)}</span>
               </div>
               {accounts.length === 0 && (
                 <p className="text-xs vela-text-faint italic">No {title.toLowerCase()} added yet.</p>
@@ -367,7 +367,7 @@ export default function ConnectPage() {
                       onChange={(e) => updateBalance(a.id, Number(e.target.value))}
                     />
                     <button onClick={() => deleteAccount(a.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 vela-text-muted hover:text-red-400 transition-all">
+                      className="opacity-0 group-hover:opacity-100 p-1 vela-text-muted hover:vela-text-danger transition-all">
                       <Trash2 size={13} />
                     </button>
                   </div>

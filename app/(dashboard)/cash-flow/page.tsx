@@ -166,7 +166,7 @@ export default function CashFlow() {
                     <span className="text-xs vela-text-muted">→</span>
                     <span className="text-xs font-medium" style={{ color: CATEGORY_COLORS[cat] ?? "#6366f1" }}>{cat}</span>
                   </div>
-                  <button onClick={() => deleteRule(pattern)} className="p-1 vela-text-faint hover:text-red-400 transition-colors">
+                  <button onClick={() => deleteRule(pattern)} className="p-1 vela-text-faint hover:vela-text-danger transition-colors">
                     <Trash2 size={13} />
                   </button>
                 </div>
@@ -324,13 +324,13 @@ export default function CashFlow() {
         <div className="vela-bg-surface rounded-2xl p-6 border">
           {/* Review mode banner — shown when arriving from CSV import */}
           {reviewMode && (
-            <div className="flex items-center justify-between gap-3 mb-4 px-3 py-2.5 bg-amber-900/20 border border-amber-700/30 rounded-xl">
+            <div className="flex items-center justify-between gap-3 mb-4 px-3 py-2.5 vela-alert-warning border rounded-xl">
               <div className="flex items-center gap-2">
-                <Tag size={13} className="text-amber-400 shrink-0" />
-                <p className="text-xs text-amber-300">
+                <Tag size={13} className="vela-text-warning shrink-0" />
+                <p className="text-xs vela-text-warning">
                   {uncategorizedTxs.length > 0
                     ? <><span className="font-semibold">{uncategorizedTxs.length}</span> uncategorized transaction{uncategorizedTxs.length !== 1 ? "s" : ""} — tap a category badge to fix</>
-                    : <span className="text-emerald-300 font-medium">All transactions categorized!</span>
+                    : <span className="vela-text-success font-medium">All transactions categorized!</span>
                   }
                 </p>
               </div>
@@ -401,7 +401,7 @@ function TransactionRow({
           <Tag size={10} />
           {tx.category}
         </button>
-        {justSaved && <CheckCircle2 size={13} className="text-emerald-400" />}
+        {justSaved && <CheckCircle2 size={13} className="vela-text-success" />}
         <span className="text-sm font-medium vela-text-primary">{formatCurrency(tx.amount)}</span>
       </div>
 
