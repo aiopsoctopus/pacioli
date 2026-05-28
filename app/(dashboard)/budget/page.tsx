@@ -133,7 +133,7 @@ function SetupFlow({
               <span className="absolute left-3 top-1/2 -translate-y-1/2 pacioli-text-muted text-sm">$</span>
               <input
                 type="number"
-                className="w-full pacioli-bg-input border rounded-xl pl-7 pr-4 py-3 text-lg font-bold focus:outline-none focus:border-indigo-500 pacioli-text-primary"
+                className="w-full pacioli-bg-input border rounded-xl pl-7 pr-4 py-3 text-lg font-bold focus:outline-none focus:border-teal-600 pacioli-text-primary"
                 value={draft[current.category] ?? current.suggestedBudget}
                 onChange={(e) => setDraft((d) => ({ ...d, [current.category]: Number(e.target.value) }))}
               />
@@ -513,7 +513,7 @@ export default function BudgetPage() {
             <div className="w-full h-2.5 pacioli-bar-track rounded-full overflow-hidden relative">
               {/* Month progress ghost */}
               <div
-                className="absolute top-0 left-0 h-2.5 rounded-full opacity-20 bg-zinc-400"
+                className="absolute top-0 left-0 h-2.5 rounded-full opacity-30 pacioli-bar-track"
                 style={{ width: `${monthPct}%` }}
               />
               {/* Actual spend */}
