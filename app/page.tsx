@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowRight, Shield, Cpu, BarChart3, Target, TrendingUp, Wallet } from "lucide-react";
+import { ArrowRight, Shield, Cpu, BarChart3, Target, TrendingUp, Wallet, Sun, Moon } from "lucide-react";
 import PacioliLogo from "@/components/pacioli-logo";
 
 const FEATURES = [
@@ -44,9 +44,99 @@ const STAT_ITEMS = [
   { value: "0", label: "Subscriptions, trackers, or third-party accounts" },
 ];
 
+/* ── Warm Stone palette ──────────────────────────────────────────── */
+const LIGHT = {
+  pageBg:        "#faf8f4",
+  navBg:         "rgba(250,248,244,0.9)",
+  navBorder:     "#e5dfd6",
+  surfaceBg:     "#ffffff",
+  surfaceBorder: "#e5dfd6",
+  cardBg:        "#ffffff",
+  cardBorder:    "#e5dfd6",
+  statsStripBg:  "#f3f0ea",
+  statsStripBorder: "#e5dfd6",
+  originBg:      "#f3f0ea",
+  originBorder:  "#e5dfd6",
+  textPrimary:   "#1e1a14",
+  textSecondary: "#78705e",
+  textMuted:     "#a89f8e",
+  textTrust:     "#78705e",
+  eyebrowBg:     "#e0f4f4",
+  eyebrowBorder: "#9dd4d4",
+  eyebrowText:   "#0d6e6e",
+  eyebrowDot:    "#0d6e6e",
+  ctaPrimary:    "#0d6e6e",
+  ctaPrimaryHover:"#0a5858",
+  ctaSecondaryBg:"transparent",
+  ctaSecondaryBorder:"#d6cfc4",
+  ctaSecondaryText:"#4a4235",
+  statValue:     "#0d6e6e",
+  statLabel:     "#78705e",
+  iconBg:        "#e0f4f4",
+  iconColor:     "#0d6e6e",
+  footerBorder:  "#e5dfd6",
+  footerText:    "#a89f8e",
+  footerLink:    "#78705e",
+  pronunciationColor: "#a89f8e",
+  emText:        "#4a4235",
+  toggleBg:      "#e5dfd6",
+  toggleColor:   "#78705e",
+};
+
+const DARK = {
+  pageBg:        "#1a1510",
+  navBg:         "rgba(26,21,16,0.9)",
+  navBorder:     "#2e2820",
+  surfaceBg:     "#221d17",
+  surfaceBorder: "#2e2820",
+  cardBg:        "#221d17",
+  cardBorder:    "#2e2820",
+  statsStripBg:  "#1f1a14",
+  statsStripBorder: "#2e2820",
+  originBg:      "#1f1a14",
+  originBorder:  "#2e2820",
+  textPrimary:   "#f0ece4",
+  textSecondary: "#a89f8e",
+  textMuted:     "#6b6048",
+  textTrust:     "#6b6048",
+  eyebrowBg:     "rgba(13,110,110,0.18)",
+  eyebrowBorder: "rgba(13,110,110,0.35)",
+  eyebrowText:   "#5dcaa5",
+  eyebrowDot:    "#5dcaa5",
+  ctaPrimary:    "#0d6e6e",
+  ctaPrimaryHover:"#0a5858",
+  ctaSecondaryBg:"rgba(13,110,110,0.12)",
+  ctaSecondaryBorder:"rgba(93,202,165,0.2)",
+  ctaSecondaryText:"#a89f8e",
+  statValue:     "#5dcaa5",
+  statLabel:     "#78705e",
+  iconBg:        "rgba(13,110,110,0.2)",
+  iconColor:     "#5dcaa5",
+  footerBorder:  "#2e2820",
+  footerText:    "#4a4235",
+  footerLink:    "#6b6048",
+  pronunciationColor: "#6b6048",
+  emText:        "#a89f8e",
+  toggleBg:      "#2e2820",
+  toggleColor:   "#a89f8e",
+};
+
 export default function LandingPage() {
+  const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    setMounted(true);
+    // Respect stored preference, default to light
+    const stored = localStorage.getItem("pacioli-landing-theme");
+    setIsDark(stored === "dark");
+  }, []);
+
+  function toggleTheme() {
+    const next = !isDark;
+    setIsDark(next);
+    localStorage.setItem("pacioli-landing-theme", next ? "dark" : "light");
+  }
 
   function handleTryDemo() {
     localStorage.setItem("pacioli-demo-mode", "true");
@@ -54,42 +144,65 @@ export default function LandingPage() {
     window.location.href = "/zoom-out?demo=true";
   }
 
+  const c = isDark ? DARK : LIGHT;
+
+  // Prevent flash before mount
+  if (!mounted) return <div style={{ background: LIGHT.pageBg, minHeight: "100vh" }} />;
+
   return (
-    <div style={{ background: "#0e0c1e", minHeight: "100vh", color: "#f0effe" }}>
+    <div style={{ background: c.pageBg, minHeight: "100vh", color: c.textPrimary, transition: "background 0.2s, color 0.2s" }}>
 
       {/* ── Navbar ─────────────────────────────────────────── */}
       <nav style={{
         position: "sticky", top: 0, zIndex: 50,
-        background: "rgba(14,12,30,0.85)",
+        background: c.navBg,
         backdropFilter: "blur(12px)",
-        borderBottom: "1px solid rgba(175,169,236,0.1)",
+        borderBottom: `1px solid ${c.navBorder}`,
         padding: "0 2rem",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         height: "60px",
+        transition: "background 0.2s, border-color 0.2s",
       }}>
-        <PacioliLogo size={30} variant="wordmark" theme="dark" />
-        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+        <PacioliLogo size={30} variant="wordmark" theme={isDark ? "dark" : "light"} />
+
+        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+          {/* Dark mode toggle */}
+          <button
+            onClick={toggleTheme}
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            style={{
+              background: c.toggleBg,
+              border: "none",
+              borderRadius: "8px",
+              color: c.toggleColor,
+              width: "34px", height: "34px",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer",
+              transition: "background 0.2s, color 0.2s",
+            }}
+          >
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+
           <button
             onClick={handleTryDemo}
             style={{
               background: "transparent",
-              border: "1px solid rgba(175,169,236,0.3)",
+              border: `1px solid ${c.ctaSecondaryBorder}`,
               borderRadius: "8px",
-              color: "#c8c4f0",
+              color: c.ctaSecondaryText,
               padding: "6px 16px",
               fontSize: "13px",
               cursor: "pointer",
               transition: "all 0.15s",
             }}
-            onMouseEnter={e => (e.currentTarget.style.borderColor = "#534AB7")}
-            onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(175,169,236,0.3)")}
           >
             Try demo
           </button>
           <Link
             href="/setup"
             style={{
-              background: "#534AB7",
+              background: c.ctaPrimary,
               borderRadius: "8px",
               color: "#fff",
               padding: "6px 16px",
@@ -114,18 +227,19 @@ export default function LandingPage() {
         {/* Eyebrow */}
         <div style={{
           display: "inline-flex", alignItems: "center", gap: "8px",
-          background: "rgba(83,74,183,0.18)",
-          border: "1px solid rgba(83,74,183,0.35)",
+          background: c.eyebrowBg,
+          border: `1px solid ${c.eyebrowBorder}`,
           borderRadius: "999px",
           padding: "5px 14px",
           fontSize: "12px",
-          color: "#AFA9EC",
+          color: c.eyebrowText,
           fontWeight: 600,
           letterSpacing: "0.05em",
           textTransform: "uppercase",
           marginBottom: "32px",
+          transition: "background 0.2s, border-color 0.2s, color 0.2s",
         }}>
-          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#5dcaa5", display: "inline-block" }} />
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: c.eyebrowDot, display: "inline-block" }} />
           Your household, run like a business
         </div>
 
@@ -136,9 +250,8 @@ export default function LandingPage() {
           lineHeight: 1.1,
           letterSpacing: "-0.02em",
           margin: "0 0 24px",
-          background: "linear-gradient(135deg, #f0effe 0%, #AFA9EC 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
+          color: c.textPrimary,
+          transition: "color 0.2s",
         }}>
           Financial clarity,<br />without the complexity.
         </h1>
@@ -146,10 +259,11 @@ export default function LandingPage() {
         {/* Sub */}
         <p style={{
           fontSize: "1.2rem",
-          color: "#7f77dd",
+          color: c.textSecondary,
           lineHeight: 1.7,
           maxWidth: "560px",
           margin: "0 auto 48px",
+          transition: "color 0.2s",
         }}>
           Pacioli is a local-first personal finance OS — budget tracking, net worth, forecasting, and goal planning.
           Your data stays on your device. Always.
@@ -161,15 +275,14 @@ export default function LandingPage() {
             href="/setup"
             style={{
               display: "inline-flex", alignItems: "center", gap: "8px",
-              background: "#534AB7",
+              background: c.ctaPrimary,
               color: "#fff",
               padding: "14px 28px",
               borderRadius: "12px",
               fontWeight: 700,
               fontSize: "1rem",
               textDecoration: "none",
-              boxShadow: "0 0 40px rgba(83,74,183,0.4)",
-              transition: "all 0.15s",
+              transition: "background 0.15s",
             }}
           >
             Get started free <ArrowRight size={16} />
@@ -178,9 +291,9 @@ export default function LandingPage() {
             onClick={handleTryDemo}
             style={{
               display: "inline-flex", alignItems: "center", gap: "8px",
-              background: "rgba(83,74,183,0.15)",
-              border: "1px solid rgba(175,169,236,0.25)",
-              color: "#c8c4f0",
+              background: c.ctaSecondaryBg,
+              border: `1px solid ${c.ctaSecondaryBorder}`,
+              color: c.ctaSecondaryText,
               padding: "14px 28px",
               borderRadius: "12px",
               fontWeight: 600,
@@ -194,17 +307,18 @@ export default function LandingPage() {
         </div>
 
         {/* Trust note */}
-        <p style={{ marginTop: "24px", fontSize: "12px", color: "#534AB7" }}>
+        <p style={{ marginTop: "24px", fontSize: "12px", color: c.textTrust, transition: "color 0.2s" }}>
           No sign-up · No credit card · No tracking · Open in seconds
         </p>
       </section>
 
       {/* ── Stats bar ──────────────────────────────────────── */}
       <section style={{
-        borderTop: "1px solid rgba(175,169,236,0.08)",
-        borderBottom: "1px solid rgba(175,169,236,0.08)",
-        background: "rgba(83,74,183,0.06)",
+        borderTop: `1px solid ${c.statsStripBorder}`,
+        borderBottom: `1px solid ${c.statsStripBorder}`,
+        background: c.statsStripBg,
         padding: "40px 2rem",
+        transition: "background 0.2s, border-color 0.2s",
       }}>
         <div style={{
           maxWidth: "900px", margin: "0 auto",
@@ -215,8 +329,8 @@ export default function LandingPage() {
         }}>
           {STAT_ITEMS.map((s) => (
             <div key={s.value}>
-              <div style={{ fontSize: "2.4rem", fontWeight: 800, color: "#534AB7", lineHeight: 1 }}>{s.value}</div>
-              <div style={{ fontSize: "12px", color: "#7f77dd", marginTop: "8px", lineHeight: 1.5 }}>{s.label}</div>
+              <div style={{ fontSize: "2.4rem", fontWeight: 800, color: c.statValue, lineHeight: 1, transition: "color 0.2s" }}>{s.value}</div>
+              <div style={{ fontSize: "12px", color: c.statLabel, marginTop: "8px", lineHeight: 1.5, transition: "color 0.2s" }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -228,12 +342,13 @@ export default function LandingPage() {
           textAlign: "center",
           fontSize: "1.8rem",
           fontWeight: 700,
-          color: "#f0effe",
+          color: c.textPrimary,
           marginBottom: "12px",
+          transition: "color 0.2s",
         }}>
           Everything your finances need
         </h2>
-        <p style={{ textAlign: "center", color: "#7f77dd", marginBottom: "48px", fontSize: "1rem" }}>
+        <p style={{ textAlign: "center", color: c.textSecondary, marginBottom: "48px", fontSize: "1rem", transition: "color 0.2s" }}>
           Built on the same double-entry principles Luca Pacioli invented in 1494.
         </p>
 
@@ -246,23 +361,25 @@ export default function LandingPage() {
             <div
               key={title}
               style={{
-                background: "rgba(44,41,68,0.5)",
-                border: "1px solid rgba(175,169,236,0.12)",
+                background: c.cardBg,
+                border: `1px solid ${c.cardBorder}`,
                 borderRadius: "16px",
                 padding: "28px",
+                transition: "background 0.2s, border-color 0.2s",
               }}
             >
               <div style={{
                 width: 40, height: 40, borderRadius: "10px",
-                background: "rgba(83,74,183,0.25)",
+                background: c.iconBg,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 marginBottom: "16px",
-                color: "#AFA9EC",
+                color: c.iconColor,
+                transition: "background 0.2s, color 0.2s",
               }}>
                 <Icon size={20} />
               </div>
-              <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "#f0effe", marginBottom: "8px" }}>{title}</h3>
-              <p style={{ fontSize: "14px", color: "#7f77dd", lineHeight: 1.65, margin: 0 }}>{body}</p>
+              <h3 style={{ fontSize: "1rem", fontWeight: 700, color: c.textPrimary, marginBottom: "8px", transition: "color 0.2s" }}>{title}</h3>
+              <p style={{ fontSize: "14px", color: c.textSecondary, lineHeight: 1.65, margin: 0, transition: "color 0.2s" }}>{body}</p>
             </div>
           ))}
         </div>
@@ -270,29 +387,27 @@ export default function LandingPage() {
 
       {/* ── Origin story / brand ───────────────────────────── */}
       <section style={{
-        background: "rgba(83,74,183,0.08)",
-        borderTop: "1px solid rgba(175,169,236,0.08)",
-        borderBottom: "1px solid rgba(175,169,236,0.08)",
+        background: c.originBg,
+        borderTop: `1px solid ${c.originBorder}`,
+        borderBottom: `1px solid ${c.originBorder}`,
         padding: "80px 2rem",
+        transition: "background 0.2s, border-color 0.2s",
       }}>
         <div style={{ maxWidth: "620px", margin: "0 auto", textAlign: "center" }}>
-          <div style={{
-            fontSize: "3rem",
-            marginBottom: "16px",
-          }}>📖</div>
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: "#f0effe", marginBottom: "20px" }}>
+          <div style={{ fontSize: "3rem", marginBottom: "16px" }}>📖</div>
+          <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: c.textPrimary, marginBottom: "20px", transition: "color 0.2s" }}>
             Named for the father of accounting
           </h2>
-          <p style={{ color: "#7f77dd", lineHeight: 1.8, fontSize: "1rem" }}>
-            Luca Pacioli published <em style={{ color: "#AFA9EC" }}>Summa de Arithmetica</em> in 1494 — codifying double-entry bookkeeping
+          <p style={{ color: c.textSecondary, lineHeight: 1.8, fontSize: "1rem", transition: "color 0.2s" }}>
+            Luca Pacioli published <em style={{ color: c.emText }}>Summa de Arithmetica</em> in 1494 — codifying double-entry bookkeeping
             and laying the foundation for modern finance. His insight: every transaction has two sides.
             Assets and liabilities. Income and spending. Where you are and where you're headed.
           </p>
-          <p style={{ color: "#7f77dd", lineHeight: 1.8, fontSize: "1rem", marginTop: "16px" }}>
+          <p style={{ color: c.textSecondary, lineHeight: 1.8, fontSize: "1rem", marginTop: "16px", transition: "color 0.2s" }}>
             Pacioli brings that rigour to your household — not corporate-grade complexity, just the
             clarity of knowing exactly where every dollar comes from and where it goes.
           </p>
-          <p style={{ marginTop: "24px", fontSize: "13px", color: "#534AB7", fontStyle: "italic" }}>
+          <p style={{ marginTop: "24px", fontSize: "13px", color: c.pronunciationColor, fontStyle: "italic", transition: "color 0.2s" }}>
             pah · CHOH · lee
           </p>
         </div>
@@ -300,10 +415,10 @@ export default function LandingPage() {
 
       {/* ── Bottom CTA ─────────────────────────────────────── */}
       <section style={{ textAlign: "center", padding: "80px 2rem 100px" }}>
-        <h2 style={{ fontSize: "2rem", fontWeight: 700, color: "#f0effe", marginBottom: "12px" }}>
+        <h2 style={{ fontSize: "2rem", fontWeight: 700, color: c.textPrimary, marginBottom: "12px", transition: "color 0.2s" }}>
           Ready to see your real picture?
         </h2>
-        <p style={{ color: "#7f77dd", marginBottom: "40px", fontSize: "1rem" }}>
+        <p style={{ color: c.textSecondary, marginBottom: "40px", fontSize: "1rem", transition: "color 0.2s" }}>
           Takes 2 minutes. No account required.
         </p>
         <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
@@ -311,14 +426,14 @@ export default function LandingPage() {
             href="/setup"
             style={{
               display: "inline-flex", alignItems: "center", gap: "8px",
-              background: "#534AB7",
+              background: c.ctaPrimary,
               color: "#fff",
               padding: "14px 28px",
               borderRadius: "12px",
               fontWeight: 700,
               fontSize: "1rem",
               textDecoration: "none",
-              boxShadow: "0 0 40px rgba(83,74,183,0.35)",
+              transition: "background 0.15s",
             }}
           >
             Get started <ArrowRight size={16} />
@@ -327,12 +442,13 @@ export default function LandingPage() {
             onClick={handleTryDemo}
             style={{
               background: "transparent",
-              border: "1px solid rgba(175,169,236,0.2)",
-              color: "#7f77dd",
+              border: `1px solid ${c.ctaSecondaryBorder}`,
+              color: c.ctaSecondaryText,
               padding: "14px 28px",
               borderRadius: "12px",
               fontSize: "1rem",
               cursor: "pointer",
+              transition: "border-color 0.2s, color 0.2s",
             }}
           >
             Try sandbox first
@@ -342,18 +458,19 @@ export default function LandingPage() {
 
       {/* ── Footer ─────────────────────────────────────────── */}
       <footer style={{
-        borderTop: "1px solid rgba(175,169,236,0.08)",
+        borderTop: `1px solid ${c.footerBorder}`,
         padding: "24px 2rem",
         textAlign: "center",
         fontSize: "12px",
-        color: "#534AB7",
+        color: c.footerText,
+        transition: "border-color 0.2s, color 0.2s",
       }}>
         Built by{" "}
-        <a href="https://aiopsoctopus.substack.com" target="_blank" rel="noopener noreferrer" style={{ color: "#7f77dd", textDecoration: "none" }}>
+        <a href="https://aiopsoctopus.substack.com" target="_blank" rel="noopener noreferrer" style={{ color: c.footerLink, textDecoration: "none" }}>
           Christina Moore
         </a>
         {" · "}
-        <a href="https://aiopsoctopus.substack.com" target="_blank" rel="noopener noreferrer" style={{ color: "#7f77dd", textDecoration: "none" }}>
+        <a href="https://aiopsoctopus.substack.com" target="_blank" rel="noopener noreferrer" style={{ color: c.footerLink, textDecoration: "none" }}>
           The AI Ops Octopus
         </a>
         {" "}🐙
