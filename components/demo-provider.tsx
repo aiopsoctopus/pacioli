@@ -18,28 +18,26 @@ const DemoContext = createContext<DemoContextValue>({
   storageKey: (k) => k,
 });
 
-export function DemoProvider({ children }: { children: React.ReactNode }) {
-  const [isDemo, setIsDemo] = useState(false);
+function resolveIsDemo(): boolean {
+  if (typeof window === "undefined") return false;
+  // URL param takes priority — ?demo=true enters demo, ?demo=false exits
+  const params = new URLSearchParams(window.location.search);
+  if (params.has("demo")) {
+    const urlDemo = params.get("demo") === "true";
+    localStorage.setItem(DEMO_STORAGE_KEY, String(urlDemo));
+    return urlDemo;
+  }
+  // Real-setup users are never in demo mode — clear any stale flag
+  const setupComplete = localStorage.getItem("pacioli-setup-complete");
+  if (setupComplete === "true") {
+    localStorage.setItem(DEMO_STORAGE_KEY, "false");
+    return false;
+  }
+  return localStorage.getItem(DEMO_STORAGE_KEY) === "true";
+}
 
-  useEffect(() => {
-    // URL param takes priority — ?demo=true enters demo, ?demo=false exits
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("demo")) {
-      const urlDemo = params.get("demo") === "true";
-      setIsDemo(urlDemo);
-      localStorage.setItem(DEMO_STORAGE_KEY, String(urlDemo));
-      return;
-    }
-    // If the user has completed real setup, never show demo mode (clears stale flag)
-    const setupComplete = localStorage.getItem("pacioli-setup-complete");
-    if (setupComplete === "true") {
-      localStorage.setItem(DEMO_STORAGE_KEY, "false");
-      return;
-    }
-    // Otherwise restore from localStorage
-    const stored = localStorage.getItem(DEMO_STORAGE_KEY);
-    if (stored === "true") setIsDemo(true);
-  }, []);
+export function DemoProvider({ children }: { children: React.ReactNode }) {
+  const [isDemo, setIsDemo] = useState<boolean>(() => resolveIsDemo());
 
   const enterDemo = useCallback(() => {
     setIsDemo(true);
