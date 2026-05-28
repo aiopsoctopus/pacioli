@@ -16,7 +16,7 @@ function Section({ children }: { children: React.ReactNode }) {
 function SectionTitle({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-3 mb-2">
-      <span className="text-indigo-400">{icon}</span>
+      <span className="pacioli-accent">{icon}</span>
       <h2 className="text-lg font-bold pacioli-text-primary">{children}</h2>
     </div>
   );
@@ -24,12 +24,12 @@ function SectionTitle({ icon, children }: { icon: React.ReactNode; children: Rea
 
 function Step({ n, label, sub, href }: { n: number; label: string; sub: string; href: string }) {
   return (
-    <Link href={href} className="flex items-start gap-4 p-4 rounded-xl border pacioli-border-subtle hover:border-indigo-500/40 transition-colors group">
-      <span className="w-7 h-7 rounded-full bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 text-sm font-bold flex items-center justify-center shrink-0 mt-0.5">
+    <Link href={href} className="flex items-start gap-4 p-4 rounded-xl border pacioli-border-subtle hover:border-teal-600/40 transition-colors group">
+      <span className="w-7 h-7 rounded-full bg-teal-700/20 border border-teal-500/30 pacioli-accent text-sm font-bold flex items-center justify-center shrink-0 mt-0.5">
         {n}
       </span>
       <div>
-        <p className="text-sm font-semibold pacioli-text-primary group-hover:text-indigo-400 transition-colors">{label}</p>
+        <p className="text-sm font-semibold pacioli-text-primary group-hover:pacioli-accent transition-colors">{label}</p>
         <p className="text-xs pacioli-text-muted mt-0.5">{sub}</p>
       </div>
     </Link>
@@ -80,9 +80,9 @@ export default function AboutPage() {
           Think of it like downloading a spreadsheet template — the template came from the internet, but your
           numbers stay on your computer. Pacioli works the same way.
         </p>
-        <div className="p-4 bg-indigo-950/30 border border-indigo-800/30 rounded-xl">
+        <div className="p-4 pacioli-bg-surface-2 border pacioli-border rounded-xl">
           <p className="text-xs pacioli-text-secondary leading-relaxed">
-            <span className="font-semibold text-indigo-400">You can verify this yourself.</span> Open
+            <span className="font-semibold pacioli-accent">You can verify this yourself.</span> Open
             DevTools → Network tab, then import a CSV. You'll see zero outbound requests carrying your data —
             because none are made. Compare that to apps like Mint, YNAB, or Copilot, which store your
             transaction history and spending patterns on their servers. That's a real tradeoff. Pacioli
@@ -112,7 +112,7 @@ export default function AboutPage() {
             href="https://aiopsoctopus.substack.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-400 hover:text-indigo-300 transition-colors inline-flex items-center gap-1"
+            className="pacioli-accent hover:opacity-80 transition-colors inline-flex items-center gap-1"
           >
             The AI Ops Octopus <ExternalLink size={11} />
           </a>
@@ -124,7 +124,7 @@ export default function AboutPage() {
             href="https://claude.ai"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-400 hover:text-indigo-300 transition-colors inline-flex items-center gap-1"
+            className="pacioli-accent hover:opacity-80 transition-colors inline-flex items-center gap-1"
           >
             Claude <ExternalLink size={11} />
           </a>
