@@ -19,8 +19,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Synchronously apply saved theme before first paint to prevent flash */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            try {
+              var t = localStorage.getItem('hfos-theme');
+              document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+            } catch(e) {
+              document.documentElement.setAttribute('data-theme', 'light');
+            }
+          })();
+        `}} />
         {/* Satoshi — brand typeface from Fontshare (free, no API key needed) */}
         <link rel="preconnect" href="https://api.fontshare.com" />
         <link
@@ -28,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased min-h-screen">
+      <body className="antialiased min-h-screen" suppressHydrationWarning>
         <ThemeProvider>
           <DemoProvider>
             {children}
