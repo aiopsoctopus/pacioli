@@ -162,7 +162,7 @@ export default function ForecastView() {
       <p className="pacioli-text-muted text-sm mb-1">Based on your actual data, projected forward.</p>
       <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">What the Future Looks Like</h2>
       <p className="pacioli-text-muted mb-8 max-w-sm">No data yet. Import your accounts and transactions to see your 12-month net worth projection.</p>
-      <a href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#534AB7", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
+      <a href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#0d6e6e", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
         Connect data
       </a>
     </div>
