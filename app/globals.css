@@ -74,8 +74,8 @@ body {
 }
 
 [data-theme="dark"] {
-  --bg-base:        #1c1b4b;
-  --bg-nav:         #161538;
+  --bg-base:        #13123a;
+  --bg-nav:         #1c1b4b;
   --bg-surface:     rgba(30,28,70,0.9);
   --bg-surface-2:   rgba(24,22,58,0.8);
   --bg-input:       #201f52;
