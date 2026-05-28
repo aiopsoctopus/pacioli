@@ -13,7 +13,7 @@ import { TrendingUp, TrendingDown, DollarSign, Target, Wallet, Upload, Layers } 
 import { useDemo } from "@/components/demo-provider";
 import { useTheme } from "@/components/theme-provider";
 
-const COLORS = ["#6366f1","#10b981","#f59e0b","#ef4444","#ec4899","#3b82f6","#8b5cf6","#14b8a6"];
+const COLORS = ["#5dcaa5","#10b981","#f59e0b","#ef4444","#ec4899","#3b82f6","#8b5cf6","#14b8a6"];
 const SETUP_KEY = "pacioli-setup-complete";
 
 export default function ZoomOut() {
@@ -172,8 +172,8 @@ export default function ZoomOut() {
             <AreaChart data={nwHistory}>
               <defs>
                 <linearGradient id="nwGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#5dcaa5" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#5dcaa5" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="month" tick={{ fill: chartTheme.textMuted, fontSize: 11 }} axisLine={false} tickLine={false} />
@@ -183,7 +183,7 @@ export default function ZoomOut() {
                 contentStyle={{ background: chartTheme.tooltipBg, border: `1px solid ${chartTheme.tooltipBorder}`, borderRadius: 8 }}
                 labelStyle={{ color: chartTheme.textMuted }}
               />
-              <Area type="monotone" dataKey="netWorth" stroke="#6366f1" strokeWidth={2} fill="url(#nwGrad)" />
+              <Area type="monotone" dataKey="netWorth" stroke="#5dcaa5" strokeWidth={2} fill="url(#nwGrad)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
