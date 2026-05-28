@@ -79,7 +79,7 @@ export default function CashFlow() {
   const allTxMonths = [...new Set(transactions.map((t) => t.date.slice(0, 7)))].sort();
   const activeMonth = selectedMonth || allTxMonths[allTxMonths.length - 1] || "";
 
-  if (!isDemo) return (
+  if (!isDemo && transactions.length === 0) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
       <p className="pacioli-text-muted text-sm mb-1">Where it comes from, where it goes.</p>
       <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">How My Money Moves</h2>
@@ -90,7 +90,7 @@ export default function CashFlow() {
     </div>
   );
 
-  if (!transactions.length || !activeMonth || !income.length) return <div className="pacioli-text-muted animate-pulse">Loading cash flow...</div>;
+  if (!transactions.length || !activeMonth) return <div className="pacioli-text-muted animate-pulse">Loading cash flow...</div>;
 
   const months = allTxMonths;
 
