@@ -8,7 +8,7 @@ export default function DemoBanner() {
   if (!isDemo) return null;
 
   return (
-    <div className="w-full bg-indigo-600 text-white px-4 py-2.5 flex items-center justify-between gap-4 text-sm shrink-0">
+    <div className="w-full bg-teal-700 text-white px-4 py-2.5 flex items-center justify-between gap-4 text-sm shrink-0">
       <div className="flex items-center gap-2.5">
         <FlaskConical size={15} className="shrink-0 opacity-80" />
         <span className="font-medium">You're exploring with sample data.</span>
