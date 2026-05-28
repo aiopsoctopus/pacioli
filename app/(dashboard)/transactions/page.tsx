@@ -84,7 +84,7 @@ function TxRow({
   const color = CATEGORY_COLORS[tx.category] ?? "#71717a";
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-3 border-b pacioli-border-subtle last:border-0 transition-colors ${selected ? "bg-indigo-500/5" : "hover:bg-zinc-500/5"}`}>
+    <div className={`flex items-center gap-3 px-4 py-3 border-b pacioli-border-subtle last:border-0 transition-colors ${selected ? "pacioli-bg-surface-2" : "pacioli-bg-nav-hover"}`}>
       {/* Checkbox */}
       <button
         onClick={() => onSelect(tx.id)}
@@ -338,7 +338,7 @@ export default function TransactionsPage() {
                   <button
                     key={cat}
                     onClick={() => setFilterCat((prev) => active ? prev.filter((c) => c !== cat) : [...prev, cat])}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs transition-colors ${active ? "bg-indigo-600/20 text-indigo-400" : "pacioli-text-secondary hover:bg-zinc-500/10"}`}
+                    className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs transition-colors ${active ? "pacioli-bg-surface-2 pacioli-accent" : "pacioli-text-secondary pacioli-bg-nav-hover"}`}
                   >
                     <span className="w-2 h-2 rounded-full shrink-0" style={{ background: CATEGORY_COLORS[cat] ?? "#71717a" }} />
                     {cat}
@@ -408,7 +408,7 @@ export default function TransactionsPage() {
       {/* Table */}
       <div className="pacioli-bg-surface rounded-2xl border overflow-hidden">
         {/* Header row */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b pacioli-border-subtle bg-zinc-500/5">
+        <div className="flex items-center gap-3 px-4 py-3 border-b pacioli-border-subtle pacioli-bg-surface-2">
           {/* Select all */}
           <button
             onClick={toggleSelectAll}
