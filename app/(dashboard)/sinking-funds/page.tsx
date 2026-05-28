@@ -41,13 +41,15 @@ export default function SinkingFunds() {
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       setFunds(JSON.parse(saved));
-    } else {
+    } else if (isDemo) {
+      // Only seed from static JSON in demo mode
       fetchJSON<SinkingFund[]>("sinking_funds.json").then((f) => {
         setFunds(f);
         localStorage.setItem(storageKey, JSON.stringify(f));
       });
     }
-  }, [storageKey]);
+    // Real-data users start with no goals — they add their own
+  }, [storageKey, isDemo]);
 
   function save(updated: SinkingFund[]) {
     setFunds(updated);
