@@ -50,6 +50,10 @@ export default function ZoomOut() {
 
   // ── Theme-aware chart styles (reads live CSS variables so tooltips adapt to light/dark) ──
   const chartTheme = useMemo(() => {
+    if (typeof window === "undefined") return {
+      tooltipBg: "#18181b", tooltipBorder: "rgba(63,63,70,0.5)",
+      textMuted: "#71717a", textPrimary: "#ffffff", textSecondary: "#d4d4d8",
+    };
     const s = getComputedStyle(document.documentElement);
     return {
       tooltipBg:     s.getPropertyValue("--bg-surface").trim()    || "#18181b",
