@@ -54,11 +54,8 @@ export default function AboutPage() {
           manage a budget, plan for goals, and project where things are heading.
         </p>
         <p className="text-sm pacioli-text-secondary leading-relaxed">
-          It's named after{" "}
-          <span className="font-medium pacioli-text-primary">Luca Pacioli</span>, the 15th-century Italian
-          mathematician who published the first systematic description of double-entry bookkeeping in 1494. He
-          believed that a person couldn't truly understand their affairs without keeping their own accounts.
-          I think that's still right.
+          It's named after Luca Pacioli, the 15th-century mathematician who first wrote down the principles
+          of double-entry bookkeeping — the same idea that every dollar has two sides.
         </p>
         <p className="text-sm pacioli-text-secondary leading-relaxed">
           I got tired of financial apps that either required handing over bank credentials to a third party,
