@@ -7,6 +7,7 @@ import {
   Link2, Sun, Moon, Wallet, List, Info, Sparkles,
 } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
+import PacioliLogo from "@/components/pacioli-logo";
 
 const ONBOARDING_KEY = "pacioli-onboarded";
 
@@ -57,13 +58,10 @@ export default function Nav() {
   }, [path]);
 
   return (
-    <nav className="pacioli-bg-nav border-r w-64 min-h-screen flex flex-col py-8 px-4 shrink-0">
+    <nav className="pacioli-bg-nav border-r w-64 h-full flex flex-col py-8 px-4 shrink-0">
       {/* Brand */}
       <div className="mb-8 px-3 flex items-center justify-between">
-        <div>
-          <h1 className="pacioli-text-primary font-bold text-xl tracking-tight">Pacioli</h1>
-          <p className="text-[11px] pacioli-text-muted mt-0.5">Household Financial OS</p>
-        </div>
+        <PacioliLogo size={32} variant="wordmark" theme={isDark ? "dark" : "light"} />
         {/* Theme toggle */}
         <button
           onClick={toggle}

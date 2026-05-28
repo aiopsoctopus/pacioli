@@ -6,7 +6,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="flex flex-col min-h-screen pacioli-bg-base pacioli-text-primary">
       <DemoBanner />
       <div className="flex flex-1 min-h-0">
-        <Nav />
+        <div className="sticky top-0 h-screen overflow-y-auto shrink-0">
+          <Nav />
+        </div>
         <main className="flex-1 overflow-y-auto flex flex-col">
           <div className="flex-1 p-8">
             {children}
@@ -41,6 +43,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               >
                 aiopsoctopus.substack.com
               </a>
+              {" "}🐙
             </p>
           </footer>
         </main>
