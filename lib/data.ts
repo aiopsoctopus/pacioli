@@ -362,12 +362,13 @@ export function useTransactions(
   const rules     = rulesOverride     ?? internalRules;
   const overrides = overridesOverride ?? internalOverrides;
 
-  // Load static JSON once on mount
+  // Load static JSON only in demo mode (ns is non-empty when demo is active)
   useEffect(() => {
+    if (!ns) { setStaticTxs([]); return; }
     fetchJSON<Transaction[]>("transactions.json")
       .then(setStaticTxs)
       .catch((e) => console.error("[Pacioli] transactions.json failed:", e));
-  }, []);
+  }, [ns]);
 
   // Re-sync internal state and imports whenever ns changes (demo toggle).
   useEffect(() => {
