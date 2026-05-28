@@ -47,14 +47,17 @@ export default function ZoomOut() {
     setSetupDone(!!val);
   }, []);
 
+  // Only fetch static JSON in demo mode — real data users start blank
   useEffect(() => {
+    if (!isDemo) return;
     fetchJSON<AccountData>("accounts.json").then(setAccounts).catch((e) => console.error("[Pacioli] accounts.json failed:", e));
     fetchJSON<SinkingFund[]>("sinking_funds.json").then(setSinkingFunds).catch((e) => console.error("[Pacioli] sinking_funds.json failed:", e));
     fetchJSON<MonthIncome[]>("income.json").then(setIncome).catch((e) => console.error("[Pacioli] income.json failed:", e));
-  }, []);
+  }, [isDemo]);
 
   // ── Early returns AFTER all hooks ───────────────────────────────────────────
-  if (setupDone === false && !isDemo) return <EmptyState />;
+  // null = still checking localStorage; false = checked, not set — both show empty for real users
+  if (!isDemo && !setupDone) return <EmptyState />;
   if (!accounts || !transactions.length || !income.length || !sinkingFunds.length) {
     return <div className="pacioli-text-muted animate-pulse">Loading your financial picture...</div>;
   }
