@@ -197,7 +197,7 @@ export default function ConnectPage() {
             className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
               isDragging
                 ? "border-indigo-500 bg-indigo-900/20"
-                : "pacioli-border hover:bg-zinc-500/10"
+                : "pacioli-border pacioli-bg-nav-hover"
             }`}
           >
             <Upload size={24} className="mx-auto mb-3 pacioli-text-muted" />
