@@ -30,6 +30,12 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem(DEMO_STORAGE_KEY, String(urlDemo));
       return;
     }
+    // If the user has completed real setup, never show demo mode (clears stale flag)
+    const setupComplete = localStorage.getItem("pacioli-setup-complete");
+    if (setupComplete === "true") {
+      localStorage.setItem(DEMO_STORAGE_KEY, "false");
+      return;
+    }
     // Otherwise restore from localStorage
     const stored = localStorage.getItem(DEMO_STORAGE_KEY);
     if (stored === "true") setIsDemo(true);
