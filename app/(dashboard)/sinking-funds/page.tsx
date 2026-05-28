@@ -104,7 +104,7 @@ export default function SinkingFunds() {
       <p className="pacioli-text-muted mb-8 max-w-sm">No goals yet. Add your first sinking fund to start saving toward a specific target.</p>
       <button
         onClick={addFund}
-        style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#534AB7", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, border:"none", cursor:"pointer", fontSize:"1rem" }}
+        style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#0d6e6e", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, border:"none", cursor:"pointer", fontSize:"1rem" }}
       >
         Add my first goal
       </button>
@@ -126,7 +126,7 @@ export default function SinkingFunds() {
         </div>
         <button
           onClick={addFund}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-teal-700 hover:bg-teal-600 text-white text-sm font-medium rounded-lg transition-colors"
         >
           <Plus size={15} /> Add Goal
         </button>
@@ -144,7 +144,7 @@ export default function SinkingFunds() {
         </div>
         <div className="pacioli-bg-surface rounded-2xl p-5 border">
           <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">Setting Aside Monthly</p>
-          <p className="text-2xl font-bold text-indigo-400">{formatCurrency(totalMonthly)}</p>
+          <p className="text-2xl font-bold pacioli-accent">{formatCurrency(totalMonthly)}</p>
         </div>
       </div>
 
@@ -161,7 +161,7 @@ export default function SinkingFunds() {
           const targetDate = new Date(data.target_date).toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
           return (
-            <div key={f.id} className={`pacioli-bg-surface rounded-2xl p-6 border transition-all ${isEdit ? "border-indigo-600/60 ring-1 ring-indigo-600/30" : ""}`}>
+            <div key={f.id} className={`pacioli-bg-surface rounded-2xl p-6 border transition-all ${isEdit ? "border-teal-600/60 ring-1 ring-teal-600/30" : ""}`}>
               {isEdit && draft ? (
                 /* ── Edit mode ── */
                 <div className="space-y-4">
@@ -169,7 +169,7 @@ export default function SinkingFunds() {
                     <div className="flex-1">
                       <label className="text-xs pacioli-text-muted mb-1 block">Goal name</label>
                       <input
-                        className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                        className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-teal-600"
                         value={draft.name}
                         onChange={(e) => setDraft({ ...draft, name: e.target.value })}
                       />
@@ -177,7 +177,7 @@ export default function SinkingFunds() {
                     <div className="w-20">
                       <label className="text-xs pacioli-text-muted mb-1 block">Emoji</label>
                       <select
-                        className="w-full pacioli-bg-input border rounded-lg px-2 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                        className="w-full pacioli-bg-input border rounded-lg px-2 py-2 text-sm focus:outline-none focus:border-teal-600"
                         value={draft.emoji}
                         onChange={(e) => setDraft({ ...draft, emoji: e.target.value })}
                       >
@@ -188,22 +188,22 @@ export default function SinkingFunds() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-xs pacioli-text-muted mb-1 block">Target amount ($)</label>
-                      <input type="number" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                      <input type="number" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-teal-600"
                         value={draft.target} onChange={(e) => setDraft({ ...draft, target: Number(e.target.value) })} />
                     </div>
                     <div>
                       <label className="text-xs pacioli-text-muted mb-1 block">Already saved ($)</label>
-                      <input type="number" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                      <input type="number" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-teal-600"
                         value={draft.saved} onChange={(e) => setDraft({ ...draft, saved: Number(e.target.value) })} />
                     </div>
                     <div>
                       <label className="text-xs pacioli-text-muted mb-1 block">Monthly contribution ($)</label>
-                      <input type="number" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                      <input type="number" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-teal-600"
                         value={draft.monthly_contribution} onChange={(e) => setDraft({ ...draft, monthly_contribution: Number(e.target.value) })} />
                     </div>
                     <div>
                       <label className="text-xs pacioli-text-muted mb-1 block">Target date</label>
-                      <input type="date" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                      <input type="date" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-teal-600"
                         value={draft.target_date.slice(0,10)} onChange={(e) => setDraft({ ...draft, target_date: e.target.value })} />
                     </div>
                   </div>
@@ -212,7 +212,7 @@ export default function SinkingFunds() {
                     <div className="flex flex-wrap gap-2">
                       {COLORS.map((c) => (
                         <button key={c} onClick={() => setDraft({ ...draft, color: c })}
-                          className={`w-6 h-6 rounded-full border-2 transition-all ${draft.color === c ? "border-indigo-500 scale-110" : "border-transparent"}`}
+                          className={`w-6 h-6 rounded-full border-2 transition-all ${draft.color === c ? "border-teal-500 scale-110" : "border-transparent"}`}
                           style={{ background: c }} />
                       ))}
                     </div>
@@ -220,7 +220,7 @@ export default function SinkingFunds() {
                   </div>
                   <div className="flex gap-2 pt-1">
                     <button onClick={isAdding ? commitAdd : commitEdit}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-lg transition-colors">
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-700 hover:bg-teal-600 text-white text-xs font-medium rounded-lg transition-colors">
                       <Check size={13} /> Save
                     </button>
                     <button onClick={cancelEdit}
