@@ -3,9 +3,8 @@ import { useEffect, useState, useMemo } from "react";
 import {
   fetchJSON, formatCurrency, formatMonth,
   AccountData, MonthIncome, getNetWorth, getMonthlySpend,
-  avgMonthlyIncome,
+  avgMonthlyIncome, useTransactions,
 } from "@/lib/data";
-import { useTransactions } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
