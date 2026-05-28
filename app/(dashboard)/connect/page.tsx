@@ -126,12 +126,12 @@ export default function ConnectPage() {
       {/* Demo mode toggle */}
       <div className={`rounded-2xl p-6 border flex items-center justify-between gap-6 ${
         isDemo
-          ? "bg-indigo-950/30 border-indigo-700/40"
+          ? "pacioli-bg-surface-2 pacioli-border"
           : "pacioli-bg-surface"
       }`}>
         <div className="flex items-start gap-4">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-            isDemo ? "bg-indigo-600" : "pacioli-bg-surface-2"
+            isDemo ? "bg-teal-700" : "pacioli-bg-surface-2"
           }`}>
             <FlaskConical size={18} className={isDemo ? "text-white" : "pacioli-text-muted"} />
           </div>
@@ -145,7 +145,7 @@ export default function ConnectPage() {
                 : "Explore Pacioli with realistic sample data before connecting your own accounts. Nothing is real — income, transactions, and balances are all fictional."}
             </p>
             {isDemo && (
-              <p className="text-xs text-indigo-400 mt-2 font-medium flex items-center gap-1">
+              <p className="text-xs pacioli-accent mt-2 font-medium flex items-center gap-1">
                 Shareable link: <span className="font-mono">{typeof window !== "undefined" ? window.location.origin : ""}/?demo=true</span>
               </p>
             )}
@@ -155,14 +155,14 @@ export default function ConnectPage() {
           {isDemo ? (
             <button
               onClick={exitDemo}
-              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-xl transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-teal-700 hover:bg-teal-600 text-white text-sm font-medium rounded-xl transition-colors"
             >
               Use my own data <ArrowRight size={14} />
             </button>
           ) : (
             <button
               onClick={enterDemo}
-              className="flex items-center gap-2 px-4 py-2 pacioli-bg-surface-2 border pacioli-text-primary text-sm font-medium rounded-xl hover:border-indigo-500/50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 pacioli-bg-surface-2 border pacioli-text-primary text-sm font-medium rounded-xl hover:border-teal-600/50 transition-colors"
             >
               <FlaskConical size={14} />
               Enter sandbox
@@ -176,7 +176,7 @@ export default function ConnectPage() {
         {/* CSV Upload */}
         <div className="pacioli-bg-surface rounded-2xl p-6 border xl:col-span-2">
           <div className="flex items-center gap-3 mb-1">
-            <FileText size={18} className="text-indigo-400" />
+            <FileText size={18} className="pacioli-accent" />
             <h3 className="text-sm font-semibold pacioli-text-primary">Upload Bank CSV</h3>
           </div>
           <p className="text-xs pacioli-text-muted mb-5">
@@ -287,7 +287,7 @@ export default function ConnectPage() {
           <h3 className="text-sm font-semibold pacioli-text-primary">Manual Account Balances</h3>
           <button
             onClick={() => setShowAddForm(true)}
-            className="flex items-center gap-1.5 text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+            className="flex items-center gap-1.5 text-xs font-medium pacioli-accent hover:opacity-80 transition-colors"
           >
             <Plus size={13} /> Add account
           </button>
@@ -328,7 +328,7 @@ export default function ConnectPage() {
               </div>
             </div>
             <div className="flex gap-2 pt-1">
-              <button onClick={addAccount} className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-lg transition-colors">Save</button>
+              <button onClick={addAccount} className="px-4 py-1.5 bg-teal-700 hover:bg-teal-600 text-white text-xs font-medium rounded-lg transition-colors">Save</button>
               <button onClick={() => setShowAddForm(false)} className="px-4 py-1.5 pacioli-bg-btn-cancel pacioli-text-primary text-xs font-medium rounded-lg transition-colors">Cancel</button>
             </div>
           </div>
