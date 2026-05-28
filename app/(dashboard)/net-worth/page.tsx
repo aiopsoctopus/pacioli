@@ -1,14 +1,30 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { fetchJSON, formatCurrency, formatMonth, getNetWorth, AccountData } from "@/lib/data";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from "recharts";
+import { useDemo } from "@/components/demo-provider";
+import { Upload } from "lucide-react";
 
 export default function NetWorth() {
+  const { isDemo } = useDemo();
   const [accounts, setAccounts] = useState<AccountData | null>(null);
 
   useEffect(() => {
+    if (!isDemo) return;
     fetchJSON<AccountData>("accounts.json").then(setAccounts);
-  }, []);
+  }, [isDemo]);
+
+  if (!isDemo) return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+      <p className="pacioli-text-muted text-sm mb-1">Assets minus what you owe.</p>
+      <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">My Net Worth</h2>
+      <p className="pacioli-text-muted mb-8 max-w-sm">No account data yet. Import a CSV to see your balance sheet.</p>
+      <Link href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#534AB7", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
+        <Upload size={15} /> Connect data
+      </Link>
+    </div>
+  );
 
   if (!accounts) return <div className="pacioli-text-muted animate-pulse">Loading balance sheet...</div>;
 
