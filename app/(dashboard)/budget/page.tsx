@@ -389,7 +389,7 @@ export default function BudgetPage() {
     saveBudgetEnvelopes(updated, ns);
   }
 
-  if (!isDemo) return (
+  if (!isDemo && transactions.length === 0) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
       <div style={{ width:64, height:64, borderRadius:"16px", background:"rgba(83,74,183,0.15)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"24px" }}>
         <Sparkles size={28} style={{ color:"#7f77dd" }} />
@@ -403,7 +403,7 @@ export default function BudgetPage() {
     </div>
   );
 
-  if (!transactions.length || !income.length) {
+  if (!transactions.length) {
     return <div className="pacioli-text-muted animate-pulse">Loading budget data...</div>;
   }
 
