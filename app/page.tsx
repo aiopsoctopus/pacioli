@@ -438,7 +438,7 @@ export default function LandingPage() {
         transition: "border-color 0.2s, color 0.2s",
       }}>
         Built by{" "}
-        <a href="https://aiopsoctopus.substack.com" target="_blank" rel="noopener noreferrer" style={{ color: c.footerLink, textDecoration: "none" }}>
+        <a href="https://www.linkedin.com/in/christina-moore-94b54a23/" target="_blank" rel="noopener noreferrer" style={{ color: c.footerLink, textDecoration: "none" }}>
           Christina Moore
         </a>
         {" · "}
