@@ -336,7 +336,7 @@ function KpiCard({ label, value, sub, positive, icon, href }: {
   );
   if (href) {
     return (
-      <a href={href} className="pacioli-bg-surface rounded-2xl p-4 sm:p-5 border block hover:border-indigo-500/40 transition-colors min-w-0">
+      <a href={href} className="pacioli-bg-surface rounded-2xl p-4 sm:p-5 border block hover:border-teal-600/40 transition-colors min-w-0">
         {inner}
       </a>
     );
