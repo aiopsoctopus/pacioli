@@ -56,8 +56,11 @@ export default function ZoomOut() {
   }, [isDemo]);
 
   // ── Early returns AFTER all hooks ───────────────────────────────────────────
-  // null = still checking localStorage; false = checked, not set — both show empty for real users
-  if (!isDemo && !setupDone) return <EmptyState />;
+  // Real-data users always see the empty state — check localStorage directly
+  // so we don't depend on async context resolution timing.
+  const isRealUser = typeof window !== "undefined" &&
+    localStorage.getItem("pacioli-setup-complete") === "true";
+  if (!isDemo || isRealUser) return <EmptyState />;
   if (!accounts || !transactions.length || !income.length || !sinkingFunds.length) {
     return <div className="pacioli-text-muted animate-pulse">Loading your financial picture...</div>;
   }
