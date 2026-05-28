@@ -72,8 +72,8 @@ export default function NetWorth() {
           <AreaChart data={nwHistory}>
             <defs>
               <linearGradient id="nwGrad2" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.35} />
-                <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                <stop offset="5%" stopColor="#5dcaa5" stopOpacity={0.35} />
+                <stop offset="95%" stopColor="#5dcaa5" stopOpacity={0} />
               </linearGradient>
             </defs>
             <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} />
@@ -83,7 +83,7 @@ export default function NetWorth() {
               contentStyle={{ background: "#18181b", border: "1px solid #3f3f46", borderRadius: 8 }}
               labelStyle={{ color: "#a1a1aa" }}
             />
-            <Area type="monotone" dataKey="netWorth" stroke="#6366f1" strokeWidth={2} fill="url(#nwGrad2)" />
+            <Area type="monotone" dataKey="netWorth" stroke="#5dcaa5" strokeWidth={2} fill="url(#nwGrad2)" />
           </AreaChart>
         </ResponsiveContainer>
       </div>
