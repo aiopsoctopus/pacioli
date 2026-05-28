@@ -5,93 +5,30 @@ body {
 }
 
 /* Pacioli theme system — variables swap on data-theme attribute */
-/* Dark theme (default) */
+/* Light theme (default) — Warm Stone */
 :root {
-  --bg-base:        #18181b;
-  --bg-nav:         #09090b;
-  --bg-surface:     rgba(39,39,42,0.5);
-  --bg-surface-2:   rgba(24,24,27,0.6);
-  --bg-input:       #27272a;
-  --bg-nav-active:  #3730a3;
-  --bg-nav-hover:   rgba(39,39,42,0.6);
-  --bg-btn-cancel:  #3f3f46;
-  --bg-chip:        rgba(63,63,70,0.4);
-  --border:         rgba(63,63,70,0.5);
-  --border-subtle:  rgba(63,63,70,0.4);
-  --border-nav:     #27272a;
-  --text-primary:   #ffffff;
-  --text-secondary: #d4d4d8;
-  --text-muted:     #71717a;
-  --text-faint:     #52525b;
-  --text-nav-active:#ffffff;
-  --bar-track:      #3f3f46;
-  --icon-muted:     #71717a;
-  --icon-active:    #a5b4fc;
-  /* Semantic status colors */
-  --text-warning:   #fbbf24;
-  --text-danger:    #f87171;
-  --text-success:   #34d399;
-  --bg-warning:     rgba(120,53,15,0.35);
-  --bg-danger:      rgba(127,29,29,0.35);
-  --bg-success:     rgba(6,78,59,0.3);
-  --border-warning: rgba(180,83,9,0.5);
-  --border-danger:  rgba(185,28,28,0.5);
-  --border-success: rgba(16,185,129,0.4);
-}
-
-[data-theme="dark"] {
-  --bg-base:        #18181b;
-  --bg-nav:         #09090b;
-  --bg-surface:     rgba(39,39,42,0.5);
-  --bg-surface-2:   rgba(24,24,27,0.6);
-  --bg-input:       #27272a;
-  --bg-nav-active:  #3730a3;
-  --bg-nav-hover:   rgba(39,39,42,0.6);
-  --bg-btn-cancel:  #3f3f46;
-  --bg-chip:        rgba(63,63,70,0.4);
-  --border:         rgba(63,63,70,0.5);
-  --border-subtle:  rgba(63,63,70,0.4);
-  --border-nav:     #27272a;
-  --text-primary:   #ffffff;
-  --text-secondary: #d4d4d8;
-  --text-muted:     #71717a;
-  --text-faint:     #52525b;
-  --text-nav-active:#ffffff;
-  --bar-track:      #3f3f46;
-  --icon-muted:     #71717a;
-  --icon-active:    #a5b4fc;
-  --text-warning:   #fbbf24;
-  --text-danger:    #f87171;
-  --text-success:   #34d399;
-  --bg-warning:     rgba(120,53,15,0.35);
-  --bg-danger:      rgba(127,29,29,0.35);
-  --bg-success:     rgba(6,78,59,0.3);
-  --border-warning: rgba(180,83,9,0.5);
-  --border-danger:  rgba(185,28,28,0.5);
-  --border-success: rgba(16,185,129,0.4);
-}
-
-[data-theme="light"] {
-  --bg-base:        #f4f4f5;
+  --bg-base:        #faf8f4;
   --bg-nav:         #ffffff;
   --bg-surface:     rgba(255,255,255,0.95);
-  --bg-surface-2:   rgba(244,244,245,0.8);
+  --bg-surface-2:   rgba(243,240,234,0.8);
   --bg-input:       #ffffff;
-  --bg-nav-active:  #4f46e5;
-  --bg-nav-hover:   rgba(228,228,231,0.6);
-  --bg-btn-cancel:  #e4e4e7;
-  --bg-chip:        rgba(212,212,216,0.4);
-  --border:         rgba(212,212,216,0.8);
-  --border-subtle:  rgba(212,212,216,0.6);
-  --border-nav:     #e4e4e7;
-  --text-primary:   #18181b;
-  --text-secondary: #3f3f46;
-  --text-muted:     #71717a;
-  --text-faint:     #a1a1aa;
+  --bg-nav-active:  #0d6e6e;
+  --bg-nav-hover:   rgba(13,110,110,0.06);
+  --bg-btn-cancel:  #e5dfd6;
+  --bg-chip:        rgba(229,223,214,0.5);
+  --border:         #e5dfd6;
+  --border-subtle:  #ede9e2;
+  --border-nav:     #e5dfd6;
+  --text-primary:   #1e1a14;
+  --text-secondary: #78705e;
+  --text-muted:     #a89f8e;
+  --text-faint:     #c4bdb0;
   --text-nav-active:#ffffff;
-  --bar-track:      #e4e4e7;
-  --icon-muted:     #a1a1aa;
+  --bar-track:      #e5dfd6;
+  --icon-muted:     #a89f8e;
   --icon-active:    #ffffff;
+  --accent:         #0d6e6e;
+  /* Semantic status colors */
   --text-warning:   #b45309;
   --text-danger:    #dc2626;
   --text-success:   #059669;
@@ -102,6 +39,77 @@ body {
   --border-danger:  rgba(220,38,38,0.3);
   --border-success: rgba(5,150,105,0.35);
 }
+
+[data-theme="light"] {
+  --bg-base:        #faf8f4;
+  --bg-nav:         #ffffff;
+  --bg-surface:     rgba(255,255,255,0.95);
+  --bg-surface-2:   rgba(243,240,234,0.8);
+  --bg-input:       #ffffff;
+  --bg-nav-active:  #0d6e6e;
+  --bg-nav-hover:   rgba(13,110,110,0.06);
+  --bg-btn-cancel:  #e5dfd6;
+  --bg-chip:        rgba(229,223,214,0.5);
+  --border:         #e5dfd6;
+  --border-subtle:  #ede9e2;
+  --border-nav:     #e5dfd6;
+  --text-primary:   #1e1a14;
+  --text-secondary: #78705e;
+  --text-muted:     #a89f8e;
+  --text-faint:     #c4bdb0;
+  --text-nav-active:#ffffff;
+  --bar-track:      #e5dfd6;
+  --icon-muted:     #a89f8e;
+  --icon-active:    #ffffff;
+  --accent:         #0d6e6e;
+  --text-warning:   #b45309;
+  --text-danger:    #dc2626;
+  --text-success:   #059669;
+  --bg-warning:     rgba(253,230,138,0.5);
+  --bg-danger:      rgba(254,202,202,0.5);
+  --bg-success:     rgba(209,250,229,0.6);
+  --border-warning: rgba(180,83,9,0.3);
+  --border-danger:  rgba(220,38,38,0.3);
+  --border-success: rgba(5,150,105,0.35);
+}
+
+[data-theme="dark"] {
+  --bg-base:        #1a1510;
+  --bg-nav:         #141009;
+  --bg-surface:     rgba(34,29,23,0.9);
+  --bg-surface-2:   rgba(26,21,16,0.8);
+  --bg-input:       #221d17;
+  --bg-nav-active:  #0d6e6e;
+  --bg-nav-hover:   rgba(13,110,110,0.1);
+  --bg-btn-cancel:  #2e2820;
+  --bg-chip:        rgba(46,40,32,0.6);
+  --border:         #2e2820;
+  --border-subtle:  #261f18;
+  --border-nav:     #2e2820;
+  --text-primary:   #f0ece4;
+  --text-secondary: #a89f8e;
+  --text-muted:     #6b6048;
+  --text-faint:     #4a4235;
+  --text-nav-active:#ffffff;
+  --bar-track:      #2e2820;
+  --icon-muted:     #6b6048;
+  --icon-active:    #ffffff;
+  --accent:         #5dcaa5;
+  --text-warning:   #fbbf24;
+  --text-danger:    #f87171;
+  --text-success:   #34d399;
+  --bg-warning:     rgba(120,53,15,0.35);
+  --bg-danger:      rgba(127,29,29,0.35);
+  --bg-success:     rgba(6,78,59,0.3);
+  --border-warning: rgba(180,83,9,0.5);
+  --border-danger:  rgba(185,28,28,0.5);
+  --border-success: rgba(16,185,129,0.4);
+}
+
+/* Accent utility — teal in light, bright teal in dark */
+.pacioli-accent         { color: var(--accent); }
+.pacioli-bg-accent      { background-color: var(--accent); }
+.pacioli-border-accent  { border-color: var(--accent); }
 
 /* Apply variables to utility classes used throughout the app */
 .pacioli-bg-base        { background-color: var(--bg-base); }
