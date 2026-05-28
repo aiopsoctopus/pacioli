@@ -62,20 +62,33 @@ export default function CashFlow() {
   const transactions = useTransactions(ns, rules, overrides);
 
   useEffect(() => {
-    fetchJSON<MonthIncome[]>("income.json")
-      .then(setIncome)
-      .catch((e) => console.error("[Pacioli] cash-flow fetch failed:", e));
+    if (isDemo) {
+      fetchJSON<MonthIncome[]>("income.json")
+        .then(setIncome)
+        .catch((e) => console.error("[Pacioli] cash-flow fetch failed:", e));
+    }
     // Check if we were sent here from an import to review uncategorized items
     if (sessionStorage.getItem("pacioli-review-uncategorized")) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setReviewMode(true);
       sessionStorage.removeItem("pacioli-review-uncategorized");
     }
-  }, [ns]);
+  }, [ns, isDemo]);
 
   // Derive available months from transactions; let user override via selectedMonth
   const allTxMonths = [...new Set(transactions.map((t) => t.date.slice(0, 7)))].sort();
   const activeMonth = selectedMonth || allTxMonths[allTxMonths.length - 1] || "";
+
+  if (!isDemo) return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+      <p className="pacioli-text-muted text-sm mb-1">Where it comes from, where it goes.</p>
+      <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">How My Money Moves</h2>
+      <p className="pacioli-text-muted mb-8 max-w-sm">No transaction data yet. Import a CSV to see your cash flow breakdown.</p>
+      <a href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#534AB7", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
+        Connect data
+      </a>
+    </div>
+  );
 
   if (!transactions.length || !activeMonth || !income.length) return <div className="pacioli-text-muted animate-pulse">Loading cash flow...</div>;
 
