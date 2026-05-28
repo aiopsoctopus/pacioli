@@ -336,8 +336,10 @@ export default function BudgetPage() {
     // Re-read envelopes from localStorage when ns (demo mode) changes.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setEnvelopes(loadBudgetEnvelopes(ns));
-    fetchJSON<MonthIncome[]>("income.json").then(setIncome);
-  }, [ns]);
+    if (isDemo) {
+      fetchJSON<MonthIncome[]>("income.json").then(setIncome);
+    }
+  }, [ns, isDemo]);
 
   const allMonths = useMemo(() => {
     if (!transactions.length) return [];
@@ -386,6 +388,20 @@ export default function BudgetPage() {
     setEnvelopes(updated);
     saveBudgetEnvelopes(updated, ns);
   }
+
+  if (!isDemo) return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+      <div style={{ width:64, height:64, borderRadius:"16px", background:"rgba(83,74,183,0.15)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"24px" }}>
+        <Sparkles size={28} style={{ color:"#7f77dd" }} />
+      </div>
+      <p className="pacioli-text-muted text-sm mb-1">How you're tracking against your plan.</p>
+      <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">My Monthly Budget</h2>
+      <p className="pacioli-text-muted mb-8 max-w-sm">No data yet. Import your transactions and I'll analyse your spending to suggest a budget for each category.</p>
+      <a href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#534AB7", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
+        Connect data
+      </a>
+    </div>
+  );
 
   if (!transactions.length || !income.length) {
     return <div className="pacioli-text-muted animate-pulse">Loading budget data...</div>;
