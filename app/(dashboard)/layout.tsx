@@ -1,10 +1,12 @@
 import Nav from "@/components/nav";
 import DemoBanner from "@/components/demo-banner";
+import SetupGuard from "@/components/setup-guard";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen pacioli-bg-base pacioli-text-primary">
       <DemoBanner />
+      <SetupGuard />
       <div className="flex flex-1 min-h-0">
         <div className="sticky top-0 h-screen overflow-y-auto shrink-0">
           <Nav />

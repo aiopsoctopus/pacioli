@@ -12,7 +12,7 @@ import PacioliLogo from "@/components/pacioli-logo";
 const ONBOARDING_KEY = "pacioli-onboarded";
 
 const links = [
-  { href: "/",              label: "Zoom Out",                   sublabel: "Summary",         icon: LayoutDashboard },
+  { href: "/zoom-out",      label: "Zoom Out",                   sublabel: "Summary",         icon: LayoutDashboard },
   { href: "/net-worth",     label: "My Net Worth",               sublabel: "Balance Sheet",   icon: Scale },
   { href: "/cash-flow",     label: "How My Money Moves",         sublabel: "Cash Flow",       icon: ArrowLeftRight },
   { href: "/transactions",  label: "All Transactions",           sublabel: "Search & Filter", icon: List },
@@ -121,7 +121,13 @@ export default function Nav() {
           })}
         </div>
 
-        {/* Footer — About link (larger/more visible) */}
+        {/* Footer — Home + About */}
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors pacioli-text-muted pacioli-bg-nav-hover mb-1"
+        >
+          <span style={{ fontSize: 14 }}>🏠</span> Back to Home
+        </Link>
         <Link
           href="/about"
           className={`flex items-center gap-2.5 px-3 py-3 rounded-xl text-sm font-medium transition-colors border ${

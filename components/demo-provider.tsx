@@ -38,6 +38,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   const enterDemo = useCallback(() => {
     setIsDemo(true);
     localStorage.setItem(DEMO_STORAGE_KEY, "true");
+    localStorage.setItem("pacioli-setup-complete", "demo");
     // Update URL without reload so the link stays shareable
     const url = new URL(window.location.href);
     url.searchParams.set("demo", "true");
@@ -47,6 +48,8 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   const exitDemo = useCallback(() => {
     setIsDemo(false);
     localStorage.setItem(DEMO_STORAGE_KEY, "false");
+    localStorage.removeItem("pacioli-setup-complete");
+    localStorage.removeItem("pacioli-setup-banner-dismissed");
     const url = new URL(window.location.href);
     url.searchParams.delete("demo");
     window.history.replaceState({}, "", url.toString());
