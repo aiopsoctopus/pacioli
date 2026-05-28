@@ -84,7 +84,7 @@ export default function CashFlow() {
       <p className="pacioli-text-muted text-sm mb-1">Where it comes from, where it goes.</p>
       <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">How My Money Moves</h2>
       <p className="pacioli-text-muted mb-8 max-w-sm">No transaction data yet. Import a CSV to see your cash flow breakdown.</p>
-      <a href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#534AB7", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
+      <a href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#0d6e6e", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
         Connect data
       </a>
     </div>
@@ -226,14 +226,14 @@ export default function CashFlow() {
 
         {/* Rule prompt banner */}
         {rulePrompt && (
-          <div className="p-4 bg-indigo-900/20 border border-indigo-700/40 rounded-xl flex items-center justify-between gap-4">
+          <div className="p-4 pacioli-bg-surface border pacioli-border rounded-xl flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-medium pacioli-text-primary">Always categorize "{rulePrompt.merchant}" as {rulePrompt.category}?</p>
               <p className="text-xs pacioli-text-muted mt-0.5">This creates a rule that applies to future imports too.</p>
             </div>
             <div className="flex gap-2 shrink-0">
               <button onClick={() => addRule(rulePrompt.merchant, rulePrompt.category)}
-                className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-lg transition-colors">
+                className="px-3 py-1.5 bg-teal-700 hover:bg-teal-600 text-white text-xs font-medium rounded-lg transition-colors">
                 Always
               </button>
               <button onClick={() => setRulePrompt(null)}
