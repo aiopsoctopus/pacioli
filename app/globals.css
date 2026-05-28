@@ -19,13 +19,13 @@ body {
   --border:         #e5dfd6;
   --border-subtle:  #ede9e2;
   --border-nav:     #e5dfd6;
-  --text-primary:   #1a1612;
-  --text-secondary: #5c4f3d;
-  --text-muted:     #8c7d6b;
-  --text-faint:     #b0a394;
+  --text-primary:   #2c2416;
+  --text-secondary: #78695a;
+  --text-muted:     #a8998a;
+  --text-faint:     #c4b8ac;
   --text-nav-active:#ffffff;
   --bar-track:      #e5dfd6;
-  --icon-muted:     #8c7d6b;
+  --icon-muted:     #a8998a;
   --icon-active:    #ffffff;
   --accent:         #0d6e6e;
   /* Semantic status colors */
@@ -53,13 +53,13 @@ body {
   --border:         #e5dfd6;
   --border-subtle:  #ede9e2;
   --border-nav:     #e5dfd6;
-  --text-primary:   #1a1612;
-  --text-secondary: #5c4f3d;
-  --text-muted:     #8c7d6b;
-  --text-faint:     #b0a394;
+  --text-primary:   #2c2416;
+  --text-secondary: #78695a;
+  --text-muted:     #a8998a;
+  --text-faint:     #c4b8ac;
   --text-nav-active:#ffffff;
   --bar-track:      #e5dfd6;
-  --icon-muted:     #8c7d6b;
+  --icon-muted:     #a8998a;
   --icon-active:    #ffffff;
   --accent:         #0d6e6e;
   --text-warning:   #92400e;
