@@ -268,14 +268,13 @@ function EmptyState() {
           href="/setup"
           style={{
             display: "inline-flex", alignItems: "center", gap: "8px",
-            background: "#534AB7",
+            background: "#0d6e6e",
             color: "#fff",
             padding: "13px 24px",
             borderRadius: "12px",
             fontWeight: 700,
             fontSize: "15px",
             textDecoration: "none",
-            boxShadow: "0 0 28px rgba(83,74,183,0.3)",
           }}
         >
           <Upload size={16} /> Connect my data
