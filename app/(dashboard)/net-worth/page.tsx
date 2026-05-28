@@ -20,7 +20,7 @@ export default function NetWorth() {
       <p className="pacioli-text-muted text-sm mb-1">Assets minus what you owe.</p>
       <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">My Net Worth</h2>
       <p className="pacioli-text-muted mb-8 max-w-sm">No account data yet. Import a CSV to see your balance sheet.</p>
-      <Link href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#534AB7", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
+      <Link href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#0d6e6e", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
         <Upload size={15} /> Connect data
       </Link>
     </div>
@@ -50,7 +50,7 @@ export default function NetWorth() {
       </div>
 
       {/* Big number */}
-      <div className="bg-gradient-to-br from-indigo-900/40 to-zinc-800/60 rounded-2xl p-8 border border-indigo-700/30">
+      <div className="pacioli-bg-surface rounded-2xl p-8 border">
         <p className="pacioli-text-muted text-sm mb-1">Total Net Worth</p>
         <p className="text-5xl font-bold pacioli-text-primary">{formatCurrency(currentNW)}</p>
         <div className="flex gap-6 mt-4 text-sm">
