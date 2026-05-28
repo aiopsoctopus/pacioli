@@ -17,38 +17,16 @@ const COLORS = ["#6366f1","#10b981","#f59e0b","#ef4444","#ec4899","#3b82f6","#8b
 const SETUP_KEY = "pacioli-setup-complete";
 
 export default function ZoomOut() {
+  // ── ALL hooks must be declared before any early returns (Rules of Hooks) ──────
   const { isDemo } = useDemo();
   const ns = isDemo ? "demo" : "";
   const { theme } = useTheme();
-  const [setupDone, setSetupDone] = useState<boolean | null>(null); // null = not checked yet
-
-  useEffect(() => {
-    const val = localStorage.getItem(SETUP_KEY);
-    setSetupDone(!!val);
-  }, []);
-
-  // ── Empty state — shown when setup not complete and not in demo ──────────────
-  if (setupDone === false && !isDemo) {
-    return <EmptyState />;
-  }
-
+  const [setupDone, setSetupDone] = useState<boolean | null>(null);
   const [accounts, setAccounts] = useState<AccountData | null>(null);
   const [sinkingFunds, setSinkingFunds] = useState<SinkingFund[]>([]);
   const [income, setIncome] = useState<MonthIncome[]>([]);
-
   const transactions = useTransactions(ns);
 
-  useEffect(() => {
-    fetchJSON<AccountData>("accounts.json").then(setAccounts).catch((e) => console.error("[Pacioli] accounts.json failed:", e));
-    fetchJSON<SinkingFund[]>("sinking_funds.json").then(setSinkingFunds).catch((e) => console.error("[Pacioli] sinking_funds.json failed:", e));
-    fetchJSON<MonthIncome[]>("income.json").then(setIncome).catch((e) => console.error("[Pacioli] income.json failed:", e));
-  }, []);
-
-  if (!accounts || !transactions.length || !income.length || !sinkingFunds.length) {
-    return <div className="pacioli-text-muted animate-pulse">Loading your financial picture...</div>;
-  }
-
-  // ── Theme-aware chart styles (reads live CSS variables so tooltips adapt to light/dark) ──
   const chartTheme = useMemo(() => {
     if (typeof window === "undefined") return {
       tooltipBg: "#18181b", tooltipBorder: "rgba(63,63,70,0.5)",
@@ -62,7 +40,24 @@ export default function ZoomOut() {
       textPrimary:   s.getPropertyValue("--text-primary").trim()   || "#ffffff",
       textSecondary: s.getPropertyValue("--text-secondary").trim() || "#d4d4d8",
     };
-  }, [theme]); // re-read CSS vars whenever theme toggles
+  }, [theme]);
+
+  useEffect(() => {
+    const val = localStorage.getItem(SETUP_KEY);
+    setSetupDone(!!val);
+  }, []);
+
+  useEffect(() => {
+    fetchJSON<AccountData>("accounts.json").then(setAccounts).catch((e) => console.error("[Pacioli] accounts.json failed:", e));
+    fetchJSON<SinkingFund[]>("sinking_funds.json").then(setSinkingFunds).catch((e) => console.error("[Pacioli] sinking_funds.json failed:", e));
+    fetchJSON<MonthIncome[]>("income.json").then(setIncome).catch((e) => console.error("[Pacioli] income.json failed:", e));
+  }, []);
+
+  // ── Early returns AFTER all hooks ───────────────────────────────────────────
+  if (setupDone === false && !isDemo) return <EmptyState />;
+  if (!accounts || !transactions.length || !income.length || !sinkingFunds.length) {
+    return <div className="pacioli-text-muted animate-pulse">Loading your financial picture...</div>;
+  }
 
   // Net worth over time (last 12 months)
   const months = Object.keys(accounts.assets[0].balances).sort();
