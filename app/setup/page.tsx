@@ -104,7 +104,7 @@ export default function SetupPage() {
           {/* ── Step: welcome ── */}
           {step === "welcome" && (
             <div style={{ textAlign: "center" }}>
-              <div style={{ marginBottom: "32px" }}>
+              <div style={{ marginBottom: "32px", display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
                 <PacioliLogo size={56} variant="mark" theme="light" />
               </div>
               <h1 style={{ fontSize: "2rem", fontWeight: 800, marginBottom: "12px", letterSpacing: "-0.02em", color: C.textPrimary }}>
