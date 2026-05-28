@@ -6,6 +6,7 @@ import {
   avgMonthlyIncome,
 } from "@/lib/data";
 import { useTransactions } from "@/lib/data";
+import { useDemo } from "@/components/demo-provider";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
   ReferenceLine, CartesianGrid, Legend,
@@ -53,15 +54,17 @@ function projectNetWorth(
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function ForecastView() {
+  const { isDemo } = useDemo();
   const [accounts, setAccounts] = useState<AccountData | null>(null);
   const [income, setIncome] = useState<MonthIncome[] | null>(null);
   const [scenarioDelta, setScenarioDelta] = useState(0); // extra $ saved per month
   const transactions = useTransactions();
 
   useEffect(() => {
+    if (!isDemo) return;
     fetchJSON<AccountData>("accounts.json").then(setAccounts);
     fetchJSON<MonthIncome[]>("income.json").then(setIncome);
-  }, []);
+  }, [isDemo]);
 
   const derived = useMemo(() => {
     if (!accounts || !income || transactions.length === 0) return null;
@@ -148,6 +151,17 @@ export default function ForecastView() {
       windowMonths: completedMonths.length,
     };
   }, [accounts, income, transactions, scenarioDelta]);
+
+  if (!isDemo) return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+      <p className="pacioli-text-muted text-sm mb-1">Based on your actual data, projected forward.</p>
+      <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">What the Future Looks Like</h2>
+      <p className="pacioli-text-muted mb-8 max-w-sm">No data yet. Import your accounts and transactions to see your 12-month net worth projection.</p>
+      <a href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#534AB7", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
+        Connect data
+      </a>
+    </div>
+  );
 
   if (!derived) {
     return <div className="pacioli-text-muted animate-pulse">Calculating forecast from your data...</div>;
