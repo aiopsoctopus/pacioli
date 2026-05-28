@@ -83,10 +83,10 @@ export default function Nav() {
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
                 path === "/getting-started"
                   ? "pacioli-bg-nav-active pacioli-text-nav-active"
-                  : "text-indigo-400 bg-indigo-600/10 hover:bg-indigo-600/20"
+                  : "pacioli-accent pacioli-bg-nav-hover"
               }`}
             >
-              <Sparkles size={18} className={path === "/getting-started" ? "pacioli-icon-active" : "text-indigo-400"} />
+              <Sparkles size={18} className={path === "/getting-started" ? "pacioli-icon-active" : "pacioli-accent"} />
               <div>
                 <p className="text-sm font-medium leading-none">Getting Started</p>
                 <p className={`text-[11px] mt-0.5 ${path === "/getting-started" ? "opacity-70" : "text-indigo-400/70"}`}>Setup checklist</p>
@@ -132,8 +132,8 @@ export default function Nav() {
           href="/about"
           className={`flex items-center gap-2.5 px-3 py-3 rounded-xl text-sm font-medium transition-colors border ${
             path === "/about"
-              ? "pacioli-bg-nav-active pacioli-text-nav-active border-indigo-500/30"
-              : "pacioli-text-secondary hover:pacioli-text-primary pacioli-border-subtle hover:border-indigo-500/30"
+              ? "pacioli-bg-nav-active pacioli-text-nav-active pacioli-border-accent"
+              : "pacioli-text-secondary hover:pacioli-text-primary pacioli-border-subtle"
           }`}
         >
           <Info size={15} />
