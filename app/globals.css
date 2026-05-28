@@ -1,118 +1,106 @@
 @import "tailwindcss";
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Satoshi", system-ui, -apple-system, sans-serif;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Pacioli theme system — purple-forward palette
-   Brand primaries: Deep Violet #3C3489 · Indigo #534AB7
-   Semantics: Teal success · Amber warning · Coral danger
-   ───────────────────────────────────────────────────────────── */
-
-/* Dark mode (default :root) */
+/* Pacioli theme system — variables swap on data-theme attribute */
+/* Dark theme (default) */
 :root {
-  /* Backgrounds — deep purple-charcoal, no zinc */
-  --bg-base:        #1a1829;
-  --bg-nav:         #211f34;
-  --bg-surface:     rgba(44,41,68,0.6);
-  --bg-surface-2:   rgba(33,31,52,0.7);
-  --bg-input:       #2c2944;
-  --bg-nav-active:  #534AB7;
-  --bg-nav-hover:   rgba(83,74,183,0.15);
-  --bg-btn-cancel:  #2c2944;
-  --bg-chip:        rgba(83,74,183,0.2);
-  --border:         rgba(175,169,236,0.15);
-  --border-subtle:  rgba(175,169,236,0.1);
-  --border-nav:     rgba(175,169,236,0.12);
-  /* Text */
-  --text-primary:   #f0effe;
-  --text-secondary: #c8c4f0;
-  --text-muted:     #7f77dd;
-  --text-faint:     #534AB7;
+  --bg-base:        #18181b;
+  --bg-nav:         #09090b;
+  --bg-surface:     rgba(39,39,42,0.5);
+  --bg-surface-2:   rgba(24,24,27,0.6);
+  --bg-input:       #27272a;
+  --bg-nav-active:  #3730a3;
+  --bg-nav-hover:   rgba(39,39,42,0.6);
+  --bg-btn-cancel:  #3f3f46;
+  --bg-chip:        rgba(63,63,70,0.4);
+  --border:         rgba(63,63,70,0.5);
+  --border-subtle:  rgba(63,63,70,0.4);
+  --border-nav:     #27272a;
+  --text-primary:   #ffffff;
+  --text-secondary: #d4d4d8;
+  --text-muted:     #71717a;
+  --text-faint:     #52525b;
   --text-nav-active:#ffffff;
-  /* UI chrome */
-  --bar-track:      rgba(83,74,183,0.25);
-  --icon-muted:     #7f77dd;
-  --icon-active:    #ffffff;
-  /* Semantic — teal/amber/coral */
-  --text-success:   #5dcaa5;
-  --text-warning:   #ef9f27;
-  --text-danger:    #f0997b;
-  --bg-success:     rgba(29,158,117,0.2);
-  --bg-warning:     rgba(239,159,39,0.2);
-  --bg-danger:      rgba(216,90,48,0.2);
-  --border-success: rgba(29,158,117,0.35);
-  --border-warning: rgba(239,159,39,0.35);
-  --border-danger:  rgba(216,90,48,0.35);
+  --bar-track:      #3f3f46;
+  --icon-muted:     #71717a;
+  --icon-active:    #a5b4fc;
+  /* Semantic status colors */
+  --text-warning:   #fbbf24;
+  --text-danger:    #f87171;
+  --text-success:   #34d399;
+  --bg-warning:     rgba(120,53,15,0.35);
+  --bg-danger:      rgba(127,29,29,0.35);
+  --bg-success:     rgba(6,78,59,0.3);
+  --border-warning: rgba(180,83,9,0.5);
+  --border-danger:  rgba(185,28,28,0.5);
+  --border-success: rgba(16,185,129,0.4);
 }
 
 [data-theme="dark"] {
-  --bg-base:        #1a1829;
-  --bg-nav:         #211f34;
-  --bg-surface:     rgba(44,41,68,0.6);
-  --bg-surface-2:   rgba(33,31,52,0.7);
-  --bg-input:       #2c2944;
-  --bg-nav-active:  #534AB7;
-  --bg-nav-hover:   rgba(83,74,183,0.15);
-  --bg-btn-cancel:  #2c2944;
-  --bg-chip:        rgba(83,74,183,0.2);
-  --border:         rgba(175,169,236,0.15);
-  --border-subtle:  rgba(175,169,236,0.1);
-  --border-nav:     rgba(175,169,236,0.12);
-  --text-primary:   #f0effe;
-  --text-secondary: #c8c4f0;
-  --text-muted:     #7f77dd;
-  --text-faint:     #534AB7;
+  --bg-base:        #18181b;
+  --bg-nav:         #09090b;
+  --bg-surface:     rgba(39,39,42,0.5);
+  --bg-surface-2:   rgba(24,24,27,0.6);
+  --bg-input:       #27272a;
+  --bg-nav-active:  #3730a3;
+  --bg-nav-hover:   rgba(39,39,42,0.6);
+  --bg-btn-cancel:  #3f3f46;
+  --bg-chip:        rgba(63,63,70,0.4);
+  --border:         rgba(63,63,70,0.5);
+  --border-subtle:  rgba(63,63,70,0.4);
+  --border-nav:     #27272a;
+  --text-primary:   #ffffff;
+  --text-secondary: #d4d4d8;
+  --text-muted:     #71717a;
+  --text-faint:     #52525b;
   --text-nav-active:#ffffff;
-  --bar-track:      rgba(83,74,183,0.25);
-  --icon-muted:     #7f77dd;
-  --icon-active:    #ffffff;
-  --text-success:   #5dcaa5;
-  --text-warning:   #ef9f27;
-  --text-danger:    #f0997b;
-  --bg-success:     rgba(29,158,117,0.2);
-  --bg-warning:     rgba(239,159,39,0.2);
-  --bg-danger:      rgba(216,90,48,0.2);
-  --border-success: rgba(29,158,117,0.35);
-  --border-warning: rgba(239,159,39,0.35);
-  --border-danger:  rgba(216,90,48,0.35);
+  --bar-track:      #3f3f46;
+  --icon-muted:     #71717a;
+  --icon-active:    #a5b4fc;
+  --text-warning:   #fbbf24;
+  --text-danger:    #f87171;
+  --text-success:   #34d399;
+  --bg-warning:     rgba(120,53,15,0.35);
+  --bg-danger:      rgba(127,29,29,0.35);
+  --bg-success:     rgba(6,78,59,0.3);
+  --border-warning: rgba(180,83,9,0.5);
+  --border-danger:  rgba(185,28,28,0.5);
+  --border-success: rgba(16,185,129,0.4);
 }
 
 [data-theme="light"] {
-  /* Backgrounds — warm parchment, not zinc */
-  --bg-base:        #f5f4fc;
-  --bg-nav:         #fafaf8;
-  --bg-surface:     rgba(255,255,255,0.97);
-  --bg-surface-2:   rgba(238,237,254,0.5);
+  --bg-base:        #f4f4f5;
+  --bg-nav:         #ffffff;
+  --bg-surface:     rgba(255,255,255,0.95);
+  --bg-surface-2:   rgba(244,244,245,0.8);
   --bg-input:       #ffffff;
-  --bg-nav-active:  #534AB7;
-  --bg-nav-hover:   rgba(83,74,183,0.08);
-  --bg-btn-cancel:  #eeecfc;
-  --bg-chip:        rgba(83,74,183,0.08);
-  --border:         rgba(83,74,183,0.15);
-  --border-subtle:  rgba(83,74,183,0.1);
-  --border-nav:     rgba(83,74,183,0.12);
-  /* Text */
-  --text-primary:   #2c2c2a;
-  --text-secondary: #3c3489;
-  --text-muted:     #534AB7;
-  --text-faint:     #afa9ec;
+  --bg-nav-active:  #4f46e5;
+  --bg-nav-hover:   rgba(228,228,231,0.6);
+  --bg-btn-cancel:  #e4e4e7;
+  --bg-chip:        rgba(212,212,216,0.4);
+  --border:         rgba(212,212,216,0.8);
+  --border-subtle:  rgba(212,212,216,0.6);
+  --border-nav:     #e4e4e7;
+  --text-primary:   #18181b;
+  --text-secondary: #3f3f46;
+  --text-muted:     #71717a;
+  --text-faint:     #a1a1aa;
   --text-nav-active:#ffffff;
-  /* UI chrome */
-  --bar-track:      #eeedfe;
-  --icon-muted:     #afa9ec;
+  --bar-track:      #e4e4e7;
+  --icon-muted:     #a1a1aa;
   --icon-active:    #ffffff;
-  /* Semantic — richer tones for light-mode legibility */
-  --text-success:   #0f6e56;
-  --text-warning:   #854f0b;
-  --text-danger:    #993c1d;
-  --bg-success:     rgba(29,158,117,0.1);
-  --bg-warning:     rgba(239,159,39,0.12);
-  --bg-danger:      rgba(216,90,48,0.1);
-  --border-success: rgba(15,110,86,0.25);
-  --border-warning: rgba(133,79,11,0.25);
-  --border-danger:  rgba(153,60,29,0.25);
+  --text-warning:   #b45309;
+  --text-danger:    #dc2626;
+  --text-success:   #059669;
+  --bg-warning:     rgba(253,230,138,0.5);
+  --bg-danger:      rgba(254,202,202,0.5);
+  --bg-success:     rgba(209,250,229,0.6);
+  --border-warning: rgba(180,83,9,0.3);
+  --border-danger:  rgba(220,38,38,0.3);
+  --border-success: rgba(5,150,105,0.35);
 }
 
 /* Apply variables to utility classes used throughout the app */
