@@ -106,6 +106,7 @@ body {
   --border-success: rgba(93,202,165,0.3);
 }
 
+/* v2 — dark mode surfaces: white-alpha overlays on indigo base, no purple cards */
 /* Accent utility — teal in light, bright teal in dark */
 .pacioli-accent         { color: var(--accent); }
 .pacioli-bg-accent      { background-color: var(--accent); }
