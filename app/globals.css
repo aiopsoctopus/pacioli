@@ -74,25 +74,25 @@ body {
 }
 
 [data-theme="dark"] {
-  --bg-base:        #1a1510;
-  --bg-nav:         #141009;
-  --bg-surface:     rgba(34,29,23,0.9);
-  --bg-surface-2:   rgba(26,21,16,0.8);
-  --bg-input:       #221d17;
+  --bg-base:        #1c1b4b;
+  --bg-nav:         #161538;
+  --bg-surface:     rgba(30,28,70,0.9);
+  --bg-surface-2:   rgba(24,22,58,0.8);
+  --bg-input:       #201f52;
   --bg-nav-active:  #0d6e6e;
-  --bg-nav-hover:   rgba(13,110,110,0.1);
-  --bg-btn-cancel:  #2e2820;
-  --bg-chip:        rgba(46,40,32,0.6);
-  --border:         #2e2820;
-  --border-subtle:  #261f18;
-  --border-nav:     #2e2820;
-  --text-primary:   #f0ece4;
-  --text-secondary: #a89f8e;
-  --text-muted:     #6b6048;
-  --text-faint:     #4a4235;
+  --bg-nav-hover:   rgba(13,110,110,0.12);
+  --bg-btn-cancel:  #2d2b6b;
+  --bg-chip:        rgba(45,43,107,0.6);
+  --border:         rgba(100,97,180,0.25);
+  --border-subtle:  rgba(100,97,180,0.15);
+  --border-nav:     rgba(100,97,180,0.2);
+  --text-primary:   #f0effe;
+  --text-secondary: #c8c4f0;
+  --text-muted:     #8b87c4;
+  --text-faint:     #5f5c96;
   --text-nav-active:#ffffff;
-  --bar-track:      #2e2820;
-  --icon-muted:     #6b6048;
+  --bar-track:      #2d2b6b;
+  --icon-muted:     #8b87c4;
   --icon-active:    #ffffff;
   --accent:         #5dcaa5;
   --text-warning:   #fbbf24;
