@@ -115,7 +115,7 @@ export default function GettingStartedPage() {
           {allDone && (
             <button
               onClick={markAllDone}
-              className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+              className="text-xs font-medium pacioli-accent hover:opacity-80 transition-colors"
             >
               Dismiss this page →
             </button>
@@ -123,7 +123,7 @@ export default function GettingStartedPage() {
         </div>
         <div className="w-full h-2 pacioli-bar-track rounded-full overflow-hidden">
           <div
-            className="h-2 rounded-full bg-indigo-500 transition-all duration-500"
+            className="h-2 rounded-full bg-teal-600 transition-all duration-500"
             style={{ width: `${(doneCount / STEPS.length) * 100}%` }}
           />
         </div>
@@ -147,7 +147,7 @@ export default function GettingStartedPage() {
                 {/* Step number / check */}
                 <button
                   onClick={() => toggleComplete(step.id)}
-                  className={`mt-0.5 shrink-0 transition-colors ${done ? "text-indigo-400" : "pacioli-text-muted hover:text-indigo-400"}`}
+                  className={`mt-0.5 shrink-0 transition-colors ${done ? "pacioli-accent" : "pacioli-text-muted hover:pacioli-accent"}`}
                   title={done ? "Mark incomplete" : "Mark complete"}
                 >
                   {done
@@ -167,7 +167,7 @@ export default function GettingStartedPage() {
                       <p className="text-sm pacioli-text-secondary leading-relaxed">{step.detail}</p>
                       <Link
                         href={step.href}
-                        className="inline-flex items-center gap-1.5 mt-1 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+                        className="inline-flex items-center gap-1.5 mt-1 text-sm font-medium pacioli-accent hover:opacity-80 transition-colors"
                       >
                         {step.cta} <ArrowRight size={14} />
                       </Link>
@@ -181,11 +181,11 @@ export default function GettingStartedPage() {
       </div>
 
       {/* Footer note */}
-      <div className="flex items-start gap-3 p-4 bg-indigo-950/20 border border-indigo-800/20 rounded-xl">
-        <Sparkles size={14} className="text-indigo-400 mt-0.5 shrink-0" />
+      <div className="flex items-start gap-3 p-4 pacioli-bg-surface border pacioli-border rounded-xl">
+        <Sparkles size={14} className="pacioli-accent mt-0.5 shrink-0" />
         <p className="text-xs pacioli-text-secondary leading-relaxed">
           All your data stays on your device — no accounts, no servers, no telemetry.{" "}
-          <Link href="/about" className="text-indigo-400 hover:text-indigo-300 transition-colors">
+          <Link href="/about" className="pacioli-accent hover:opacity-80 transition-colors">
             Learn more about how Pacioli handles your data →
           </Link>
         </p>
