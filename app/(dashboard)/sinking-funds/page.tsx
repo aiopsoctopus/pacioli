@@ -97,7 +97,18 @@ export default function SinkingFunds() {
     setIsAdding(false);
   }
 
-  if (!funds.length) return <div className="pacioli-text-muted animate-pulse">Loading goals...</div>;
+  if (!isDemo) return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+      <p className="pacioli-text-muted text-sm mb-1">Named buckets, real targets, clear timelines.</p>
+      <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">Achieve My Goals</h2>
+      <p className="pacioli-text-muted mb-8 max-w-sm">No goals yet. Add sinking funds to start saving toward specific targets.</p>
+      <a href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#534AB7", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
+        Connect data
+      </a>
+    </div>
+  );
+
+  if (isDemo && !funds.length) return <div className="pacioli-text-muted animate-pulse">Loading goals...</div>;
 
   const totalSaved = funds.reduce((s, f) => s + f.saved, 0);
   const totalTarget = funds.reduce((s, f) => s + f.target, 0);
