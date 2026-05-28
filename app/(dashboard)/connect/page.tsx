@@ -58,10 +58,7 @@ export default function ConnectPage() {
   const [manualAccounts, setManualAccounts] = useState<ManualAccount[]>(() => {
     if (typeof window === "undefined") return [];
     const saved = localStorage.getItem(MANUAL_ACCOUNTS_KEY);
-    return saved ? JSON.parse(saved) : [
-      { id: "ma1", name: "Primary Home", type: "asset", balance: 520000, institution: "Manual" },
-      { id: "ma2", name: "2022 Honda CR-V", type: "asset", balance: 24000, institution: "Manual" },
-    ];
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [newAccount, setNewAccount] = useState<Omit<ManualAccount, "id">>({
