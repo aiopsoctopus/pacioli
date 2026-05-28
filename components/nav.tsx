@@ -89,7 +89,7 @@ export default function Nav() {
               <Sparkles size={18} className={path === "/getting-started" ? "pacioli-icon-active" : "pacioli-accent"} />
               <div>
                 <p className="text-sm font-medium leading-none">Getting Started</p>
-                <p className={`text-[11px] mt-0.5 ${path === "/getting-started" ? "opacity-70" : "text-indigo-400/70"}`}>Setup checklist</p>
+                <p className={`text-[11px] mt-0.5 ${path === "/getting-started" ? "opacity-70" : "opacity-70"}`}>Setup checklist</p>
               </div>
             </Link>
           )}
