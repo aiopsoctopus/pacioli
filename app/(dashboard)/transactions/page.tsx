@@ -255,6 +255,17 @@ export default function TransactionsPage() {
   const allSelected = sorted.length > 0 && selected.size === sorted.length;
   const someSelected = selected.size > 0;
 
+  if (!isDemo && transactions.length === 0) return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+      <p className="pacioli-text-muted text-sm mb-1">All transactions from your accounts and CSV imports.</p>
+      <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">Transactions</h2>
+      <p className="pacioli-text-muted mb-8 max-w-sm">No transactions yet. Import a CSV to see your spending history.</p>
+      <a href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#534AB7", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
+        Connect data
+      </a>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       {/* Header */}
