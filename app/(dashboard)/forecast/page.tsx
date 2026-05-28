@@ -54,10 +54,11 @@ function projectNetWorth(
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function ForecastView() {
   const { isDemo } = useDemo();
+  const ns = isDemo ? "demo" : "";
   const [accounts, setAccounts] = useState<AccountData | null>(null);
   const [income, setIncome] = useState<MonthIncome[] | null>(null);
   const [scenarioDelta, setScenarioDelta] = useState(0); // extra $ saved per month
-  const transactions = useTransactions();
+  const transactions = useTransactions(ns);
 
   useEffect(() => {
     if (!isDemo) return;
@@ -66,28 +67,33 @@ export default function ForecastView() {
   }, [isDemo]);
 
   const derived = useMemo(() => {
-    if (!accounts || !income || transactions.length === 0) return null;
-
-    // Current month = latest month with income data
-    const sortedIncomeMonths = income.map((i) => i.month).sort();
-    const currentMonth = sortedIncomeMonths[sortedIncomeMonths.length - 1];
-
-    // Starting net worth = latest account balance month
-    const allAccountMonths = [
-      ...accounts.assets.flatMap((a) => Object.keys(a.balances)),
-      ...accounts.liabilities.flatMap((l) => Object.keys(l.balances)),
-    ].sort();
-    const latestAccountMonth = allAccountMonths[allAccountMonths.length - 1];
-    const startingNW = getNetWorth(accounts, latestAccountMonth);
+    if (transactions.length === 0) return null;
 
     // All transaction months (sorted)
     const txMonths = [...new Set(transactions.map((t) => t.date.slice(0, 7)))].sort();
 
+    // Current month: latest income month if available, else latest tx month
+    const sortedIncomeMonths = income ? income.map((i) => i.month).sort() : [];
+    const currentMonth = sortedIncomeMonths.length > 0
+      ? sortedIncomeMonths[sortedIncomeMonths.length - 1]
+      : txMonths[txMonths.length - 1];
+
+    // Starting net worth = latest account balance month (0 if no accounts data)
+    let startingNW = 0;
+    if (accounts) {
+      const allAccountMonths = [
+        ...accounts.assets.flatMap((a) => Object.keys(a.balances)),
+        ...accounts.liabilities.flatMap((l) => Object.keys(l.balances)),
+      ].sort();
+      const latestAccountMonth = allAccountMonths[allAccountMonths.length - 1];
+      startingNW = getNetWorth(accounts, latestAccountMonth);
+    }
+
     // Last N completed months before currentMonth
     const completedMonths = txMonths.filter((m) => m < currentMonth).slice(-WINDOW_MONTHS);
 
-    // Average monthly income
-    const avgIncome = avgMonthlyIncome(income, currentMonth, WINDOW_MONTHS);
+    // Average monthly income (0 if no income data)
+    const avgIncome = income ? avgMonthlyIncome(income, currentMonth, WINDOW_MONTHS) : 0;
 
     // Average monthly spend per completed month (exclude Savings category)
     let totalSpend = 0;
@@ -151,7 +157,7 @@ export default function ForecastView() {
     };
   }, [accounts, income, transactions, scenarioDelta]);
 
-  if (!isDemo) return (
+  if (!isDemo && transactions.length === 0) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
       <p className="pacioli-text-muted text-sm mb-1">Based on your actual data, projected forward.</p>
       <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">What the Future Looks Like</h2>
