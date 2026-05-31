@@ -162,7 +162,7 @@ export default function AboutPage() {
           <Step
             n={4}
             label="Run the budget setup"
-            sub="The AI analyses your last 6 months and suggests a monthly target for each category."
+            sub="Pacioli analyses your last 6 months and suggests a monthly target for each category."
             href="/budget"
           />
           <Step

@@ -192,7 +192,7 @@ export default function ZoomOut() {
         <div className="pacioli-bg-surface rounded-2xl p-6 border">
           <h3 className="text-sm font-semibold pacioli-text-secondary mb-4">Spending This Month</h3>
           <ResponsiveContainer width="100%" height={220}>
-            <PieChart>
+            <PieChart width={500} height={220}>
               <Pie data={pieData} cx="40%" cy="50%" innerRadius={55} outerRadius={90} paddingAngle={2} dataKey="value">
                 {pieData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Pie>

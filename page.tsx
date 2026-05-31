@@ -13,7 +13,7 @@ const FEATURES = [
   {
     icon: Wallet,
     title: "Envelope budgeting",
-    body: "Analyses 6 months of your spending and suggests category budgets — you tweak, accept, done.",
+    body: "AI analyses 6 months of your spending and suggests category budgets — you tweak, accept, done.",
   },
   {
     icon: TrendingUp,
@@ -385,6 +385,34 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Origin story / brand ───────────────────────────── */}
+      <section style={{
+        background: c.originBg,
+        borderTop: `1px solid ${c.originBorder}`,
+        borderBottom: `1px solid ${c.originBorder}`,
+        padding: "80px 2rem",
+        transition: "background 0.2s, border-color 0.2s",
+      }}>
+        <div style={{ maxWidth: "620px", margin: "0 auto", textAlign: "center" }}>
+          <div style={{ fontSize: "3rem", marginBottom: "16px" }}>📖</div>
+          <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: c.textPrimary, marginBottom: "20px", transition: "color 0.2s" }}>
+            Named for the father of accounting
+          </h2>
+          <p style={{ color: c.textSecondary, lineHeight: 1.8, fontSize: "1rem", transition: "color 0.2s" }}>
+            Luca Pacioli published <em style={{ color: c.emText }}>Summa de Arithmetica</em> in 1494 — codifying double-entry bookkeeping
+            and laying the foundation for modern finance. His insight: every transaction has two sides.
+            Assets and liabilities. Income and spending. Where you are and where you're headed.
+          </p>
+          <p style={{ color: c.textSecondary, lineHeight: 1.8, fontSize: "1rem", marginTop: "16px", transition: "color 0.2s" }}>
+            Pacioli brings that rigour to your household — not corporate-grade complexity, just the
+            clarity of knowing exactly where every dollar comes from and where it goes.
+          </p>
+          <p style={{ marginTop: "24px", fontSize: "13px", color: c.pronunciationColor, fontStyle: "italic", transition: "color 0.2s" }}>
+            pah · CHOH · lee
+          </p>
+        </div>
+      </section>
+
       {/* ── Bottom CTA ─────────────────────────────────────── */}
       <section style={{ textAlign: "center", padding: "80px 2rem 100px" }}>
         <h2 style={{ fontSize: "2rem", fontWeight: 700, color: c.textPrimary, marginBottom: "12px", transition: "color 0.2s" }}>
@@ -438,7 +466,7 @@ export default function LandingPage() {
         transition: "border-color 0.2s, color 0.2s",
       }}>
         Built by{" "}
-        <a href="https://www.linkedin.com/in/christina-moore-94b54a23/" target="_blank" rel="noopener noreferrer" style={{ color: c.footerLink, textDecoration: "none" }}>
+        <a href="https://aiopsoctopus.substack.com" target="_blank" rel="noopener noreferrer" style={{ color: c.footerLink, textDecoration: "none" }}>
           Christina Moore
         </a>
         {" · "}

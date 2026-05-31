@@ -106,6 +106,22 @@ export function getNetWorth(accounts: AccountData, month: string): number {
   return assets - liabilities;
 }
 
+/**
+ * Returns the latest month that appears in BOTH the account balances AND
+ * the transaction list. Use this everywhere a "current month" is needed so
+ * all pages stay in sync even when balance data runs ahead of transactions.
+ */
+export function getLatestSharedMonth(accounts: AccountData, transactions: Transaction[]): string {
+  const txMonths = new Set(transactions.map((t) => t.date.slice(0, 7)));
+  const balanceMonths = Object.keys(accounts.assets[0]?.balances ?? {}).sort();
+  // Walk backwards from the latest balance month until we find one with tx data
+  for (let i = balanceMonths.length - 1; i >= 0; i--) {
+    if (txMonths.has(balanceMonths[i])) return balanceMonths[i];
+  }
+  // Fallback: latest balance month
+  return balanceMonths[balanceMonths.length - 1];
+}
+
 export function getMonthlySpend(transactions: Transaction[], month: string): Record<string, number> {
   const byCategory: Record<string, number> = {};
   for (const tx of transactions) {
@@ -255,6 +271,134 @@ export function analyseCategorySpend(
 
   // Sort by avg spend descending
   return results.sort((a, b) => b.avg - a.avg);
+}
+
+// ─── Expense frequency classifier ─────────────────────────────────────────────
+
+export type ExpenseFrequency =
+  | "monthly"    // appears in most months with consistent amount (subscriptions, rent)
+  | "variable"   // appears in most months but amount varies (groceries, dining)
+  | "annual"     // appears in 1–2 months per year, or same calendar month across years
+  | "one-off";   // appears in a single month, never repeated
+
+export interface MerchantClassification {
+  merchant: string;
+  category: string;
+  frequency: ExpenseFrequency;
+  /** True monthly cost: actual monthly average for recurring, amortized for annual */
+  normalizedMonthlyAmount: number;
+  /** How many distinct months this merchant appeared in */
+  monthsPresent: number;
+  /** Total months of history in the dataset */
+  totalHistoryMonths: number;
+}
+
+/**
+ * Classify each merchant's spending pattern from transaction history.
+ *
+ * Algorithm:
+ * 1. Group transactions by merchant.
+ * 2. Count distinct months present vs total history.
+ * 3. Compute coefficient of variation (CV = stddev / mean) of monthly totals.
+ * 4. Classify:
+ *    - ≥50% of months present + CV < 0.35 → monthly (consistent recurring)
+ *    - ≥50% of months present + CV ≥ 0.35 → variable (frequent but irregular)
+ *    - <50% of months but appears in same calendar month across years → annual
+ *    - <50% of months, no year-repeat → one-off
+ * 5. Amortize annual costs: total / historyMonths gives true monthly impact.
+ */
+export function classifyMerchants(transactions: Transaction[]): MerchantClassification[] {
+  if (transactions.length === 0) return [];
+
+  // Total history span in months
+  const allMonths = [...new Set(transactions.map((t) => t.date.slice(0, 7)))].sort();
+  const totalHistoryMonths = allMonths.length;
+
+  // Group by merchant
+  const byMerchant = new Map<string, Transaction[]>();
+  for (const tx of transactions) {
+    if (tx.category === "Savings") continue;
+    const existing = byMerchant.get(tx.merchant) ?? [];
+    existing.push(tx);
+    byMerchant.set(tx.merchant, existing);
+  }
+
+  const results: MerchantClassification[] = [];
+
+  for (const [merchant, txs] of byMerchant) {
+    const category = txs[0].category;
+
+    // Monthly totals
+    const byMonth = new Map<string, number>();
+    for (const tx of txs) {
+      const m = tx.date.slice(0, 7);
+      byMonth.set(m, (byMonth.get(m) ?? 0) + tx.amount);
+    }
+
+    const monthsPresent = byMonth.size;
+    const presenceFraction = monthsPresent / totalHistoryMonths;
+    const amounts = [...byMonth.values()];
+    const mean = amounts.reduce((s, v) => s + v, 0) / amounts.length;
+    const variance = amounts.reduce((s, v) => s + (v - mean) ** 2, 0) / amounts.length;
+    const cv = mean > 0 ? Math.sqrt(variance) / mean : 0;
+
+    // Check for annual pattern: same calendar month across different years
+    const calendarMonths = txs.map((t) => t.date.slice(5, 7)); // "01"–"12"
+    const uniqueCalendarMonths = new Set(calendarMonths);
+    const years = new Set(txs.map((t) => t.date.slice(0, 4)));
+    const isAnnual =
+      presenceFraction < 0.4 &&
+      uniqueCalendarMonths.size <= 2 &&
+      years.size >= 2;
+
+    let frequency: ExpenseFrequency;
+    if (presenceFraction >= 0.5 && cv < 0.35) {
+      frequency = "monthly";
+    } else if (presenceFraction >= 0.5) {
+      frequency = "variable";
+    } else if (isAnnual) {
+      frequency = "annual";
+    } else if (monthsPresent === 1) {
+      frequency = "one-off";
+    } else {
+      // Irregular but not annual — treat as variable for budget purposes
+      frequency = "variable";
+    }
+
+    // Normalized monthly amount: amortize over full history
+    const totalSpend = amounts.reduce((s, v) => s + v, 0);
+    const normalizedMonthlyAmount = totalSpend / totalHistoryMonths;
+
+    results.push({
+      merchant,
+      category,
+      frequency,
+      normalizedMonthlyAmount: Math.round(normalizedMonthlyAmount * 100) / 100,
+      monthsPresent,
+      totalHistoryMonths,
+    });
+  }
+
+  return results.sort((a, b) => b.normalizedMonthlyAmount - a.normalizedMonthlyAmount);
+}
+
+/**
+ * Compute true average monthly spend per category using the frequency classifier.
+ * Annual and one-off costs are amortized across the full history window,
+ * so a $1,200 annual insurance premium contributes $100/mo rather than
+ * spiking the month it occurs.
+ *
+ * Returns: { category → normalizedMonthlyAmount }
+ */
+export function getNormalizedMonthlyCategorySpend(
+  transactions: Transaction[],
+): Record<string, number> {
+  const classifications = classifyMerchants(transactions);
+  const byCat: Record<string, number> = {};
+  for (const c of classifications) {
+    byCat[c.category] = (byCat[c.category] ?? 0) + c.normalizedMonthlyAmount;
+  }
+  return byCat;
 }
 
 /** Returns how far through the current month we are as a 0–1 fraction */

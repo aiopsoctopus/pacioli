@@ -68,11 +68,11 @@ function SetupFlow({
       <div>
         <div className="flex items-center gap-2 mb-1">
           <Sparkles size={16} className="text-indigo-400" />
-          <p className="text-xs font-semibold text-indigo-400 uppercase tracking-wide">AI Budget Setup</p>
+          <p className="text-xs font-semibold text-indigo-400 uppercase tracking-wide">Smart Budget Setup</p>
         </div>
         <h2 className="text-3xl font-bold pacioli-text-primary">Set Your Budget</h2>
         <p className="pacioli-text-muted text-sm mt-1">
-          Review each category — AI has analysed your last 6 months and suggested a target. Accept or adjust.
+          Review each category — targets are based on your 6-month spending average and trend. Accept or adjust.
         </p>
       </div>
 
@@ -139,7 +139,7 @@ function SetupFlow({
               />
             </div>
             <div className="text-right shrink-0">
-              <p className="text-xs pacioli-text-muted">AI suggested</p>
+              <p className="text-xs pacioli-text-muted">Suggested</p>
               <p className="text-sm font-semibold text-indigo-400">{formatCurrency(current.suggestedBudget)}</p>
             </div>
           </div>
@@ -181,7 +181,7 @@ function SetupFlow({
           }}
           className="hover:pacioli-text-muted transition-colors underline underline-offset-2"
         >
-          Accept all AI suggestions and finish
+          Accept all suggestions and finish
         </button>
       </p>
     </div>
@@ -312,7 +312,7 @@ function EnvelopeRow({
       {analysis && envelope.budgetAmount !== analysis.suggestedBudget && !editing && (
         <p className="text-xs text-indigo-400/70 mt-1.5 flex items-center gap-1">
           <Sparkles size={10} />
-          AI suggested {formatCurrency(analysis.suggestedBudget)} · {analysis.rationale.split(".")[0]}.
+          Suggested {formatCurrency(analysis.suggestedBudget)} based on your average · {analysis.rationale.split(".")[0]}.
         </p>
       )}
     </div>
@@ -456,7 +456,7 @@ export default function BudgetPage() {
           className="flex items-center gap-1.5 text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
         >
           <Sparkles size={13} />
-          Re-run AI setup
+          Re-run smart setup
         </button>
       </div>
 
@@ -640,7 +640,7 @@ export default function BudgetPage() {
           <div className="pacioli-bg-surface rounded-2xl p-5 border border-indigo-800/20 bg-indigo-950/10">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles size={13} className="text-indigo-400" />
-              <p className="text-xs font-semibold text-indigo-400">AI Insight</p>
+              <p className="text-xs font-semibold text-indigo-400">Spending Insight</p>
               <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/30">Soon</span>
             </div>
             {/* LLM_HOOK: monthly narrative — the CFO memo.

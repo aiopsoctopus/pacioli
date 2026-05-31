@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import {
-  fetchJSON, formatCurrency, formatMonth,
+  fetchJSON, formatCurrency,
   AccountData, MonthIncome, getNetWorth, getMonthlySpend,
-  avgMonthlyIncome, useTransactions,
+  avgMonthlyIncome, useTransactions, getNormalizedMonthlyCategorySpend,
 } from "@/lib/data";
+import { runProjection, ScenarioEvent, INVESTMENT_ANNUAL_RETURN } from "@/lib/scenario";
 import { useDemo } from "@/components/demo-provider";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -13,43 +14,6 @@ import {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const WINDOW_MONTHS = 6;
-const INVESTMENT_ANNUAL_RETURN = 0.066; // 6.6% per year
-const MONTHLY_RETURN = INVESTMENT_ANNUAL_RETURN / 12;
-const PROJECTION_MONTHS = 12;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-function nextMonthKey(yyyyMM: string): string {
-  const [y, m] = yyyyMM.split("-").map(Number);
-  const d = new Date(y, m); // month is 0-based, so this is already next month
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
-
-function projectNetWorth(
-  startingNW: number,
-  monthlyCashFlow: number,
-  months: number,
-  scenarioDelta = 0,
-): { month: string; base: number; scenario: number }[] {
-  const today = new Date();
-  const startMonthStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
-
-  const rows: { month: string; base: number; scenario: number }[] = [];
-  let baseNW = startingNW;
-  let scenarioNW = startingNW;
-  let current = startMonthStr;
-
-  for (let i = 0; i < months; i++) {
-    current = nextMonthKey(current);
-    baseNW = baseNW * (1 + MONTHLY_RETURN) + monthlyCashFlow;
-    scenarioNW = scenarioNW * (1 + MONTHLY_RETURN) + monthlyCashFlow + scenarioDelta;
-    rows.push({
-      month: formatMonth(current),
-      base: Math.round(baseNW),
-      scenario: Math.round(scenarioNW),
-    });
-  }
-  return rows;
-}
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function ForecastView() {
@@ -78,67 +42,60 @@ export default function ForecastView() {
       ? sortedIncomeMonths[sortedIncomeMonths.length - 1]
       : txMonths[txMonths.length - 1];
 
-    // Starting net worth = latest account balance month (0 if no accounts data)
+    // Starting NW: cap to today's month so forward-dated balances don't inflate
     let startingNW = 0;
     if (accounts) {
-      const allAccountMonths = [
+      const todayMonth = new Date().toISOString().slice(0, 7);
+      const balanceMonths = [
         ...accounts.assets.flatMap((a) => Object.keys(a.balances)),
-        ...accounts.liabilities.flatMap((l) => Object.keys(l.balances)),
-      ].sort();
-      const latestAccountMonth = allAccountMonths[allAccountMonths.length - 1];
+      ].sort().filter((m) => m <= todayMonth);
+      const latestAccountMonth = balanceMonths.at(-1) ?? currentMonth;
       startingNW = getNetWorth(accounts, latestAccountMonth);
     }
 
-    // Last N completed months before currentMonth
+    // Last N completed months before currentMonth (used for income window)
     const completedMonths = txMonths.filter((m) => m < currentMonth).slice(-WINDOW_MONTHS);
 
     // Average monthly income (0 if no income data)
     const avgIncome = income ? avgMonthlyIncome(income, currentMonth, WINDOW_MONTHS) : 0;
 
-    // Average monthly spend per completed month (exclude Savings category)
-    let totalSpend = 0;
-    let monthsWithData = 0;
-    for (const m of completedMonths) {
-      const spend = getMonthlySpend(transactions, m);
-      const monthTotal = Object.values(spend).reduce((s, v) => s + v, 0);
-      if (monthTotal > 0) {
-        totalSpend += monthTotal;
-        monthsWithData++;
-      }
-    }
-    const avgSpend = monthsWithData > 0 ? Math.round(totalSpend / monthsWithData) : 0;
+    // Normalized monthly spend using frequency classifier (amortizes annual costs correctly)
+    const normalizedCatSpend = getNormalizedMonthlyCategorySpend(
+      transactions.filter((t) => t.date.slice(0, 7) < currentMonth)
+    );
+    const avgSpend = Math.round(Object.values(normalizedCatSpend).reduce((s, v) => s + v, 0));
 
-    // Try to split fixed vs variable from category averages
-    // "Fixed" heuristics: Housing, Utilities, Insurance, Subscriptions, Loan Payment, Savings
+    // Fixed vs variable split for UI display (category heuristic on normalized amounts)
     const FIXED_CATEGORIES = new Set([
       "Housing", "Mortgage", "Rent", "Utilities", "Insurance",
       "Subscriptions", "Loan Payment", "Phone", "Internet",
     ]);
-    let totalFixed = 0;
-    let totalVariable = 0;
-    for (const m of completedMonths) {
-      const spend = getMonthlySpend(transactions, m);
-      for (const [cat, amt] of Object.entries(spend)) {
-        if (FIXED_CATEGORIES.has(cat)) totalFixed += amt;
-        else totalVariable += amt;
-      }
+    let avgFixed = 0, avgVariable = 0;
+    for (const [cat, amt] of Object.entries(normalizedCatSpend)) {
+      if (FIXED_CATEGORIES.has(cat)) avgFixed += amt; else avgVariable += amt;
     }
-    const avgFixed = monthsWithData > 0 ? Math.round(totalFixed / monthsWithData) : 0;
-    const avgVariable = monthsWithData > 0 ? Math.round(totalVariable / monthsWithData) : 0;
+    avgFixed = Math.round(avgFixed);
+    avgVariable = Math.round(avgVariable);
 
     const monthlyCashFlow = avgIncome - avgSpend;
     const savingsRate = avgIncome > 0 ? Math.round((monthlyCashFlow / avgIncome) * 100) : 0;
 
-    // Build projection
-    const chartRows = [
-      { month: "Now", base: startingNW, scenario: startingNW },
-      ...projectNetWorth(startingNW, monthlyCashFlow, PROJECTION_MONTHS, scenarioDelta),
-    ];
+    // Build scenario events from the slider delta
+    const sliderEvents: ScenarioEvent[] = scenarioDelta !== 0 ? [{
+      id: "slider",
+      label: scenarioDelta > 0 ? `Save $${scenarioDelta.toLocaleString()}/mo more` : `Spend $${Math.abs(scenarioDelta).toLocaleString()}/mo more`,
+      type: "savings",
+      startMonth: currentMonth,
+      delta: Math.abs(scenarioDelta),
+      recurring: true,
+      ...(scenarioDelta < 0 && { type: "expense" as const }),
+    }] : [];
 
-    const endBase = chartRows[chartRows.length - 1].base;
-    const endScenario = chartRows[chartRows.length - 1].scenario;
-    const gainBase = endBase - startingNW;
-    const gainScenario = endScenario - startingNW;
+    // Run projection via the engine
+    const { rows: projRows, summary } = runProjection(
+      { startingNW, monthlyCashFlow, startMonth: currentMonth },
+      sliderEvents,
+    );
 
     return {
       startingNW,
@@ -148,11 +105,11 @@ export default function ForecastView() {
       avgSpend,
       monthlyCashFlow,
       savingsRate,
-      endBase,
-      endScenario,
-      gainBase,
-      gainScenario,
-      chartRows,
+      endBase: summary.endBase,
+      endScenario: summary.endScenario,
+      gainBase: summary.gainBase,
+      gainScenario: summary.gainScenario,
+      chartRows: projRows,
       windowMonths: completedMonths.length,
     };
   }, [accounts, income, transactions, scenarioDelta]);

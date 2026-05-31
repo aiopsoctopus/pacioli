@@ -29,7 +29,10 @@ export default function NetWorth() {
   if (!accounts) return <div className="pacioli-text-muted animate-pulse">Loading balance sheet...</div>;
 
   const months = Object.keys(accounts.assets[0].balances).sort();
-  const currentMonth = months[months.length - 1];
+  // Cap to the current calendar month so future-dated balance entries don't
+  // inflate the headline figure (keeps NW in sync with the dashboard).
+  const todayMonth = new Date().toISOString().slice(0, 7);
+  const currentMonth = months.filter((m) => m <= todayMonth).at(-1) ?? months[months.length - 1];
 
   const nwHistory = months.map((m) => ({
     month: formatMonth(m),

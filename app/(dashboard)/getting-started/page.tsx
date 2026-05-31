@@ -36,7 +36,7 @@ export const STEPS: StepDef[] = [
   {
     id: "budget",
     label: "Set up your budget",
-    description: "Let the AI suggest monthly targets based on your real spending.",
+    description: "Get smart monthly targets based on your real spending patterns.",
     detail:
       "The budget setup flow analyses your last 6 months of transactions per category and recommends a monthly target — accounting for trends, seasonal spikes, and a small buffer. You can accept, adjust, or skip any suggestion. Takes about 2 minutes.",
     href: "/budget",
