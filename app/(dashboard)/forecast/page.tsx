@@ -363,13 +363,20 @@ export default function ForecastView() {
           </div>
         )}
 
-        {/* Active events */}
+        {/* Editable event cards */}
         {scenarioEvents.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-4 space-y-3">
             {scenarioEvents.map((ev) => (
-              <span key={ev.id} className="text-xs px-2 py-1 rounded-full bg-indigo-950/40 border border-indigo-500/20 text-indigo-300">
-                {ev.label}
-              </span>
+              <EventCard
+                key={ev.id}
+                event={ev}
+                onChange={(updated) =>
+                  setScenarioEvents((evs) => evs.map((e) => (e.id === ev.id ? updated : e)))
+                }
+                onRemove={() =>
+                  setScenarioEvents((evs) => evs.filter((e) => e.id !== ev.id))
+                }
+              />
             ))}
           </div>
         )}
@@ -482,6 +489,138 @@ function MetricCard({ label, value, sub, highlight }: {
       <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">{label}</p>
       <p className={`text-2xl font-bold ${highlight ?? "pacioli-text-primary"}`}>{value}</p>
       <p className="text-xs pacioli-text-faint mt-1">{sub}</p>
+    </div>
+  );
+}
+
+// ─── Event type config ────────────────────────────────────────────────────────
+
+const EVENT_TYPE_CONFIG = {
+  income:  { label: "Income",  color: "text-emerald-400", bg: "bg-emerald-950/30 border-emerald-500/20", maxDelta: 20000, step: 100 },
+  expense: { label: "Expense", color: "text-red-400",     bg: "bg-red-950/30 border-red-500/20",         maxDelta: 50000, step: 500 },
+  savings: { label: "Savings", color: "text-indigo-400",  bg: "bg-indigo-950/30 border-indigo-500/20",   maxDelta: 5000,  step: 50  },
+} as const;
+
+// ─── EventCard ────────────────────────────────────────────────────────────────
+
+function EventCard({
+  event,
+  onChange,
+  onRemove,
+}: {
+  event: ScenarioEvent;
+  onChange: (updated: ScenarioEvent) => void;
+  onRemove: () => void;
+}) {
+  const cfg = EVENT_TYPE_CONFIG[event.type];
+  const [deltaInput, setDeltaInput] = useState(String(event.delta));
+
+  function update(patch: Partial<ScenarioEvent>) {
+    onChange({ ...event, ...patch });
+  }
+
+  function commitDeltaInput() {
+    const val = parseFloat(deltaInput);
+    if (!isNaN(val) && val >= 0) {
+      update({ delta: Math.round(val) });
+      setDeltaInput(String(Math.round(val)));
+    } else {
+      setDeltaInput(String(event.delta));
+    }
+  }
+
+  const recurringLabel = event.recurring
+    ? (event.type === "expense" ? "/mo" : "/mo")
+    : "one-time";
+
+  return (
+    <div className={`rounded-xl border p-4 ${cfg.bg}`}>
+      {/* Header row */}
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <span className={`text-xs font-semibold uppercase tracking-wide ${cfg.color} shrink-0`}>
+            {cfg.label}
+          </span>
+          <span className="text-sm pacioli-text-primary font-medium truncate">{event.label}</span>
+        </div>
+        <button
+          onClick={onRemove}
+          className="text-xs pacioli-text-muted hover:text-red-400 transition-colors shrink-0"
+          title="Remove event"
+        >
+          ✕
+        </button>
+      </div>
+
+      {/* Delta slider + input */}
+      <div className="mb-3">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-xs pacioli-text-muted">
+            Amount {recurringLabel}
+          </span>
+          <div className="flex items-center gap-1">
+            <span className="text-xs pacioli-text-muted">$</span>
+            <input
+              type="number"
+              value={deltaInput}
+              min={0}
+              max={cfg.maxDelta}
+              step={cfg.step}
+              onChange={(e) => setDeltaInput(e.target.value)}
+              onBlur={commitDeltaInput}
+              onKeyDown={(e) => e.key === "Enter" && commitDeltaInput()}
+              className="w-24 text-xs text-right px-2 py-1 rounded pacioli-bg-surface border pacioli-text-primary focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+          </div>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={cfg.maxDelta}
+          step={cfg.step}
+          value={event.delta}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            update({ delta: v });
+            setDeltaInput(String(v));
+          }}
+          className="w-full accent-indigo-500"
+        />
+      </div>
+
+      {/* Month range + recurring */}
+      <div className="flex flex-wrap gap-3 items-center">
+        <div className="flex items-center gap-1.5">
+          <label className="text-xs pacioli-text-muted">From</label>
+          <input
+            type="month"
+            value={event.startMonth}
+            onChange={(e) => update({ startMonth: e.target.value })}
+            className="text-xs px-2 py-1 rounded pacioli-bg-surface border pacioli-text-primary focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          />
+        </div>
+        {event.recurring && (
+          <div className="flex items-center gap-1.5">
+            <label className="text-xs pacioli-text-muted">Until</label>
+            <input
+              type="month"
+              value={event.endMonth ?? ""}
+              placeholder="forever"
+              onChange={(e) => update({ endMonth: e.target.value || undefined })}
+              className="text-xs px-2 py-1 rounded pacioli-bg-surface border pacioli-text-primary focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            />
+          </div>
+        )}
+        <label className="flex items-center gap-1.5 cursor-pointer ml-auto">
+          <input
+            type="checkbox"
+            checked={event.recurring}
+            onChange={(e) => update({ recurring: e.target.checked })}
+            className="accent-indigo-500"
+          />
+          <span className="text-xs pacioli-text-muted">Recurring</span>
+        </label>
+      </div>
     </div>
   );
 }
