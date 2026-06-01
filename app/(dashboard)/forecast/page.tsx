@@ -1,16 +1,17 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import {
   fetchJSON, formatCurrency,
   AccountData, MonthIncome, getNetWorth, getMonthlySpend,
   avgMonthlyIncome, useTransactions, getNormalizedMonthlyCategorySpend,
 } from "@/lib/data";
-import { runProjection, ScenarioEvent, INVESTMENT_ANNUAL_RETURN } from "@/lib/scenario";
+import { runProjection, ScenarioEvent, ProjectionSummary } from "@/lib/scenario";
 import { useDemo } from "@/components/demo-provider";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
   ReferenceLine, CartesianGrid, Legend,
 } from "recharts";
+import { Send, Loader2, Sparkles, RotateCcw } from "lucide-react";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const WINDOW_MONTHS = 6;
@@ -22,6 +23,17 @@ export default function ForecastView() {
   const [accounts, setAccounts] = useState<AccountData | null>(null);
   const [income, setIncome] = useState<MonthIncome[] | null>(null);
   const [scenarioDelta, setScenarioDelta] = useState(0); // extra $ saved per month
+
+  // ── Scenario chat state ──────────────────────────────────────────────────────
+  const [chatInput, setChatInput] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatError, setChatError] = useState<string | null>(null);
+  const [chatNarration, setChatNarration] = useState<string | null>(null);
+  const [clarifyingQuestion, setClarifyingQuestion] = useState<string | null>(null);
+  const [scenarioEvents, setScenarioEvents] = useState<ScenarioEvent[]>([]);
+  const [lastQuestion, setLastQuestion] = useState<string | null>(null);
+  const chatInputRef = useRef<HTMLInputElement>(null);
+
   const transactions = useTransactions(ns);
 
   useEffect(() => {
@@ -80,21 +92,23 @@ export default function ForecastView() {
     const monthlyCashFlow = avgIncome - avgSpend;
     const savingsRate = avgIncome > 0 ? Math.round((monthlyCashFlow / avgIncome) * 100) : 0;
 
-    // Build scenario events from the slider delta
-    const sliderEvents: ScenarioEvent[] = scenarioDelta !== 0 ? [{
-      id: "slider",
-      label: scenarioDelta > 0 ? `Save $${scenarioDelta.toLocaleString()}/mo more` : `Spend $${Math.abs(scenarioDelta).toLocaleString()}/mo more`,
-      type: "savings",
-      startMonth: currentMonth,
-      delta: Math.abs(scenarioDelta),
-      recurring: true,
-      ...(scenarioDelta < 0 && { type: "expense" as const }),
-    }] : [];
+    // Merge slider delta + chat scenario events
+    const allEvents: ScenarioEvent[] = [...scenarioEvents];
+    if (scenarioDelta !== 0) {
+      allEvents.push({
+        id: "slider",
+        label: scenarioDelta > 0 ? `Save $${scenarioDelta.toLocaleString()}/mo more` : `Spend $${Math.abs(scenarioDelta).toLocaleString()}/mo more`,
+        type: scenarioDelta > 0 ? "savings" : "expense",
+        startMonth: currentMonth,
+        delta: Math.abs(scenarioDelta),
+        recurring: true,
+      });
+    }
 
     // Run projection via the engine
     const { rows: projRows, summary } = runProjection(
       { startingNW, monthlyCashFlow, startMonth: currentMonth },
-      sliderEvents,
+      allEvents,
     );
 
     return {
@@ -105,14 +119,106 @@ export default function ForecastView() {
       avgSpend,
       monthlyCashFlow,
       savingsRate,
+      currentMonth,
       endBase: summary.endBase,
       endScenario: summary.endScenario,
       gainBase: summary.gainBase,
       gainScenario: summary.gainScenario,
+      summary,
       chartRows: projRows,
       windowMonths: completedMonths.length,
     };
-  }, [accounts, income, transactions, scenarioDelta]);
+  }, [accounts, income, transactions, scenarioDelta, scenarioEvents]);
+
+  // ── Chat handler ─────────────────────────────────────────────────────────────
+  async function handleChat(question: string) {
+    if (!derived || !question.trim()) return;
+    setChatLoading(true);
+    setChatError(null);
+    setChatNarration(null);
+    setLastQuestion(question);
+
+    try {
+      // Step 1: parse NL → events
+      const parseRes = await fetch("/api/scenario", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: "parse",
+          question,
+          baseline: {
+            startingNW: derived.startingNW,
+            monthlyCashFlow: derived.monthlyCashFlow,
+            avgIncome: derived.avgIncome,
+            avgSpend: derived.avgSpend,
+            currentMonth: derived.currentMonth,
+          },
+          existingEvents: scenarioEvents,
+        }),
+      });
+
+      const parsed = await parseRes.json();
+      if (!parseRes.ok) throw new Error(parsed.error ?? "Parse failed");
+
+      // If clarifying question needed, surface it and stop
+      if (!parsed.readyToProject && parsed.clarifyingQuestion) {
+        setClarifyingQuestion(parsed.clarifyingQuestion);
+        // Store partial events so next turn can build on them
+        if (parsed.events?.length) setScenarioEvents(parsed.events.filter((e: ScenarioEvent) => e.delta !== -1));
+        setChatLoading(false);
+        return;
+      }
+
+      setClarifyingQuestion(null);
+      const newEvents: ScenarioEvent[] = parsed.events ?? [];
+      setScenarioEvents(newEvents);
+
+      // Step 2: run projection (via the engine already in derived — trigger rerender)
+      // The projection runs automatically via useMemo when scenarioEvents changes.
+      // We need the summary *after* state update — compute it inline here.
+      const { summary: projSummary } = runProjection(
+        { startingNW: derived.startingNW, monthlyCashFlow: derived.monthlyCashFlow, startMonth: derived.currentMonth },
+        newEvents,
+      );
+
+      // Step 3: narrate
+      const narrateRes = await fetch("/api/scenario", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: "narrate",
+          question,
+          baseline: {
+            startingNW: derived.startingNW,
+            monthlyCashFlow: derived.monthlyCashFlow,
+            avgIncome: derived.avgIncome,
+            avgSpend: derived.avgSpend,
+            currentMonth: derived.currentMonth,
+          },
+          projectionSummary: projSummary,
+          existingEvents: newEvents,
+        }),
+      });
+
+      const narrateData = await narrateRes.json();
+      if (!narrateRes.ok) throw new Error(narrateData.error ?? "Narration failed");
+      setChatNarration(narrateData.narration);
+    } catch (e: unknown) {
+      setChatError(e instanceof Error ? e.message : "Something went wrong");
+    } finally {
+      setChatLoading(false);
+    }
+  }
+
+  function resetScenario() {
+    setScenarioEvents([]);
+    setScenarioDelta(0);
+    setChatNarration(null);
+    setClarifyingQuestion(null);
+    setChatError(null);
+    setLastQuestion(null);
+    setChatInput("");
+  }
 
   if (!isDemo && transactions.length === 0) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
@@ -204,6 +310,88 @@ export default function ForecastView() {
           <p className="text-xs pacioli-text-success mt-3">
             Saving an extra {formatCurrency(scenarioDelta)}/mo adds{" "}
             <span className="font-semibold">{formatCurrency(gainScenario - gainBase)}</span> over 12 months.
+          </p>
+        )}
+      </div>
+
+      {/* What if? chat panel */}
+      <div className="pacioli-bg-surface rounded-2xl p-5 border">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Sparkles size={15} className="text-indigo-400" />
+            <h3 className="text-sm font-semibold pacioli-text-secondary">Ask a "What if?" question</h3>
+          </div>
+          {(scenarioEvents.length > 0 || chatNarration) && (
+            <button
+              onClick={resetScenario}
+              className="flex items-center gap-1 text-xs pacioli-text-muted hover:pacioli-text-secondary transition-colors"
+            >
+              <RotateCcw size={11} /> Reset
+            </button>
+          )}
+        </div>
+
+        {/* Input */}
+        <form
+          onSubmit={(e) => { e.preventDefault(); handleChat(chatInput); setChatInput(""); }}
+          className="flex gap-2"
+        >
+          <input
+            ref={chatInputRef}
+            type="text"
+            value={chatInput}
+            onChange={(e) => setChatInput(e.target.value)}
+            placeholder={clarifyingQuestion ?? "e.g. Can I afford to quit and open a bookstore?"}
+            disabled={chatLoading}
+            className="flex-1 text-sm px-3 py-2 rounded-lg pacioli-bg-surface-2 border pacioli-text-primary placeholder:pacioli-text-muted focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
+          />
+          <button
+            type="submit"
+            disabled={chatLoading || !chatInput.trim()}
+            className="px-3 py-2 rounded-lg bg-indigo-600 text-white disabled:opacity-40 hover:bg-indigo-700 transition-colors"
+          >
+            {chatLoading ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
+          </button>
+        </form>
+
+        {/* Clarifying question */}
+        {clarifyingQuestion && !chatLoading && (
+          <div className="mt-3 px-3 py-2 rounded-lg bg-indigo-950/30 border border-indigo-500/20">
+            <p className="text-xs text-indigo-300">
+              <span className="font-semibold">One question: </span>{clarifyingQuestion}
+            </p>
+          </div>
+        )}
+
+        {/* Active events */}
+        {scenarioEvents.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {scenarioEvents.map((ev) => (
+              <span key={ev.id} className="text-xs px-2 py-1 rounded-full bg-indigo-950/40 border border-indigo-500/20 text-indigo-300">
+                {ev.label}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Narration */}
+        {chatNarration && (
+          <div className="mt-3 px-3 py-2 rounded-lg pacioli-bg-surface-2 border">
+            <p className="text-sm pacioli-text-secondary leading-relaxed">{chatNarration}</p>
+            {lastQuestion && (
+              <p className="text-xs pacioli-text-muted mt-2 italic">"{lastQuestion}"</p>
+            )}
+          </div>
+        )}
+
+        {/* Error */}
+        {chatError && (
+          <p className="mt-3 text-xs text-red-400">{chatError}</p>
+        )}
+
+        {!chatNarration && !clarifyingQuestion && !chatLoading && scenarioEvents.length === 0 && (
+          <p className="text-xs pacioli-text-muted mt-2">
+            Describe a life change — quitting a job, a big purchase, starting a side income — and see how it affects your 12-month projection.
           </p>
         )}
       </div>
