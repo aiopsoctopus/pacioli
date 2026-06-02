@@ -13,10 +13,10 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import Groq from "groq-sdk";
 import { ScenarioEvent } from "@/lib/scenario";
 
-const client = new Anthropic(); // reads ANTHROPIC_API_KEY from env automatically
+const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 // ─── System prompt ────────────────────────────────────────────────────────────
 
@@ -110,9 +110,9 @@ interface RequestBody {
 // ─── Handler ──────────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.GROQ_API_KEY) {
     return NextResponse.json(
-      { error: "ANTHROPIC_API_KEY not configured on the server." },
+      { error: "GROQ_API_KEY not configured on the server." },
       { status: 500 },
     );
   }
@@ -135,14 +135,16 @@ User's question: "${question}"
 
 Parse this into structured scenario events. Follow the output schema exactly.`;
 
-    const response = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
+    const response = await client.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
       max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userMessage }],
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: userMessage },
+      ],
     });
 
-    const raw = response.content[0].type === "text" ? response.content[0].text : "";
+    const raw = response.choices[0]?.message?.content ?? "";
 
     let parsed: ParsedScenario;
     try {
@@ -178,16 +180,16 @@ ${JSON.stringify(existingEvents, null, 2)}
 
 Write a 2–3 sentence plain-English summary of what this means for the user. Be honest about uncertainty. Use the actual numbers from the projection. Do NOT use JSON — just prose.`;
 
-    const response = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
+    const response = await client.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
       max_tokens: 256,
-      system:
-        "You are a concise, honest financial narrator. Use the exact numbers provided. Never add caveats not supported by the data. Plain prose only — no JSON, no markdown headers.",
-      messages: [{ role: "user", content: narrateMessage }],
+      messages: [
+        { role: "system", content: "You are a concise, honest financial narrator. Use the exact numbers provided. Never add caveats not supported by the data. Plain prose only — no JSON, no markdown headers." },
+        { role: "user", content: narrateMessage },
+      ],
     });
 
-    const narration =
-      response.content[0].type === "text" ? response.content[0].text.trim() : "";
+    const narration = response.choices[0]?.message?.content?.trim() ?? "";
 
     return NextResponse.json({ narration });
   }
