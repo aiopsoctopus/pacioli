@@ -137,13 +137,15 @@ export function getMonthlySpend(transactions: Transaction[], month: string): Rec
 export interface BudgetAnalysis {
   category: string;
   monthlyAmounts: number[];          // last N months in chronological order
-  avg: number;                       // 6-month average
+  avg: number;                       // simple 6-month average (for trend/display only)
+  normalizedMonthlyAmount: number;   // true monthly cost — annual/one-off costs amortized
+  hasAnnualCosts: boolean;           // true if any merchant in this category is annual/one-off
   trend: "rising" | "falling" | "stable";
   trendPct: number;                  // % change first half vs second half of window
   peakMonth: string;                 // month key of highest spend
   peakAmount: number;
   isSeasonal: boolean;               // true if peak > 1.5× avg
-  suggestedBudget: number;           // rounded recommended amount
+  suggestedBudget: number;           // rounded recommended amount (based on normalizedMonthlyAmount)
   rationale: string;                 // rule-based explanation
   // LLM_HOOK: replace `rationale` string with an LLM-generated version
   // that interprets merchant names, references specific events, and speaks
@@ -186,7 +188,22 @@ export function analyseCategorySpend(
 
   if (completedMonths.length === 0) return [];
 
-  // Build { category -> amount[] } in chronological order
+  // Transactions scoped to the analysis window (excludes current partial month)
+  const windowTxs = transactions.filter((t) => completedMonths.includes(t.date.slice(0, 7)));
+
+  // Normalized monthly amounts via frequency classifier — amortizes annual/one-off costs
+  // so a $1,200 annual insurance premium contributes $100/mo rather than spiking one month.
+  const classifiedMerchants = classifyMerchants(windowTxs);
+  const normalizedByCat: Record<string, number> = {};
+  const annualCatFlags: Record<string, boolean> = {};
+  for (const c of classifiedMerchants) {
+    normalizedByCat[c.category] = (normalizedByCat[c.category] ?? 0) + c.normalizedMonthlyAmount;
+    if (c.frequency === "annual" || c.frequency === "one-off") {
+      annualCatFlags[c.category] = true;
+    }
+  }
+
+  // Build { category -> amount[] } in chronological order (for trend/sparkline display)
   const byCategory: Record<string, number[]> = {};
   for (const m of completedMonths) {
     const spend = getMonthlySpend(transactions, m);
@@ -224,17 +241,15 @@ export function analyseCategorySpend(
     const peakAmount = amounts[peakIdx] ?? 0;
     const isSeasonal = peakAmount > avg * 1.5 && amounts.length >= 3;
 
-    // Suggested budget — rules:
-    // Rising:   use 110% of recent (second-half) average, rounded up to nearest $25
-    // Falling:  use 100% of recent average (don't cut too aggressively)
-    // Stable:   use 105% of overall avg for breathing room
-    // Seasonal: nudge up by 10% to account for occasional spikes
-    let raw = trend === "rising"
-      ? secondHalfAvg * 1.1
-      : trend === "falling"
-      ? secondHalfAvg * 1.0
-      : avg * 1.05;
-    if (isSeasonal) raw = raw * 1.1;
+    // True monthly cost: use normalized amount from classifier (amortizes annual costs).
+    // Fall back to simple avg if the classifier has no data for this category.
+    const normalizedMonthlyAmount = Math.round(normalizedByCat[category] ?? avg);
+    const hasAnnualCosts = annualCatFlags[category] ?? false;
+
+    // Suggested budget: apply trend multiplier on top of the normalized base.
+    // Rising:  +10% buffer on recent pace; Falling: track recent lower spend; Stable: +5% buffer.
+    const trendMultiplier = trend === "rising" ? 1.1 : trend === "falling" ? 1.0 : 1.05;
+    const raw = normalizedMonthlyAmount * trendMultiplier;
     const suggestedBudget = Math.ceil(raw / 25) * 25; // round up to nearest $25
 
     // Rule-based rationale
@@ -242,16 +257,23 @@ export function analyseCategorySpend(
     // To upgrade, call the LLM API with the stats above + recent merchant names
     // and replace this string with the LLM response.
     let rationale = "";
-    const avgStr = formatCurrency(Math.round(avg));
+    const normalizedStr = formatCurrency(normalizedMonthlyAmount);
     const peakMonthLabel = formatMonth(peakMonth);
-    if (trend === "rising") {
-      rationale = `Up ${Math.abs(trendPct)}% over the past ${windowMonths} months (avg ${avgStr}). Budget set at recent pace + 10% buffer.`;
+    if (hasAnnualCosts) {
+      rationale = `Includes annual or irregular costs amortized to ${normalizedStr}/mo.`;
+      if (trend === "rising") {
+        rationale += ` Spending is up ${Math.abs(trendPct)}% — 10% buffer added.`;
+      } else if (trend === "falling") {
+        rationale += ` Trending down ${Math.abs(trendPct)}%.`;
+      }
+    } else if (trend === "rising") {
+      rationale = `Up ${Math.abs(trendPct)}% over the past ${windowMonths} months (avg ${normalizedStr}). Budget set at recent pace + 10% buffer.`;
     } else if (trend === "falling") {
-      rationale = `Trending down ${Math.abs(trendPct)}% — avg ${avgStr}. Budget tracks your recent lower spend.`;
+      rationale = `Trending down ${Math.abs(trendPct)}% — avg ${normalizedStr}. Budget tracks your recent lower spend.`;
     } else {
-      rationale = `Steady at ~${avgStr}/mo over ${windowMonths} months. Small 5% buffer added for flexibility.`;
+      rationale = `Steady at ~${normalizedStr}/mo over ${windowMonths} months. Small 5% buffer added for flexibility.`;
     }
-    if (isSeasonal) {
+    if (isSeasonal && !hasAnnualCosts) {
       rationale += ` Spiked to ${formatCurrency(Math.round(peakAmount))} in ${peakMonthLabel} — seasonal bump included.`;
     }
 
@@ -259,6 +281,8 @@ export function analyseCategorySpend(
       category,
       monthlyAmounts: amounts,
       avg: Math.round(avg),
+      normalizedMonthlyAmount,
+      hasAnnualCosts,
       trend,
       trendPct,
       peakMonth,
@@ -269,8 +293,8 @@ export function analyseCategorySpend(
     });
   }
 
-  // Sort by avg spend descending
-  return results.sort((a, b) => b.avg - a.avg);
+  // Sort by normalized monthly amount descending (more accurate than raw avg for annual-heavy cats)
+  return results.sort((a, b) => b.normalizedMonthlyAmount - a.normalizedMonthlyAmount);
 }
 
 // ─── Expense frequency classifier ─────────────────────────────────────────────

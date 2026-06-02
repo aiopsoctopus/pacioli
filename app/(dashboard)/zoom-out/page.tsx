@@ -72,19 +72,20 @@ export default function ZoomOut() {
     netWorth: getNetWorth(accounts, m),
   }));
 
-  // Use the latest month that has BOTH income and transaction data.
-  // Account balance months can run ahead (e.g. 2026-06 balance but no June txns yet).
-  const txMonths = new Set(transactions.map((t) => t.date.slice(0, 7)));
-  const incomeMonths = income.map((i) => i.month).filter((m) => txMonths.has(m)).sort();
-  const currentMonth = incomeMonths.length > 0
-    ? incomeMonths[incomeMonths.length - 1]
-    : months[months.length - 1];
-  const prevMonth = incomeMonths.length > 1
-    ? incomeMonths[incomeMonths.length - 2]
-    : months[months.length - 2];
-  const currentNW = getNetWorth(accounts, currentMonth);
-  const prevNW = getNetWorth(accounts, prevMonth);
+  // NW headline: cap to today so future-dated balance entries don't inflate the figure.
+  // Matches the same logic used on /net-worth so both pages show the same number.
+  const todayMonth = new Date().toISOString().slice(0, 7);
+  const nwMonth = months.filter((m) => m <= todayMonth).at(-1) ?? months[months.length - 1];
+  const prevNwMonth = months.filter((m) => m < nwMonth).at(-1) ?? months[months.length - 2];
+  const currentNW = getNetWorth(accounts, nwMonth);
+  const prevNW = getNetWorth(accounts, prevNwMonth);
   const nwChange = currentNW - prevNW;
+
+  // Spend/income headline: use the latest month that has actual transaction data.
+  // This matches what /cash-flow shows by default and avoids showing $0 spend for
+  // a month where balances exist but transactions haven't come in yet.
+  const txMonths = [...new Set(transactions.map((t) => t.date.slice(0, 7)))].sort();
+  const currentMonth = txMonths.at(-1) ?? nwMonth;
 
   // This month spending by category
   const spendByCat = getMonthlySpend(transactions, currentMonth);
@@ -192,7 +193,7 @@ export default function ZoomOut() {
         <div className="pacioli-bg-surface rounded-2xl p-6 border">
           <h3 className="text-sm font-semibold pacioli-text-secondary mb-4">Spending This Month</h3>
           <ResponsiveContainer width="100%" height={220}>
-            <PieChart width={500} height={220}>
+            <PieChart>
               <Pie data={pieData} cx="40%" cy="50%" innerRadius={55} outerRadius={90} paddingAngle={2} dataKey="value">
                 {pieData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Pie>

@@ -13,7 +13,7 @@ const FEATURES = [
   {
     icon: Wallet,
     title: "Envelope budgeting",
-    body: "AI analyses 6 months of your spending and suggests category budgets — you tweak, accept, done.",
+    body: "Analyses 6 months of your spending and suggests category budgets — you tweak, accept, done.",
   },
   {
     icon: TrendingUp,

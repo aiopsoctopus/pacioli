@@ -31,7 +31,7 @@ const STEPS: StepDef[] = [
   {
     id: "budget",
     label: "Set up your budget",
-    description: "The AI analyses your last 6 months of spending and suggests a monthly target for each category. Takes about 2 minutes.",
+    description: "Pacioli analyses your last 6 months of spending and suggests a monthly target for each category. Takes about 2 minutes.",
     href: "/budget",
     cta: "Go to Budget →",
   },

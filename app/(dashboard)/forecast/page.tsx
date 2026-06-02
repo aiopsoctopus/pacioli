@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import {
   fetchJSON, formatCurrency,
   AccountData, MonthIncome, getNetWorth, getMonthlySpend,
-  avgMonthlyIncome, useTransactions, getNormalizedMonthlyCategorySpend,
+  avgMonthlyIncome, useTransactions, getNormalizedMonthlyCategorySpend, classifyMerchants,
 } from "@/lib/data";
 import { runProjection, ScenarioEvent, ProjectionSummary } from "@/lib/scenario";
 import { useDemo } from "@/components/demo-provider";
@@ -11,10 +11,18 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
   ReferenceLine, CartesianGrid, Legend,
 } from "recharts";
-import { Send, Loader2, Sparkles, RotateCcw } from "lucide-react";
+import { Send, Loader2, Sparkles, RotateCcw, Plus } from "lucide-react";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const WINDOW_MONTHS = 6;
+const HORIZON_OPTIONS = [
+  { label: "1 yr",  months: 12  },
+  { label: "3 yr",  months: 36  },
+  { label: "5 yr",  months: 60  },
+  { label: "10 yr", months: 120 },
+] as const;
+const SCENARIO_STORAGE_KEY = "pacioli-scenario-events";
+const SCENARIO_DELTA_KEY   = "pacioli-scenario-delta";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function ForecastView() {
@@ -22,7 +30,11 @@ export default function ForecastView() {
   const ns = isDemo ? "demo" : "";
   const [accounts, setAccounts] = useState<AccountData | null>(null);
   const [income, setIncome] = useState<MonthIncome[] | null>(null);
-  const [scenarioDelta, setScenarioDelta] = useState(0); // extra $ saved per month
+  const [projectionMonths, setProjectionMonths] = useState(12);
+  const [scenarioDelta, setScenarioDelta] = useState<number>(() => {
+    if (typeof window === "undefined") return 0;
+    return Number(localStorage.getItem(SCENARIO_DELTA_KEY) ?? 0);
+  });
 
   // ── Scenario chat state ──────────────────────────────────────────────────────
   const [chatInput, setChatInput] = useState("");
@@ -30,7 +42,11 @@ export default function ForecastView() {
   const [chatError, setChatError] = useState<string | null>(null);
   const [chatNarration, setChatNarration] = useState<string | null>(null);
   const [clarifyingQuestion, setClarifyingQuestion] = useState<string | null>(null);
-  const [scenarioEvents, setScenarioEvents] = useState<ScenarioEvent[]>([]);
+  const [scenarioEvents, setScenarioEvents] = useState<ScenarioEvent[]>(() => {
+    if (typeof window === "undefined") return [];
+    try { return JSON.parse(localStorage.getItem(SCENARIO_STORAGE_KEY) ?? "[]"); }
+    catch { return []; }
+  });
   const [lastQuestion, setLastQuestion] = useState<string | null>(null);
   const chatInputRef = useRef<HTMLInputElement>(null);
 
@@ -41,6 +57,27 @@ export default function ForecastView() {
     fetchJSON<AccountData>("accounts.json").then(setAccounts);
     fetchJSON<MonthIncome[]>("income.json").then(setIncome);
   }, [isDemo]);
+
+  // Persist scenario state across navigation
+  useEffect(() => {
+    localStorage.setItem(SCENARIO_STORAGE_KEY, JSON.stringify(scenarioEvents));
+  }, [scenarioEvents]);
+  useEffect(() => {
+    localStorage.setItem(SCENARIO_DELTA_KEY, String(scenarioDelta));
+  }, [scenarioDelta]);
+
+  function addEvent(type: ScenarioEvent["type"]) {
+    const todayMonth = new Date().toISOString().slice(0, 7);
+    const newEvent: ScenarioEvent = {
+      id: `manual_${Date.now()}`,
+      label: type === "income" ? "New income" : type === "expense" ? "New expense" : "Extra savings",
+      type,
+      startMonth: todayMonth,
+      delta: type === "savings" ? 200 : type === "income" ? 1000 : 500,
+      recurring: true,
+    };
+    setScenarioEvents((evs) => [...evs, newEvent]);
+  }
 
   const derived = useMemo(() => {
     if (transactions.length === 0) return null;
@@ -77,14 +114,26 @@ export default function ForecastView() {
     );
     const avgSpend = Math.round(Object.values(normalizedCatSpend).reduce((s, v) => s + v, 0));
 
-    // Fixed vs variable split for UI display (category heuristic on normalized amounts)
-    const FIXED_CATEGORIES = new Set([
-      "Housing", "Mortgage", "Rent", "Utilities", "Insurance",
-      "Subscriptions", "Loan Payment", "Phone", "Internet",
-    ]);
+    // Fixed vs variable split for UI display — derived from frequency classifier.
+    // "monthly" frequency (consistent recurring amount) → fixed; everything else → variable.
+    const merchantClassifications = classifyMerchants(
+      transactions.filter((t) => t.date.slice(0, 7) < currentMonth)
+    );
+    const fixedCats = new Set<string>();
+    for (const c of merchantClassifications) {
+      if (c.frequency === "monthly") fixedCats.add(c.category);
+    }
+    // A category is fixed only if ALL its merchants are monthly-classified
+    const variableCats = new Set(
+      merchantClassifications
+        .filter((c) => c.frequency !== "monthly")
+        .map((c) => c.category)
+    );
     let avgFixed = 0, avgVariable = 0;
     for (const [cat, amt] of Object.entries(normalizedCatSpend)) {
-      if (FIXED_CATEGORIES.has(cat)) avgFixed += amt; else avgVariable += amt;
+      // If a category has any variable/annual merchants, treat the whole category as variable
+      if (fixedCats.has(cat) && !variableCats.has(cat)) avgFixed += amt;
+      else avgVariable += amt;
     }
     avgFixed = Math.round(avgFixed);
     avgVariable = Math.round(avgVariable);
@@ -107,7 +156,7 @@ export default function ForecastView() {
 
     // Run projection via the engine
     const { rows: projRows, summary } = runProjection(
-      { startingNW, monthlyCashFlow, startMonth: currentMonth },
+      { startingNW, monthlyCashFlow, startMonth: currentMonth, projectionMonths },
       allEvents,
     );
 
@@ -128,7 +177,7 @@ export default function ForecastView() {
       chartRows: projRows,
       windowMonths: completedMonths.length,
     };
-  }, [accounts, income, transactions, scenarioDelta, scenarioEvents]);
+  }, [accounts, income, transactions, scenarioDelta, scenarioEvents, projectionMonths]);
 
   // ── Chat handler ─────────────────────────────────────────────────────────────
   async function handleChat(question: string) {
@@ -177,7 +226,7 @@ export default function ForecastView() {
       // The projection runs automatically via useMemo when scenarioEvents changes.
       // We need the summary *after* state update — compute it inline here.
       const { summary: projSummary } = runProjection(
-        { startingNW: derived.startingNW, monthlyCashFlow: derived.monthlyCashFlow, startMonth: derived.currentMonth },
+        { startingNW: derived.startingNW, monthlyCashFlow: derived.monthlyCashFlow, startMonth: derived.currentMonth, projectionMonths },
         newEvents,
       );
 
@@ -218,6 +267,8 @@ export default function ForecastView() {
     setChatError(null);
     setLastQuestion(null);
     setChatInput("");
+    localStorage.removeItem(SCENARIO_STORAGE_KEY);
+    localStorage.removeItem(SCENARIO_DELTA_KEY);
   }
 
   if (!isDemo && transactions.length === 0) return (
@@ -363,6 +414,22 @@ export default function ForecastView() {
           </div>
         )}
 
+        {/* Manual add buttons */}
+        <div className="flex gap-2 mt-3 flex-wrap">
+          {(["income", "expense", "savings"] as const).map((type) => {
+            const cfg = EVENT_TYPE_CONFIG[type];
+            return (
+              <button
+                key={type}
+                onClick={() => addEvent(type)}
+                className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-colors ${cfg.bg} ${cfg.color} hover:opacity-80`}
+              >
+                <Plus size={11} /> {cfg.label}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Editable event cards */}
         {scenarioEvents.length > 0 && (
           <div className="mt-4 space-y-3">
@@ -405,7 +472,25 @@ export default function ForecastView() {
 
       {/* Forecast chart */}
       <div className="pacioli-bg-surface rounded-2xl p-6 border">
-        <h3 className="text-sm font-semibold pacioli-text-secondary mb-1">Projected Net Worth</h3>
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="text-sm font-semibold pacioli-text-secondary">Projected Net Worth</h3>
+          {/* Horizon selector */}
+          <div className="flex gap-1">
+            {HORIZON_OPTIONS.map((opt) => (
+              <button
+                key={opt.months}
+                onClick={() => setProjectionMonths(opt.months)}
+                className={`text-xs px-2.5 py-1 rounded-lg border transition-colors ${
+                  projectionMonths === opt.months
+                    ? "bg-indigo-600 border-indigo-500 text-white"
+                    : "pacioli-bg-surface-2 border-transparent pacioli-text-muted hover:pacioli-text-secondary"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
         <p className="text-xs pacioli-text-muted mb-4">
           Calculated from your {windowMonths}-month average income ({formatCurrency(avgIncome)}/mo) and spending ({formatCurrency(avgSpend)}/mo), with ~6.6% annualized investment return
         </p>
@@ -514,6 +599,7 @@ function EventCard({
 }) {
   const cfg = EVENT_TYPE_CONFIG[event.type];
   const [deltaInput, setDeltaInput] = useState(String(event.delta));
+  const [editingLabel, setEditingLabel] = useState(false);
 
   function update(patch: Partial<ScenarioEvent>) {
     onChange({ ...event, ...patch });
@@ -541,7 +627,24 @@ function EventCard({
           <span className={`text-xs font-semibold uppercase tracking-wide ${cfg.color} shrink-0`}>
             {cfg.label}
           </span>
-          <span className="text-sm pacioli-text-primary font-medium truncate">{event.label}</span>
+          {editingLabel ? (
+            <input
+              autoFocus
+              type="text"
+              defaultValue={event.label}
+              onBlur={(e) => { update({ label: e.target.value || event.label }); setEditingLabel(false); }}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === "Escape") e.currentTarget.blur(); }}
+              className="text-sm px-1.5 py-0.5 rounded pacioli-bg-surface border pacioli-text-primary focus:outline-none focus:ring-1 focus:ring-indigo-500 flex-1 min-w-0"
+            />
+          ) : (
+            <button
+              onClick={() => setEditingLabel(true)}
+              className="text-sm pacioli-text-primary font-medium truncate hover:pacioli-text-secondary text-left"
+              title="Click to rename"
+            >
+              {event.label}
+            </button>
+          )}
         </div>
         <button
           onClick={onRemove}
