@@ -62,12 +62,34 @@ export interface ScenarioBaseline {
   startingNW: number;
   /** Average monthly cash flow (income − spend) from historical data */
   monthlyCashFlow: number;
+  /**
+   * Monthly income component. Required for growth/inflation adjustments.
+   * If omitted, the engine treats all cash flow as flat (no growth/inflation applied).
+   */
+  monthlyIncome?: number;
+  /**
+   * Monthly expenses component (positive number). Required for growth/inflation adjustments.
+   * If omitted, expenses = monthlyIncome - monthlyCashFlow (derived).
+   */
+  monthlyExpenses?: number;
   /** YYYY-MM of the first projected month (usually current calendar month) */
   startMonth: string;
   /** Number of months to project forward */
   projectionMonths?: number;
   /** Annual investment return rate (default: INVESTMENT_ANNUAL_RETURN) */
   annualReturn?: number;
+  /**
+   * Annual income growth rate as a decimal (e.g. 0.03 = 3%/yr).
+   * Applied to the income component only — models raises, promotions, COL adjustments.
+   * Default: 0 (flat income).
+   */
+  annualIncomeGrowth?: number;
+  /**
+   * Annual inflation rate as a decimal (e.g. 0.025 = 2.5%/yr).
+   * Applied to the expenses component only — models rising cost of living.
+   * Default: 0 (flat expenses).
+   */
+  annualInflation?: number;
 }
 
 /** One row in the output time series */
@@ -176,6 +198,14 @@ export function runProjection(
 ): ProjectionResult {
   const months = baseline.projectionMonths ?? PROJECTION_MONTHS;
   const monthlyReturn = (baseline.annualReturn ?? INVESTMENT_ANNUAL_RETURN) / 12;
+  const incomeGrowth  = baseline.annualIncomeGrowth ?? 0;
+  const inflation     = baseline.annualInflation    ?? 0;
+
+  // Split cash flow into income / expenses for growth modeling.
+  // If caller didn't provide the split, fall back to flat (no growth applied).
+  const hasGrowth = incomeGrowth !== 0 || inflation !== 0;
+  const baseIncome   = baseline.monthlyIncome    ?? (hasGrowth ? baseline.monthlyCashFlow : 0);
+  const baseExpenses = baseline.monthlyExpenses  ?? (hasGrowth ? 0 : 0);
 
   const rows: ProjectionRow[] = [];
 
@@ -199,10 +229,20 @@ export function runProjection(
 
   for (let i = 0; i < months; i++) {
     current = nextMonthKey(current);
-    const evDelta = eventDeltaForMonth(events, current);
-    const scenarioCashFlow = baseline.monthlyCashFlow + evDelta;
 
-    baseNW = baseNW * (1 + monthlyReturn) + baseline.monthlyCashFlow;
+    // Years elapsed since projection start (continuous, not stepped)
+    const yearsElapsed = (i + 1) / 12;
+
+    // Adjusted monthly cash flow: income grows, expenses inflate
+    const adjustedCashFlow = hasGrowth
+      ? baseIncome   * Math.pow(1 + incomeGrowth, yearsElapsed)
+      - baseExpenses * Math.pow(1 + inflation,    yearsElapsed)
+      : baseline.monthlyCashFlow;
+
+    const evDelta = eventDeltaForMonth(events, current);
+    const scenarioCashFlow = adjustedCashFlow + evDelta;
+
+    baseNW     = baseNW     * (1 + monthlyReturn) + adjustedCashFlow;
     scenarioNW = scenarioNW * (1 + monthlyReturn) + scenarioCashFlow;
 
     if (scenarioNW < scenarioTrough) {

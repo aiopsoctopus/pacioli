@@ -31,6 +31,8 @@ export default function ForecastView() {
   const [accounts, setAccounts] = useState<AccountData | null>(null);
   const [income, setIncome] = useState<MonthIncome[] | null>(null);
   const [projectionMonths, setProjectionMonths] = useState(12);
+  const [annualIncomeGrowth, setAnnualIncomeGrowth] = useState(0.03);  // 3% default
+  const [annualInflation,    setAnnualInflation]    = useState(0.025); // 2.5% default
   const [scenarioDelta, setScenarioDelta] = useState<number>(() => {
     if (typeof window === "undefined") return 0;
     return Number(localStorage.getItem(SCENARIO_DELTA_KEY) ?? 0);
@@ -156,7 +158,16 @@ export default function ForecastView() {
 
     // Run projection — use bracket engine if any event has bracket data
     const hasBracket = allEvents.some((e) => e.bracket != null);
-    const baselineArgs = { startingNW, monthlyCashFlow, startMonth: currentMonth, projectionMonths };
+    const baselineArgs = {
+      startingNW,
+      monthlyCashFlow,
+      monthlyIncome:   avgIncome,
+      monthlyExpenses: avgSpend,
+      startMonth: currentMonth,
+      projectionMonths,
+      annualIncomeGrowth,
+      annualInflation,
+    };
 
     const { rows: projRows, summary } = runProjection(baselineArgs, allEvents);
     const bracketResult = hasBracket ? runBracketProjection(baselineArgs, allEvents) : null;
@@ -185,7 +196,7 @@ export default function ForecastView() {
       hasBracket,
       windowMonths: completedMonths.length,
     };
-  }, [accounts, income, transactions, scenarioDelta, scenarioEvents, projectionMonths]);
+  }, [accounts, income, transactions, scenarioDelta, scenarioEvents, projectionMonths, annualIncomeGrowth, annualInflation]);
 
   // ── Chat handler ─────────────────────────────────────────────────────────────
   async function handleChat(question: string) {
@@ -233,7 +244,7 @@ export default function ForecastView() {
       // Step 2: run projection (via the engine already in derived — trigger rerender)
       // The projection runs automatically via useMemo when scenarioEvents changes.
       // We need the summary *after* state update — compute it inline here.
-      const baselineArgs2 = { startingNW: derived.startingNW, monthlyCashFlow: derived.monthlyCashFlow, startMonth: derived.currentMonth, projectionMonths };
+      const baselineArgs2 = { startingNW: derived.startingNW, monthlyCashFlow: derived.monthlyCashFlow, monthlyIncome: derived.avgIncome, monthlyExpenses: derived.avgSpend, startMonth: derived.currentMonth, projectionMonths, annualIncomeGrowth, annualInflation };
       const { summary: projSummary } = runProjection(baselineArgs2, newEvents);
       const hasBracketNarrate = newEvents.some((e) => e.bracket != null);
       const bracketResult2 = hasBracketNarrate ? runBracketProjection(baselineArgs2, newEvents) : null;
@@ -600,22 +611,74 @@ export default function ForecastView() {
           <span className="font-medium">Projection assumptions</span>
           <span className="text-xs group-open:rotate-180 transition-transform inline-block">▾</span>
         </summary>
-        <div className="px-5 pb-5 space-y-3 border-t pt-4">
-          {[
-            { label: "Average monthly income", value: avgIncome, color: "pacioli-text-success" },
-            { label: "Fixed expenses", value: -avgFixed, color: "pacioli-text-danger" },
-            { label: "Variable expenses", value: -avgVariable, color: "pacioli-text-warning" },
-            { label: "Net monthly cash flow", value: monthlyCashFlow, color: monthlyCashFlow >= 0 ? "pacioli-text-success" : "pacioli-text-danger" },
-          ].map(({ label, value, color }) => (
-            <div key={label} className="flex justify-between items-center py-1.5 border-b pacioli-border-subtle last:border-0">
-              <span className="text-sm pacioli-text-secondary">{label}</span>
-              <span className={`text-sm font-semibold ${color}`}>
-                {value >= 0 ? "" : "−"}{formatCurrency(Math.abs(value))}
-              </span>
-            </div>
-          ))}
-          <p className="text-xs pacioli-text-muted pt-1">
-            Derived from your last {windowMonths} completed months. Investment accounts grow at 6.6%/yr (~0.55%/mo).
+        <div className="px-5 pb-5 border-t pt-4 space-y-5">
+          {/* Historical averages (read-only) */}
+          <div className="space-y-2">
+            <p className="text-xs font-medium pacioli-text-muted uppercase tracking-wide">From your last {windowMonths} months</p>
+            {[
+              { label: "Average monthly income",   value: avgIncome,        color: "pacioli-text-success" },
+              { label: "Fixed expenses",           value: -avgFixed,        color: "pacioli-text-danger" },
+              { label: "Variable expenses",        value: -avgVariable,     color: "pacioli-text-warning" },
+              { label: "Net monthly cash flow",    value: monthlyCashFlow,  color: monthlyCashFlow >= 0 ? "pacioli-text-success" : "pacioli-text-danger" },
+            ].map(({ label, value, color }) => (
+              <div key={label} className="flex justify-between items-center py-1.5 border-b pacioli-border-subtle last:border-0">
+                <span className="text-sm pacioli-text-secondary">{label}</span>
+                <span className={`text-sm font-semibold ${color}`}>
+                  {value >= 0 ? "" : "−"}{formatCurrency(Math.abs(value))}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Growth rate controls */}
+          <div className="space-y-4">
+            <p className="text-xs font-medium pacioli-text-muted uppercase tracking-wide">Long-range adjustments</p>
+            <p className="text-xs pacioli-text-muted -mt-2">
+              Applied as annual compound rates over the projection horizon. Matters most at 3yr+; has no effect at 1yr.
+            </p>
+
+            {[
+              {
+                label: "Income growth rate",
+                sub: "Raises, promotions, COL adjustments",
+                value: annualIncomeGrowth,
+                set: setAnnualIncomeGrowth,
+                color: "pacioli-text-success",
+              },
+              {
+                label: "Inflation rate",
+                sub: "Rising cost of living on expenses",
+                value: annualInflation,
+                set: setAnnualInflation,
+                color: "pacioli-text-warning",
+              },
+            ].map(({ label, sub, value, set, color }) => (
+              <div key={label}>
+                <div className="flex justify-between items-baseline mb-1.5">
+                  <div>
+                    <span className="text-sm pacioli-text-secondary">{label}</span>
+                    <span className="text-xs pacioli-text-muted ml-2">{sub}</span>
+                  </div>
+                  <span className={`text-sm font-semibold ${color}`}>{(value * 100).toFixed(1)}%/yr</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={0.10}
+                  step={0.005}
+                  value={value}
+                  onChange={(e) => set(Number(e.target.value))}
+                  className="w-full accent-indigo-500"
+                />
+                <div className="flex justify-between text-xs pacioli-text-faint mt-0.5">
+                  <span>0%</span><span>5%</span><span>10%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-xs pacioli-text-muted">
+            Investment accounts grow at 6.6%/yr (~0.55%/mo). Income growth and inflation are applied to the baseline income/expense split derived from your transaction history.
           </p>
         </div>
       </details>
