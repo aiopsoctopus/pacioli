@@ -292,189 +292,158 @@ export default function ForecastView() {
     gainBase, gainScenario, chartRows, windowMonths,
   } = derived;
 
-  const showScenario = scenarioDelta !== 0;
+  const showScenario = scenarioEvents.length > 0 || scenarioDelta !== 0;
+  const EXAMPLE_PROMPTS = [
+    "Can I afford to quit my job?",
+    "What if we buy a house next year?",
+    "What if I start a side business?",
+    "Can I retire in 10 years?",
+  ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
+
+      {/* ── Page header ───────────────────────────────────────────────────────── */}
       <div>
-        <p className="pacioli-text-muted text-sm">Based on your last {windowMonths} months of actual data</p>
-        <h2 className="text-3xl font-bold pacioli-text-primary mt-1">What the Future Looks Like</h2>
+        <p className="pacioli-text-muted text-sm">Model a life change and see the numbers.</p>
+        <h2 className="text-3xl font-bold pacioli-text-primary mt-1">Scenario Planner</h2>
       </div>
 
-      {/* Key metrics */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-        <MetricCard
-          label="Today's Net Worth"
-          value={formatCurrency(startingNW)}
-          sub="current baseline"
-        />
-        <MetricCard
-          label={showScenario ? "Base (12 mo)" : "In 12 Months"}
-          value={formatCurrency(endBase)}
-          sub={`+${formatCurrency(gainBase)} projected`}
-          highlight="pacioli-text-success"
-        />
-        {showScenario ? (
-          <MetricCard
-            label="With Scenario (12 mo)"
-            value={formatCurrency(endScenario)}
-            sub={`+${formatCurrency(gainScenario)} projected`}
-            highlight="pacioli-text-success"
-          />
-        ) : (
-          <MetricCard
-            label="Monthly Cash Flow"
-            value={formatCurrency(monthlyCashFlow)}
-            sub="after all expenses"
-            highlight={monthlyCashFlow >= 0 ? "pacioli-text-success" : "pacioli-text-danger"}
-          />
-        )}
-        <MetricCard
-          label="Savings Rate"
-          value={`${savingsRate}%`}
-          sub="of gross income"
-          highlight={savingsRate >= 20 ? "pacioli-text-success" : "pacioli-text-warning"}
-        />
-      </div>
-
-      {/* Scenario toggle */}
-      <div className="pacioli-bg-surface rounded-2xl p-5 border">
-        <h3 className="text-sm font-semibold pacioli-text-secondary mb-1">Scenario: What if I save more?</h3>
-        <p className="text-xs pacioli-text-muted mb-4">
-          Drag to add extra monthly savings on top of your current cash flow and see how it changes your 12-month projection.
-        </p>
-        <div className="flex items-center gap-4">
-          <input
-            type="range"
-            min={0}
-            max={1000}
-            step={50}
-            value={scenarioDelta}
-            onChange={(e) => setScenarioDelta(Number(e.target.value))}
-            className="flex-1 accent-indigo-500"
-          />
-          <span className="text-sm font-semibold pacioli-text-primary w-24 text-right">
-            {scenarioDelta === 0 ? "Off" : `+${formatCurrency(scenarioDelta)}/mo`}
-          </span>
-        </div>
-        {showScenario && (
-          <p className="text-xs pacioli-text-success mt-3">
-            Saving an extra {formatCurrency(scenarioDelta)}/mo adds{" "}
-            <span className="font-semibold">{formatCurrency(gainScenario - gainBase)}</span> over 12 months.
-          </p>
-        )}
-      </div>
-
-      {/* What if? chat panel */}
-      <div className="pacioli-bg-surface rounded-2xl p-5 border">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <Sparkles size={15} className="text-indigo-400" />
-            <h3 className="text-sm font-semibold pacioli-text-secondary">Ask a "What if?" question</h3>
+      {/* ── Hero: What if? input ──────────────────────────────────────────────── */}
+      <div className="pacioli-bg-surface rounded-2xl border overflow-hidden">
+        {/* Input area */}
+        <div className="p-6 pb-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Sparkles size={16} className="text-indigo-400" />
+              <span className="text-base font-semibold pacioli-text-primary">Ask a "What if?" question</span>
+            </div>
+            {(scenarioEvents.length > 0 || chatNarration || scenarioDelta !== 0) && (
+              <button
+                onClick={resetScenario}
+                className="flex items-center gap-1.5 text-xs pacioli-text-muted hover:pacioli-text-secondary transition-colors"
+              >
+                <RotateCcw size={11} /> Reset scenario
+              </button>
+            )}
           </div>
-          {(scenarioEvents.length > 0 || chatNarration) && (
+
+          <form
+            onSubmit={(e) => { e.preventDefault(); handleChat(chatInput); setChatInput(""); }}
+            className="flex gap-2"
+          >
+            <input
+              ref={chatInputRef}
+              type="text"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              placeholder={clarifyingQuestion ? `↳ ${clarifyingQuestion}` : "e.g. Can I afford to quit my job and start a business?"}
+              disabled={chatLoading}
+              className="flex-1 text-sm px-4 py-3 rounded-xl pacioli-bg-surface-2 border pacioli-text-primary placeholder:pacioli-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
+            />
             <button
-              onClick={resetScenario}
-              className="flex items-center gap-1 text-xs pacioli-text-muted hover:pacioli-text-secondary transition-colors"
+              type="submit"
+              disabled={chatLoading || !chatInput.trim()}
+              className="px-4 py-3 rounded-xl bg-indigo-600 text-white disabled:opacity-40 hover:bg-indigo-700 transition-colors font-medium text-sm flex items-center gap-2"
             >
-              <RotateCcw size={11} /> Reset
+              {chatLoading ? <Loader2 size={15} className="animate-spin" /> : <><Send size={14} /> Ask</>}
             </button>
+          </form>
+
+          {/* Example prompt chips — shown when idle */}
+          {!chatNarration && !clarifyingQuestion && !chatLoading && scenarioEvents.length === 0 && (
+            <div className="flex gap-2 mt-3 flex-wrap">
+              {EXAMPLE_PROMPTS.map((p) => (
+                <button
+                  key={p}
+                  onClick={() => { handleChat(p); }}
+                  className="text-xs px-3 py-1.5 rounded-full pacioli-bg-surface-2 border pacioli-text-muted hover:pacioli-text-secondary hover:border-indigo-500/40 transition-colors"
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Clarifying question callout */}
+          {clarifyingQuestion && !chatLoading && (
+            <div className="mt-3 flex items-start gap-2.5 px-4 py-3 rounded-xl bg-indigo-950/40 border border-indigo-500/25">
+              <Sparkles size={13} className="text-indigo-400 mt-0.5 shrink-0" />
+              <p className="text-sm text-indigo-300 leading-relaxed">
+                <span className="font-semibold">One question: </span>{clarifyingQuestion}
+              </p>
+            </div>
+          )}
+
+          {/* Narration */}
+          {chatNarration && (
+            <div className="mt-4 flex items-start gap-2.5 px-4 py-3 rounded-xl pacioli-bg-surface-2 border">
+              <Sparkles size={13} className="text-indigo-400 mt-0.5 shrink-0" />
+              <div>
+                <p className="text-sm pacioli-text-secondary leading-relaxed">{chatNarration}</p>
+                {lastQuestion && (
+                  <p className="text-xs pacioli-text-muted mt-1.5 italic">"{lastQuestion}"</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {chatError && (
+            <p className="mt-3 text-xs text-red-400">{chatError}</p>
           )}
         </div>
 
-        {/* Input */}
-        <form
-          onSubmit={(e) => { e.preventDefault(); handleChat(chatInput); setChatInput(""); }}
-          className="flex gap-2"
-        >
-          <input
-            ref={chatInputRef}
-            type="text"
-            value={chatInput}
-            onChange={(e) => setChatInput(e.target.value)}
-            placeholder={clarifyingQuestion ?? "e.g. Can I afford to quit and open a bookstore?"}
-            disabled={chatLoading}
-            className="flex-1 text-sm px-3 py-2 rounded-lg pacioli-bg-surface-2 border pacioli-text-primary placeholder:pacioli-text-muted focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
-          />
-          <button
-            type="submit"
-            disabled={chatLoading || !chatInput.trim()}
-            className="px-3 py-2 rounded-lg bg-indigo-600 text-white disabled:opacity-40 hover:bg-indigo-700 transition-colors"
-          >
-            {chatLoading ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
-          </button>
-        </form>
-
-        {/* Clarifying question */}
-        {clarifyingQuestion && !chatLoading && (
-          <div className="mt-3 px-3 py-2 rounded-lg bg-indigo-950/30 border border-indigo-500/20">
-            <p className="text-xs text-indigo-300">
-              <span className="font-semibold">One question: </span>{clarifyingQuestion}
+        {/* Divider + manual event controls */}
+        <div className="border-t px-6 py-4">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs font-medium pacioli-text-muted uppercase tracking-wide">
+              {scenarioEvents.length > 0 ? `${scenarioEvents.length} scenario event${scenarioEvents.length > 1 ? "s" : ""}` : "Or build manually"}
             </p>
+            <div className="flex gap-2">
+              {(["income", "expense", "savings"] as const).map((type) => {
+                const cfg = EVENT_TYPE_CONFIG[type];
+                return (
+                  <button
+                    key={type}
+                    onClick={() => addEvent(type)}
+                    style={{ ...cfg.bgStyle, color: cfg.color, borderWidth: 1, borderStyle: "solid" }}
+                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-opacity hover:opacity-80"
+                  >
+                    <Plus size={11} /> {cfg.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        )}
 
-        {/* Manual add buttons */}
-        <div className="flex gap-2 mt-3 flex-wrap">
-          {(["income", "expense", "savings"] as const).map((type) => {
-            const cfg = EVENT_TYPE_CONFIG[type];
-            return (
-              <button
-                key={type}
-                onClick={() => addEvent(type)}
-                className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-colors ${cfg.bg} ${cfg.color} hover:opacity-80`}
-              >
-                <Plus size={11} /> {cfg.label}
-              </button>
-            );
-          })}
+          {scenarioEvents.length > 0 && (
+            <div className="space-y-3">
+              {scenarioEvents.map((ev) => (
+                <EventCard
+                  key={ev.id}
+                  event={ev}
+                  onChange={(updated) =>
+                    setScenarioEvents((evs) => evs.map((e) => (e.id === ev.id ? updated : e)))
+                  }
+                  onRemove={() =>
+                    setScenarioEvents((evs) => evs.filter((e) => e.id !== ev.id))
+                  }
+                />
+              ))}
+            </div>
+          )}
         </div>
-
-        {/* Editable event cards */}
-        {scenarioEvents.length > 0 && (
-          <div className="mt-4 space-y-3">
-            {scenarioEvents.map((ev) => (
-              <EventCard
-                key={ev.id}
-                event={ev}
-                onChange={(updated) =>
-                  setScenarioEvents((evs) => evs.map((e) => (e.id === ev.id ? updated : e)))
-                }
-                onRemove={() =>
-                  setScenarioEvents((evs) => evs.filter((e) => e.id !== ev.id))
-                }
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Narration */}
-        {chatNarration && (
-          <div className="mt-3 px-3 py-2 rounded-lg pacioli-bg-surface-2 border">
-            <p className="text-sm pacioli-text-secondary leading-relaxed">{chatNarration}</p>
-            {lastQuestion && (
-              <p className="text-xs pacioli-text-muted mt-2 italic">"{lastQuestion}"</p>
-            )}
-          </div>
-        )}
-
-        {/* Error */}
-        {chatError && (
-          <p className="mt-3 text-xs text-red-400">{chatError}</p>
-        )}
-
-        {!chatNarration && !clarifyingQuestion && !chatLoading && scenarioEvents.length === 0 && (
-          <p className="text-xs pacioli-text-muted mt-2">
-            Describe a life change — quitting a job, a big purchase, starting a side income — and see how it affects your 12-month projection.
-          </p>
-        )}
       </div>
 
-      {/* Forecast chart */}
+      {/* ── Chart: responds to scenario ───────────────────────────────────────── */}
       <div className="pacioli-bg-surface rounded-2xl p-6 border">
         <div className="flex items-center justify-between mb-1">
-          <h3 className="text-sm font-semibold pacioli-text-secondary">Projected Net Worth</h3>
-          {/* Horizon selector */}
+          <div>
+            <h3 className="text-sm font-semibold pacioli-text-secondary">Net Worth Projection</h3>
+            <p className="text-xs pacioli-text-muted mt-0.5">
+              {windowMonths}-mo avg · {formatCurrency(avgIncome)}/mo in · {formatCurrency(avgSpend)}/mo out · 6.6% annual return
+            </p>
+          </div>
           <div className="flex gap-1">
             {HORIZON_OPTIONS.map((opt) => (
               <button
@@ -491,23 +460,21 @@ export default function ForecastView() {
             ))}
           </div>
         </div>
-        <p className="text-xs pacioli-text-muted mb-4">
-          Calculated from your {windowMonths}-month average income ({formatCurrency(avgIncome)}/mo) and spending ({formatCurrency(avgSpend)}/mo), with ~6.6% annualized investment return
-        </p>
-        <ResponsiveContainer width="100%" height={280}>
-          <AreaChart data={chartRows}>
+
+        <ResponsiveContainer width="100%" height={300}>
+          <AreaChart data={chartRows} style={{ marginTop: 16 }}>
             <defs>
               <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
                 <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="scenGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.25} />
+                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
                 <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle, #27272a)" />
-            <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} />
+            <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
             <YAxis
               tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
               tick={{ fill: "#71717a", fontSize: 11 }}
@@ -516,7 +483,7 @@ export default function ForecastView() {
             <Tooltip
               formatter={(v: unknown, name: unknown) => [
                 formatCurrency(Number(v)),
-                name === "base" ? "Base projection" : "With scenario",
+                name === "base" ? "Base" : "With scenario",
               ]}
               contentStyle={{
                 background: "var(--bg-surface, #18181b)",
@@ -525,43 +492,73 @@ export default function ForecastView() {
               }}
               labelStyle={{ color: "var(--text-secondary, #a1a1aa)" }}
             />
-            {showScenario && <Legend formatter={(v) => v === "base" ? "Base" : "Scenario"} />}
+            {showScenario && <Legend formatter={(v) => v === "base" ? "Base trajectory" : "With your scenario"} />}
             <ReferenceLine x="Now" stroke="#6366f1" strokeDasharray="4 4" label={{ value: "Today", fill: "#6366f1", fontSize: 11 }} />
             <Area type="monotone" dataKey="base" stroke="#10b981" strokeWidth={2} fill="url(#baseGrad)" dot={false} />
             {showScenario && (
-              <Area type="monotone" dataKey="scenario" stroke="#6366f1" strokeWidth={2} fill="url(#scenGrad)" dot={false} />
+              <Area type="monotone" dataKey="scenario" stroke="#6366f1" strokeWidth={2.5} fill="url(#scenGrad)" dot={false} />
             )}
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Monthly assumptions */}
-      <div className="pacioli-bg-surface rounded-2xl p-6 border">
-        <h3 className="text-sm font-semibold pacioli-text-secondary mb-1">Monthly Averages</h3>
-        <p className="text-xs pacioli-text-muted mb-4">Derived from your last {windowMonths} completed months of actual transactions</p>
-        <div className="space-y-3">
+      {/* ── KPI summary ───────────────────────────────────────────────────────── */}
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+        <MetricCard
+          label="Today's Net Worth"
+          value={formatCurrency(startingNW)}
+          sub="current baseline"
+        />
+        <MetricCard
+          label="Base trajectory"
+          value={formatCurrency(endBase)}
+          sub={`${gainBase >= 0 ? "+" : ""}${formatCurrency(gainBase)} over ${projectionMonths / 12}yr`}
+          highlight="pacioli-text-success"
+        />
+        <MetricCard
+          label={showScenario ? "With scenario" : "Monthly cash flow"}
+          value={showScenario ? formatCurrency(endScenario) : formatCurrency(monthlyCashFlow)}
+          sub={showScenario
+            ? `${gainScenario >= gainBase ? "+" : ""}${formatCurrency(gainScenario - gainBase)} vs base`
+            : "after all expenses"}
+          highlight={showScenario
+            ? (gainScenario >= gainBase ? "pacioli-text-success" : "pacioli-text-danger")
+            : (monthlyCashFlow >= 0 ? "pacioli-text-success" : "pacioli-text-danger")}
+        />
+        <MetricCard
+          label="Savings rate"
+          value={`${savingsRate}%`}
+          sub="of gross income"
+          highlight={savingsRate >= 20 ? "pacioli-text-success" : "pacioli-text-warning"}
+        />
+      </div>
+
+      {/* ── Assumptions (secondary) ───────────────────────────────────────────── */}
+      <details className="pacioli-bg-surface rounded-2xl border group">
+        <summary className="flex items-center justify-between p-5 cursor-pointer list-none pacioli-text-muted text-sm hover:pacioli-text-secondary transition-colors">
+          <span className="font-medium">Projection assumptions</span>
+          <span className="text-xs group-open:rotate-180 transition-transform inline-block">▾</span>
+        </summary>
+        <div className="px-5 pb-5 space-y-3 border-t pt-4">
           {[
-            { label: "Average Monthly Income", value: avgIncome, color: "pacioli-text-success" },
-            { label: "Fixed Expenses (housing, utilities, insurance, subscriptions)", value: -avgFixed, color: "pacioli-text-danger" },
-            { label: "Variable Expenses (groceries, dining, shopping, etc.)", value: -avgVariable, color: "pacioli-text-warning" },
-            {
-              label: "Net Monthly Cash Flow",
-              value: monthlyCashFlow,
-              color: monthlyCashFlow >= 0 ? "pacioli-text-success" : "pacioli-text-danger",
-            },
+            { label: "Average monthly income", value: avgIncome, color: "pacioli-text-success" },
+            { label: "Fixed expenses", value: -avgFixed, color: "pacioli-text-danger" },
+            { label: "Variable expenses", value: -avgVariable, color: "pacioli-text-warning" },
+            { label: "Net monthly cash flow", value: monthlyCashFlow, color: monthlyCashFlow >= 0 ? "pacioli-text-success" : "pacioli-text-danger" },
           ].map(({ label, value, color }) => (
-            <div key={label} className="flex justify-between items-center py-2 border-b pacioli-border-subtle last:border-0">
+            <div key={label} className="flex justify-between items-center py-1.5 border-b pacioli-border-subtle last:border-0">
               <span className="text-sm pacioli-text-secondary">{label}</span>
               <span className={`text-sm font-semibold ${color}`}>
                 {value >= 0 ? "" : "−"}{formatCurrency(Math.abs(value))}
               </span>
             </div>
           ))}
+          <p className="text-xs pacioli-text-muted pt-1">
+            Derived from your last {windowMonths} completed months. Investment accounts grow at 6.6%/yr (~0.55%/mo).
+          </p>
         </div>
-        <p className="text-xs pacioli-text-muted mt-4">
-          * Investment accounts grow at an assumed 6.6% annual return (~0.55%/mo). Import more months of transactions to improve accuracy.
-        </p>
-      </div>
+      </details>
+
     </div>
   );
 }
@@ -581,9 +578,9 @@ function MetricCard({ label, value, sub, highlight }: {
 // ─── Event type config ────────────────────────────────────────────────────────
 
 const EVENT_TYPE_CONFIG = {
-  income:  { label: "Income",  color: "text-emerald-400", bg: "bg-emerald-950/30 border-emerald-500/20", maxDelta: 20000, step: 100 },
-  expense: { label: "Expense", color: "text-red-400",     bg: "bg-red-950/30 border-red-500/20",         maxDelta: 50000, step: 500 },
-  savings: { label: "Savings", color: "text-indigo-400",  bg: "bg-indigo-950/30 border-indigo-500/20",   maxDelta: 5000,  step: 50  },
+  income:  { label: "Income",  color: "#34d399", bgStyle: { background: "rgba(6,78,59,0.35)",   borderColor: "rgba(52,211,153,0.3)"  }, bg: "bg-emerald-950/30 border-emerald-500/20", maxDelta: 20000, step: 100 },
+  expense: { label: "Expense", color: "#f87171", bgStyle: { background: "rgba(69,10,10,0.35)",  borderColor: "rgba(248,113,113,0.3)" }, bg: "bg-red-950/30 border-red-500/20",         maxDelta: 50000, step: 500 },
+  savings: { label: "Savings", color: "#818cf8", bgStyle: { background: "rgba(30,27,75,0.45)",  borderColor: "rgba(129,140,248,0.3)" }, bg: "bg-indigo-950/30 border-indigo-500/20",   maxDelta: 5000,  step: 50  },
 } as const;
 
 // ─── EventCard ────────────────────────────────────────────────────────────────
@@ -620,7 +617,7 @@ function EventCard({
     : "one-time";
 
   return (
-    <div className={`rounded-xl border p-4 ${cfg.bg}`}>
+    <div className="rounded-xl p-4" style={{ ...cfg.bgStyle, borderWidth: 1, borderStyle: "solid" }}>
       {/* Header row */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2 flex-1 min-w-0">

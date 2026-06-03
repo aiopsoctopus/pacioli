@@ -18,7 +18,7 @@ const links = [
   { href: "/transactions",  label: "All Transactions",           sublabel: "Search & Filter", icon: List },
   { href: "/budget",        label: "My Budget",                  sublabel: "Envelopes & Suggestions",  icon: Wallet },
   { href: "/sinking-funds", label: "Achieve My Goals",           sublabel: "Sinking Funds",   icon: PiggyBank },
-  { href: "/forecast",      label: "What the Future Looks Like", sublabel: "12-Mo Forecast",  icon: TrendingUp },
+  { href: "/forecast",      label: "Scenario Planner",           sublabel: "What If?",        icon: TrendingUp },
   { href: "/connect",       label: "Connect Data",               sublabel: "Accounts & CSV",  icon: Link2 },
 ];
 
