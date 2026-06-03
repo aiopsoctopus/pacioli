@@ -578,9 +578,9 @@ function MetricCard({ label, value, sub, highlight }: {
 // ─── Event type config ────────────────────────────────────────────────────────
 
 const EVENT_TYPE_CONFIG = {
-  income:  { label: "Income",  color: "#34d399", bgStyle: { background: "rgba(6,78,59,0.35)",   borderColor: "rgba(52,211,153,0.3)"  }, bg: "bg-emerald-950/30 border-emerald-500/20", maxDelta: 20000, step: 100 },
-  expense: { label: "Expense", color: "#f87171", bgStyle: { background: "rgba(69,10,10,0.35)",  borderColor: "rgba(248,113,113,0.3)" }, bg: "bg-red-950/30 border-red-500/20",         maxDelta: 50000, step: 500 },
-  savings: { label: "Savings", color: "#818cf8", bgStyle: { background: "rgba(30,27,75,0.45)",  borderColor: "rgba(129,140,248,0.3)" }, bg: "bg-indigo-950/30 border-indigo-500/20",   maxDelta: 5000,  step: 50  },
+  income:  { label: "Income",  color: "#6ee7b7", bgStyle: { background: "rgba(6,78,59,0.35)",   borderColor: "rgba(52,211,153,0.3)"  }, bg: "bg-emerald-950/30 border-emerald-500/20", maxDelta: 20000, step: 100 },
+  expense: { label: "Expense", color: "#fca5a5", bgStyle: { background: "rgba(69,10,10,0.35)",  borderColor: "rgba(248,113,113,0.3)" }, bg: "bg-red-950/30 border-red-500/20",         maxDelta: 50000, step: 500 },
+  savings: { label: "Savings", color: "#a5b4fc", bgStyle: { background: "rgba(30,27,75,0.45)",  borderColor: "rgba(129,140,248,0.3)" }, bg: "bg-indigo-950/30 border-indigo-500/20",   maxDelta: 5000,  step: 50  },
 } as const;
 
 // ─── EventCard ────────────────────────────────────────────────────────────────
