@@ -476,85 +476,84 @@ export default function ForecastView() {
           </div>
         </div>
 
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={chartRows} style={{ marginTop: 16 }}>
-            <defs>
-              <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="scenGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle, #27272a)" />
-            <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
-            <YAxis
-              tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
-              tick={{ fill: "#71717a", fontSize: 11 }}
-              axisLine={false} tickLine={false} width={60}
-            />
-            <Tooltip
-              formatter={(v: unknown, name: unknown) => {
-                const labels: Record<string, string> = {
-                  base: hasBracket ? "Base case" : showScenario ? "With scenario" : "Base trajectory",
-                  scenario: "With scenario",
-                  pessimistic: "Pessimistic",
-                  optimistic: "Optimistic",
-                };
-                return [formatCurrency(Number(v)), labels[name as string] ?? String(name)];
-              }}
-              contentStyle={{ background: "var(--bg-surface, #18181b)", border: "1px solid var(--border-subtle, #3f3f46)", borderRadius: 8 }}
-              labelStyle={{ color: "var(--text-secondary, #a1a1aa)" }}
-            />
-            {(showScenario || hasBracket) && (
-              <Legend formatter={(v) => ({
-                base: hasBracket ? "Base case" : "With scenario",
-                scenario: "With scenario",
-                pessimistic: "Pessimistic",
-                optimistic: "Optimistic",
-              }[v as string] ?? v)} />
-            )}
-            <ReferenceLine x="Now" stroke="#6366f1" strokeDasharray="4 4" label={{ value: "Today", fill: "#6366f1", fontSize: 11 }} />
+        {(() => {
+          // In bracket mode, merge noChange (base trajectory) into bracket rows so
+          // all series share one data array and recharts renders a single X-axis.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const mergedRows: any[] = hasBracket && bracketRows
+            ? bracketRows.map((r, i) => ({ ...r, noChange: chartRows[i]?.base ?? r.base }))
+            : chartRows;
 
-            {/* Base / no-scenario line */}
-            {!showScenario && !hasBracket && (
-              <Area type="monotone" dataKey="base" data={chartRows} stroke="#10b981" strokeWidth={2} fill="url(#baseGrad)" dot={false} />
-            )}
+          return (
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={mergedRows} style={{ marginTop: 16 }}>
+                <defs>
+                  <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="scenGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="bandGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.18} />
+                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0.04} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle, #27272a)" />
+                <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+                <YAxis tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} width={60} />
+                <Tooltip
+                  formatter={(v: unknown, name: unknown) => {
+                    const labels: Record<string, string> = {
+                      base: hasBracket ? "Base case" : showScenario ? "With scenario" : "Trajectory",
+                      scenario: "With scenario",
+                      pessimistic: "Pessimistic",
+                      optimistic: "Optimistic",
+                      noChange: "No change",
+                    };
+                    return [formatCurrency(Number(v)), labels[name as string] ?? String(name)];
+                  }}
+                  contentStyle={{ background: "var(--bg-surface, #18181b)", border: "1px solid var(--border-subtle, #3f3f46)", borderRadius: 8 }}
+                  labelStyle={{ color: "var(--text-secondary, #a1a1aa)" }}
+                />
+                <ReferenceLine x="Now" stroke="#6366f1" strokeDasharray="4 4" label={{ value: "Today", fill: "#6366f1", fontSize: 11 }} />
 
-            {/* Normal scenario (no bracket) */}
-            {showScenario && !hasBracket && (
-              <>
-                <Area type="monotone" dataKey="base" data={chartRows} stroke="#10b981" strokeWidth={2} fill="url(#baseGrad)" dot={false} />
-                <Area type="monotone" dataKey="scenario" data={chartRows} stroke="#6366f1" strokeWidth={2.5} fill="url(#scenGrad)" dot={false} />
-              </>
-            )}
+                {!showScenario && !hasBracket && (
+                  <Area type="monotone" dataKey="base" stroke="#10b981" strokeWidth={2} fill="url(#baseGrad)" dot={false} />
+                )}
 
-            {/* Bracket mode: pessimistic band + base + optimistic */}
-            {hasBracket && bracketRows && (
-              <>
-                {/* Shaded band between pessimistic and optimistic */}
-                <Area type="monotone" dataKey="optimistic" data={bracketRows} stroke="none" fill="#6366f1" fillOpacity={0.12} dot={false} legendType="none" />
-                <Area type="monotone" dataKey="pessimistic" data={bracketRows} stroke="none" fill="var(--bg-surface, #18181b)" fillOpacity={1} dot={false} legendType="none" />
-                {/* Three lines */}
-                <Area type="monotone" dataKey="pessimistic" data={bracketRows} stroke="#f59e0b" strokeWidth={1.5} strokeDasharray="4 3" fill="none" dot={false} />
-                <Area type="monotone" dataKey="base"        data={bracketRows} stroke="#6366f1" strokeWidth={2.5} fill="url(#scenGrad)" dot={false} />
-                <Area type="monotone" dataKey="optimistic"  data={bracketRows} stroke="#10b981" strokeWidth={1.5} strokeDasharray="4 3" fill="none" dot={false} />
-                {/* Base no-scenario ghost */}
-                <Area type="monotone" dataKey="base" data={chartRows} stroke="#71717a" strokeWidth={1} strokeDasharray="2 4" fill="none" dot={false} name="base" />
-              </>
-            )}
-          </AreaChart>
-        </ResponsiveContainer>
+                {showScenario && !hasBracket && (
+                  <>
+                    <Area type="monotone" dataKey="base"     stroke="#10b981" strokeWidth={2}   fill="url(#baseGrad)" dot={false} />
+                    <Area type="monotone" dataKey="scenario" stroke="#6366f1" strokeWidth={2.5} fill="url(#scenGrad)" dot={false} />
+                  </>
+                )}
 
-        {/* Bracket legend annotation */}
+                {hasBracket && (
+                  <>
+                    {/* Band fill: optimistic area with gradient, pessimistic cuts it out */}
+                    <Area type="monotone" dataKey="optimistic"  stroke="none"    fill="url(#bandGrad)" dot={false} legendType="none" />
+                    {/* Three scenario lines */}
+                    <Area type="monotone" dataKey="pessimistic" stroke="#f59e0b" strokeWidth={1.5} strokeDasharray="5 3" fill="none" dot={false} name="pessimistic" />
+                    <Area type="monotone" dataKey="base"        stroke="#6366f1" strokeWidth={2.5} fill="none"             dot={false} name="base" />
+                    <Area type="monotone" dataKey="optimistic"  stroke="#10b981" strokeWidth={1.5} strokeDasharray="5 3" fill="none" dot={false} name="optimistic" />
+                    {/* No-change ghost */}
+                    <Area type="monotone" dataKey="noChange"    stroke="#52525b" strokeWidth={1}   strokeDasharray="2 4" fill="none" dot={false} name="noChange" />
+                  </>
+                )}
+              </AreaChart>
+            </ResponsiveContainer>
+          );
+        })()}
+
         {hasBracket && (
-          <div className="flex items-center gap-4 mt-3 text-xs pacioli-text-muted flex-wrap">
-            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:20, height:2, background:"#10b981", borderTop:"2px dashed #10b981" }} /> Optimistic</span>
-            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:20, height:2, background:"#6366f1" }} /> Base case</span>
-            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:20, height:2, borderTop:"2px dashed #f59e0b" }} /> Pessimistic</span>
-            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:20, height:2, borderTop:"2px dashed #71717a" }} /> No change</span>
+          <div className="flex items-center gap-5 mt-3 text-xs pacioli-text-muted flex-wrap">
+            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:16, borderTop:"2px dashed #10b981" }} />&nbsp;Optimistic</span>
+            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:16, borderTop:"2.5px solid #6366f1" }} />&nbsp;Base case</span>
+            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:16, borderTop:"2px dashed #f59e0b" }} />&nbsp;Pessimistic</span>
+            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:16, borderTop:"1px dashed #52525b" }} />&nbsp;No change</span>
           </div>
         )}
       </div>
