@@ -406,8 +406,8 @@ export default function ForecastView() {
                   <button
                     key={type}
                     onClick={() => addEvent(type)}
-                    style={{ ...cfg.bgStyle, color: cfg.color, borderWidth: 1, borderStyle: "solid" }}
-                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-opacity hover:opacity-80"
+                    style={{ background: cfg.bg, color: cfg.color, borderColor: cfg.border, borderWidth: 1, borderStyle: "solid" }}
+                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-opacity hover:opacity-80 font-medium"
                   >
                     <Plus size={11} /> {cfg.label}
                   </button>
@@ -578,9 +578,9 @@ function MetricCard({ label, value, sub, highlight }: {
 // ─── Event type config ────────────────────────────────────────────────────────
 
 const EVENT_TYPE_CONFIG = {
-  income:  { label: "Income",  color: "#6ee7b7", bgStyle: { background: "rgba(6,78,59,0.35)",   borderColor: "rgba(52,211,153,0.3)"  }, bg: "bg-emerald-950/30 border-emerald-500/20", maxDelta: 20000, step: 100 },
-  expense: { label: "Expense", color: "#fca5a5", bgStyle: { background: "rgba(69,10,10,0.35)",  borderColor: "rgba(248,113,113,0.3)" }, bg: "bg-red-950/30 border-red-500/20",         maxDelta: 50000, step: 500 },
-  savings: { label: "Savings", color: "#a5b4fc", bgStyle: { background: "rgba(30,27,75,0.45)",  borderColor: "rgba(129,140,248,0.3)" }, bg: "bg-indigo-950/30 border-indigo-500/20",   maxDelta: 5000,  step: 50  },
+  income:  { label: "Income",  color: "#059669", border: "#10b981", bg: "rgba(16,185,129,0.12)",  maxDelta: 20000, step: 100 },
+  expense: { label: "Expense", color: "#dc2626", border: "#ef4444", bg: "rgba(239,68,68,0.10)",   maxDelta: 50000, step: 500 },
+  savings: { label: "Savings", color: "#4338ca", border: "#6366f1", bg: "rgba(99,102,241,0.10)",  maxDelta: 5000,  step: 50  },
 } as const;
 
 // ─── EventCard ────────────────────────────────────────────────────────────────
@@ -617,11 +617,11 @@ function EventCard({
     : "one-time";
 
   return (
-    <div className="rounded-xl p-4" style={{ ...cfg.bgStyle, borderWidth: 1, borderStyle: "solid" }}>
+    <div className="rounded-xl p-4" style={{ background: cfg.bg, borderColor: cfg.border, borderWidth: 1, borderStyle: "solid" }}>
       {/* Header row */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <span className={`text-xs font-semibold uppercase tracking-wide ${cfg.color} shrink-0`}>
+          <span className="text-xs font-semibold uppercase tracking-wide shrink-0" style={{ color: cfg.color }}>
             {cfg.label}
           </span>
           {editingLabel ? (

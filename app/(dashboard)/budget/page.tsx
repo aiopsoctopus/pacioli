@@ -11,7 +11,7 @@ import { Sparkles, ChevronRight, Check, Pencil, X, TrendingUp, TrendingDown, Min
 
 const CATEGORY_COLORS: Record<string, string> = {
   Housing: "#6366f1", Groceries: "#10b981", "Dining Out": "#f59e0b",
-  Transport: "#ef4444", Subscriptions: "#ec4899", Health: "#3b82f6",
+  Transport: "#06b6d4", Subscriptions: "#ec4899", Health: "#3b82f6",
   Shopping: "#8b5cf6", Travel: "#14b8a6", Entertainment: "#f97316", Other: "#71717a",
 };
 
@@ -242,9 +242,10 @@ function EnvelopeRow({
   const pct = envelope.budgetAmount > 0 ? (spent / envelope.budgetAmount) * 100 : 0;
   const remaining = envelope.budgetAmount - spent;
   const isOver = spent > envelope.budgetAmount;
-  const isWarning = pct >= 80 && !isOver;
+  const isWarning = pct >= 90 && !isOver;
 
-  const barColor = isOver ? "var(--text-danger)" : isWarning ? "var(--text-warning)" : color;
+  // Bar stays the category color until 90% — warning amber at 90%+, danger red only when over
+  const barColor = isOver ? "var(--text-danger)" : isWarning ? "#f59e0b" : color;
 
   function commit() {
     onUpdate(envelope.category, draft);
@@ -483,7 +484,7 @@ export default function BudgetPage() {
         </div>
         <div className="pacioli-bg-surface rounded-2xl p-5 border">
           <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">Budget Pace</p>
-          <p className={`text-2xl font-bold ${isAheadOfPace ? "pacioli-text-success" : isBehindPace ? "pacioli-text-danger" : "pacioli-text-warning"}`}>
+          <p className={`text-2xl font-bold ${isAheadOfPace ? "pacioli-text-success" : isBehindPace ? "pacioli-text-warning" : "pacioli-text-success"}`}>
             {isAheadOfPace ? "Ahead" : isBehindPace ? "Behind" : "On pace"}
           </p>
           <p className="text-xs pacioli-text-muted mt-1">
@@ -521,7 +522,7 @@ export default function BudgetPage() {
                 className="h-2.5 rounded-full transition-all duration-500"
                 style={{
                   width: `${Math.min(100, budgetPct)}%`,
-                  background: isBehindPace ? "var(--text-danger)" : isAheadOfPace ? "var(--text-success)" : "#6366f1",
+                  background: isBehindPace ? "#f59e0b" : isAheadOfPace ? "var(--text-success)" : "#6366f1",
                 }}
               />
             </div>
