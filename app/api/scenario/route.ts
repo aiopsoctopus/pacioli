@@ -27,9 +27,10 @@ Your job is to convert a natural-language life question into a structured list o
 ## Rules
 
 1. Output ONLY valid JSON — no markdown, no prose outside the JSON structure.
-2. Never invent numbers the user hasn't provided or clearly implied. If a number is unknown, set delta to -1 and mark it in the "unknowns" array.
-3. Never do arithmetic yourself. The projection engine handles all math.
-4. If the user asks a follow-up after results are shown, update your events list or answer the question directly.
+2. Never do arithmetic yourself. The projection engine handles all math.
+3. For uncertain amounts, ALWAYS provide a bracket (pessimistic/base/optimistic) rather than asking the user to supply a number. Use real-world context to estimate plausible ranges. Set delta = bracket.base.
+4. Only set readyToProject: false if you are missing structural information (e.g. which month something starts, whether it's recurring) that a bracket cannot substitute for. Never block on uncertain dollar amounts.
+5. If the user asks a follow-up after results are shown, update your events list or answer the question directly.
 
 ## Output schema
 
@@ -38,40 +39,46 @@ Your job is to convert a natural-language life question into a structured list o
   "events": [
     {
       "id": "unique-string",
-      "label": "Human-readable label for this event",
+      "label": "Human-readable label",
       "type": "income" | "expense" | "savings",
       "startMonth": "YYYY-MM",
       "endMonth": "YYYY-MM or null",
-      "delta": number (positive magnitude, -1 if unknown),
-      "recurring": boolean
+      "delta": number (= bracket.base if bracket present, else the known amount),
+      "recurring": boolean,
+      "bracket": {
+        "pessimistic": number,
+        "base": number,
+        "optimistic": number
+      } | null
     }
   ],
-  "unknowns": [
-    {
-      "eventId": "id of the event with unknown delta",
-      "question": "Single clarifying question to ask the user"
-    }
-  ],
-  "clarifyingQuestion": "If there are unknowns, ask ONE question here. Otherwise null.",
-  "readyToProject": boolean
+  "clarifyingQuestion": "Only if structural info is missing (not dollar amounts). Otherwise null.",
+  "readyToProject": boolean,
+  "bracketSummary": "One sentence explaining the range, e.g. 'Bookstore income modelled as $1k–$4k/mo based on typical indie retail.' Or null if no brackets."
 }
 \`\`\`
 
 ## Event type semantics
-- "income": positive delta = more income; negative delta handled by sign convention — always use positive magnitude
-- "expense": always reduces cash flow by delta amount
-- "savings": adds delta to monthly savings (increases effective cash flow)
+- "income": delta = monthly income amount (positive = more money in)
+- "expense": delta = cost (always subtracted from cash flow)
+- "savings": delta = extra monthly savings added on top
+
+## Bracket guidance — use real-world context
+- Quitting a job: salary is unknown → use the user's avgIncome as a reference for the income loss bracket
+- Starting a business: bracket based on sector (bookstore: $1k–$4k/mo; SaaS: $0–$10k/mo; freelance: $2k–$8k/mo)
+- Home purchase: use regional medians; bracket the mortgage payment
+- Remodel / big expense: contractor ranges are typically 0.7×–1.4× estimate
 
 ## Examples
 
-User: "Can I afford to quit my job in September and open a bookstore?"
-→ Two events: (1) income event ending in August — but delta is their salary which is unknown. (2) bookstore income starting some month — delta unknown. Ask about salary first.
+User: "Can I afford to quit my job and open a bookstore?"
+→ Two events: (1) job income loss — bracket pessimistic = avgIncome (full loss), base = avgIncome * 0.9, optimistic = 0 (kept part-time). (2) bookstore income — bracket pessimistic = 500, base = 2000, optimistic = 5000. readyToProject = true.
 
 User: "What if I save an extra $500 a month?"
-→ One savings event, startMonth = current month, delta = 500, recurring = true, readyToProject = true.
+→ One savings event, delta = 500, no bracket needed, readyToProject = true.
 
 User: "What if I spend $40,000 on a kitchen remodel next March?"
-→ One expense event, startMonth = next March, delta = 40000, recurring = false, readyToProject = true.
+→ One expense event, startMonth = next March, delta = 40000, bracket pessimistic = 56000 (1.4×), base = 40000, optimistic = 28000 (0.7×), readyToProject = true.
 
 Today's date is provided in each request. Use it to interpret relative dates like "next year", "in 6 months", "this fall".`;
 
@@ -79,9 +86,15 @@ Today's date is provided in each request. Use it to interpret relative dates lik
 
 interface ParsedScenario {
   events: ScenarioEvent[];
-  unknowns: { eventId: string; question: string }[];
   clarifyingQuestion: string | null;
   readyToProject: boolean;
+  bracketSummary: string | null;
+}
+
+interface BracketSummaryInput {
+  pessimistic: { endScenario: number; gainScenario: number };
+  base:        { endScenario: number; gainScenario: number };
+  optimistic:  { endScenario: number; gainScenario: number };
 }
 
 interface RequestBody {
@@ -101,6 +114,7 @@ interface RequestBody {
     gainScenario: number;
     goesNegative: boolean;
     runwayMonths?: number;
+    bracket?: BracketSummaryInput;
   };
   /** Previously parsed events (for follow-up turns) */
   existingEvents?: ScenarioEvent[];
@@ -163,22 +177,29 @@ Parse this into structured scenario events. Follow the output schema exactly.`;
 
   // ── Mode: narrate results ──────────────────────────────────────────────────
   if (mode === "narrate" && projectionSummary) {
-    const { endBase, endScenario, gainBase, gainScenario, goesNegative, runwayMonths } =
+    const { endBase, endScenario, gainBase, gainScenario, goesNegative, runwayMonths, bracket } =
       projectionSummary;
+
+    const bracketSection = bracket
+      ? `\nRange (pessimistic → base → optimistic):
+- Pessimistic: NW ${bracket.pessimistic.gainScenario >= 0 ? "+" : ""}$${bracket.pessimistic.gainScenario.toLocaleString()} → $${bracket.pessimistic.endScenario.toLocaleString()}
+- Base:        NW ${bracket.base.gainScenario >= 0 ? "+" : ""}$${bracket.base.gainScenario.toLocaleString()} → $${bracket.base.endScenario.toLocaleString()}
+- Optimistic:  NW ${bracket.optimistic.gainScenario >= 0 ? "+" : ""}$${bracket.optimistic.gainScenario.toLocaleString()} → $${bracket.optimistic.endScenario.toLocaleString()}`
+      : "";
 
     const narrateMessage = `Today is ${baseline.currentMonth}.
 
 The user asked: "${question}"
 
-Projection results (12 months):
-- Base trajectory (no changes): net worth grows by $${gainBase.toLocaleString()} to $${endBase.toLocaleString()}
-- Scenario trajectory: net worth grows by $${gainScenario.toLocaleString()} to $${endScenario.toLocaleString()}
-- Does scenario go negative: ${goesNegative}${runwayMonths != null ? `\n- Runway at scenario cash flow: ${runwayMonths} months` : ""}
+Projection results:
+- Base trajectory (no changes): net worth ${gainBase >= 0 ? "+" : ""}$${gainBase.toLocaleString()} → $${endBase.toLocaleString()}
+- Scenario (base case): net worth ${gainScenario >= 0 ? "+" : ""}$${gainScenario.toLocaleString()} → $${endScenario.toLocaleString()}
+- Does scenario go negative: ${goesNegative}${runwayMonths != null ? `\n- Runway: ${runwayMonths} months` : ""}${bracketSection}
 
-Scenario events applied:
+Scenario events:
 ${JSON.stringify(existingEvents, null, 2)}
 
-Write a 2–3 sentence plain-English summary of what this means for the user. Be honest about uncertainty. Use the actual numbers from the projection. Do NOT use JSON — just prose.`;
+Write 2–3 sentences in plain English. ${bracket ? "Lead with the range: best case vs worst case, then give the base-case number. Be honest about uncertainty." : "Use the actual numbers. Be honest about uncertainty."} No JSON, no markdown.`;
 
     const response = await client.chat.completions.create({
       model: "llama-3.3-70b-versatile",

@@ -5,7 +5,7 @@ import {
   AccountData, MonthIncome, getNetWorth, getMonthlySpend,
   avgMonthlyIncome, useTransactions, getNormalizedMonthlyCategorySpend, classifyMerchants,
 } from "@/lib/data";
-import { runProjection, ScenarioEvent, ProjectionSummary } from "@/lib/scenario";
+import { runProjection, runBracketProjection, ScenarioEvent, ProjectionSummary } from "@/lib/scenario";
 import { useDemo } from "@/components/demo-provider";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -154,11 +154,12 @@ export default function ForecastView() {
       });
     }
 
-    // Run projection via the engine
-    const { rows: projRows, summary } = runProjection(
-      { startingNW, monthlyCashFlow, startMonth: currentMonth, projectionMonths },
-      allEvents,
-    );
+    // Run projection — use bracket engine if any event has bracket data
+    const hasBracket = allEvents.some((e) => e.bracket != null);
+    const baselineArgs = { startingNW, monthlyCashFlow, startMonth: currentMonth, projectionMonths };
+
+    const { rows: projRows, summary } = runProjection(baselineArgs, allEvents);
+    const bracketResult = hasBracket ? runBracketProjection(baselineArgs, allEvents) : null;
 
     return {
       startingNW,
@@ -175,6 +176,13 @@ export default function ForecastView() {
       gainScenario: summary.gainScenario,
       summary,
       chartRows: projRows,
+      bracketRows: bracketResult?.rows ?? null,
+      bracketSummaries: bracketResult ? {
+        pessimistic: bracketResult.summaryPessimistic,
+        base:        bracketResult.summaryBase,
+        optimistic:  bracketResult.summaryOptimistic,
+      } : null,
+      hasBracket,
       windowMonths: completedMonths.length,
     };
   }, [accounts, income, transactions, scenarioDelta, scenarioEvents, projectionMonths]);
@@ -225,10 +233,10 @@ export default function ForecastView() {
       // Step 2: run projection (via the engine already in derived — trigger rerender)
       // The projection runs automatically via useMemo when scenarioEvents changes.
       // We need the summary *after* state update — compute it inline here.
-      const { summary: projSummary } = runProjection(
-        { startingNW: derived.startingNW, monthlyCashFlow: derived.monthlyCashFlow, startMonth: derived.currentMonth, projectionMonths },
-        newEvents,
-      );
+      const baselineArgs2 = { startingNW: derived.startingNW, monthlyCashFlow: derived.monthlyCashFlow, startMonth: derived.currentMonth, projectionMonths };
+      const { summary: projSummary } = runProjection(baselineArgs2, newEvents);
+      const hasBracketNarrate = newEvents.some((e) => e.bracket != null);
+      const bracketResult2 = hasBracketNarrate ? runBracketProjection(baselineArgs2, newEvents) : null;
 
       // Step 3: narrate
       const narrateRes = await fetch("/api/scenario", {
@@ -244,7 +252,14 @@ export default function ForecastView() {
             avgSpend: derived.avgSpend,
             currentMonth: derived.currentMonth,
           },
-          projectionSummary: projSummary,
+          projectionSummary: {
+            ...projSummary,
+            bracket: bracketResult2 ? {
+              pessimistic: { endScenario: bracketResult2.summaryPessimistic.endScenario, gainScenario: bracketResult2.summaryPessimistic.gainScenario },
+              base:        { endScenario: bracketResult2.summaryBase.endScenario,        gainScenario: bracketResult2.summaryBase.gainScenario },
+              optimistic:  { endScenario: bracketResult2.summaryOptimistic.endScenario,  gainScenario: bracketResult2.summaryOptimistic.gainScenario },
+            } : undefined,
+          },
           existingEvents: newEvents,
         }),
       });
@@ -289,7 +304,7 @@ export default function ForecastView() {
   const {
     startingNW, avgIncome, avgFixed, avgVariable, avgSpend,
     monthlyCashFlow, savingsRate, endBase, endScenario,
-    gainBase, gainScenario, chartRows, windowMonths,
+    gainBase, gainScenario, chartRows, bracketRows, bracketSummaries, hasBracket, windowMonths,
   } = derived;
 
   const showScenario = scenarioEvents.length > 0 || scenarioDelta !== 0;
@@ -481,25 +496,67 @@ export default function ForecastView() {
               axisLine={false} tickLine={false} width={60}
             />
             <Tooltip
-              formatter={(v: unknown, name: unknown) => [
-                formatCurrency(Number(v)),
-                name === "base" ? "Base" : "With scenario",
-              ]}
-              contentStyle={{
-                background: "var(--bg-surface, #18181b)",
-                border: "1px solid var(--border-subtle, #3f3f46)",
-                borderRadius: 8,
+              formatter={(v: unknown, name: unknown) => {
+                const labels: Record<string, string> = {
+                  base: hasBracket ? "Base case" : showScenario ? "With scenario" : "Base trajectory",
+                  scenario: "With scenario",
+                  pessimistic: "Pessimistic",
+                  optimistic: "Optimistic",
+                };
+                return [formatCurrency(Number(v)), labels[name as string] ?? String(name)];
               }}
+              contentStyle={{ background: "var(--bg-surface, #18181b)", border: "1px solid var(--border-subtle, #3f3f46)", borderRadius: 8 }}
               labelStyle={{ color: "var(--text-secondary, #a1a1aa)" }}
             />
-            {showScenario && <Legend formatter={(v) => v === "base" ? "Base trajectory" : "With your scenario"} />}
+            {(showScenario || hasBracket) && (
+              <Legend formatter={(v) => ({
+                base: hasBracket ? "Base case" : "With scenario",
+                scenario: "With scenario",
+                pessimistic: "Pessimistic",
+                optimistic: "Optimistic",
+              }[v as string] ?? v)} />
+            )}
             <ReferenceLine x="Now" stroke="#6366f1" strokeDasharray="4 4" label={{ value: "Today", fill: "#6366f1", fontSize: 11 }} />
-            <Area type="monotone" dataKey="base" stroke="#10b981" strokeWidth={2} fill="url(#baseGrad)" dot={false} />
-            {showScenario && (
-              <Area type="monotone" dataKey="scenario" stroke="#6366f1" strokeWidth={2.5} fill="url(#scenGrad)" dot={false} />
+
+            {/* Base / no-scenario line */}
+            {!showScenario && !hasBracket && (
+              <Area type="monotone" dataKey="base" data={chartRows} stroke="#10b981" strokeWidth={2} fill="url(#baseGrad)" dot={false} />
+            )}
+
+            {/* Normal scenario (no bracket) */}
+            {showScenario && !hasBracket && (
+              <>
+                <Area type="monotone" dataKey="base" data={chartRows} stroke="#10b981" strokeWidth={2} fill="url(#baseGrad)" dot={false} />
+                <Area type="monotone" dataKey="scenario" data={chartRows} stroke="#6366f1" strokeWidth={2.5} fill="url(#scenGrad)" dot={false} />
+              </>
+            )}
+
+            {/* Bracket mode: pessimistic band + base + optimistic */}
+            {hasBracket && bracketRows && (
+              <>
+                {/* Shaded band between pessimistic and optimistic */}
+                <Area type="monotone" dataKey="optimistic" data={bracketRows} stroke="none" fill="#6366f1" fillOpacity={0.12} dot={false} legendType="none" />
+                <Area type="monotone" dataKey="pessimistic" data={bracketRows} stroke="none" fill="var(--bg-surface, #18181b)" fillOpacity={1} dot={false} legendType="none" />
+                {/* Three lines */}
+                <Area type="monotone" dataKey="pessimistic" data={bracketRows} stroke="#f59e0b" strokeWidth={1.5} strokeDasharray="4 3" fill="none" dot={false} />
+                <Area type="monotone" dataKey="base"        data={bracketRows} stroke="#6366f1" strokeWidth={2.5} fill="url(#scenGrad)" dot={false} />
+                <Area type="monotone" dataKey="optimistic"  data={bracketRows} stroke="#10b981" strokeWidth={1.5} strokeDasharray="4 3" fill="none" dot={false} />
+                {/* Base no-scenario ghost */}
+                <Area type="monotone" dataKey="base" data={chartRows} stroke="#71717a" strokeWidth={1} strokeDasharray="2 4" fill="none" dot={false} name="base" />
+              </>
             )}
           </AreaChart>
         </ResponsiveContainer>
+
+        {/* Bracket legend annotation */}
+        {hasBracket && (
+          <div className="flex items-center gap-4 mt-3 text-xs pacioli-text-muted flex-wrap">
+            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:20, height:2, background:"#10b981", borderTop:"2px dashed #10b981" }} /> Optimistic</span>
+            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:20, height:2, background:"#6366f1" }} /> Base case</span>
+            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:20, height:2, borderTop:"2px dashed #f59e0b" }} /> Pessimistic</span>
+            <span className="flex items-center gap-1.5"><span style={{ display:"inline-block", width:20, height:2, borderTop:"2px dashed #71717a" }} /> No change</span>
+          </div>
+        )}
       </div>
 
       {/* ── KPI summary ───────────────────────────────────────────────────────── */}
@@ -515,16 +572,21 @@ export default function ForecastView() {
           sub={`${gainBase >= 0 ? "+" : ""}${formatCurrency(gainBase)} over ${projectionMonths / 12}yr`}
           highlight="pacioli-text-success"
         />
-        <MetricCard
-          label={showScenario ? "With scenario" : "Monthly cash flow"}
-          value={showScenario ? formatCurrency(endScenario) : formatCurrency(monthlyCashFlow)}
-          sub={showScenario
-            ? `${gainScenario >= gainBase ? "+" : ""}${formatCurrency(gainScenario - gainBase)} vs base`
-            : "after all expenses"}
-          highlight={showScenario
-            ? (gainScenario >= gainBase ? "pacioli-text-success" : "pacioli-text-danger")
-            : (monthlyCashFlow >= 0 ? "pacioli-text-success" : "pacioli-text-danger")}
-        />
+        {hasBracket && bracketSummaries ? (
+          <MetricCard
+            label="Range (pessimistic → optimistic)"
+            value={`${formatCurrency(bracketSummaries.pessimistic.endScenario, true)} – ${formatCurrency(bracketSummaries.optimistic.endScenario, true)}`}
+            sub={`Base: ${formatCurrency(bracketSummaries.base.endScenario, true)}`}
+            highlight="pacioli-text-secondary"
+          />
+        ) : (
+          <MetricCard
+            label={showScenario ? "With scenario" : "Monthly cash flow"}
+            value={showScenario ? formatCurrency(endScenario) : formatCurrency(monthlyCashFlow)}
+            sub={showScenario ? `${gainScenario >= gainBase ? "+" : ""}${formatCurrency(gainScenario - gainBase)} vs base` : "after all expenses"}
+            highlight={showScenario ? (gainScenario >= gainBase ? "pacioli-text-success" : "pacioli-text-danger") : (monthlyCashFlow >= 0 ? "pacioli-text-success" : "pacioli-text-danger")}
+          />
+        )}
         <MetricCard
           label="Savings rate"
           value={`${savingsRate}%`}

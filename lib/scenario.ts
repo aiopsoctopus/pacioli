@@ -44,6 +44,16 @@ export interface ScenarioEvent {
   delta: number;
   /** True = affects every month in [startMonth, endMonth]; false = one-time hit in startMonth */
   recurring: boolean;
+  /**
+   * Optional bracket for uncertain events.
+   * When present, the engine runs three projections and the chart shows a range band.
+   * `delta` should equal `bracket.base` — it's the single value used when no bracket is shown.
+   */
+  bracket?: {
+    pessimistic: number;  // worst-case delta magnitude
+    base: number;         // most-likely delta magnitude
+    optimistic: number;   // best-case delta magnitude
+  };
 }
 
 /** The raw inputs needed to run a projection */
@@ -99,6 +109,24 @@ export interface ProjectionSummary {
 export interface ProjectionResult {
   rows: ProjectionRow[];
   summary: ProjectionSummary;
+}
+
+/** One row in a bracket projection — three parallel NW values */
+export interface BracketRow {
+  month: string;
+  monthKey: string;
+  base: number;
+  pessimistic: number;
+  optimistic: number;
+}
+
+export interface BracketProjectionResult {
+  rows: BracketRow[];
+  summaryPessimistic: ProjectionSummary;
+  summaryBase: ProjectionSummary;
+  summaryOptimistic: ProjectionSummary;
+  /** True if any bracketed event is present */
+  hasBracket: boolean;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -219,4 +247,45 @@ export function runProjection(
       runwayMonths,
     },
   };
+}
+
+// ─── Bracket projection ───────────────────────────────────────────────────────
+
+/**
+ * Run three parallel projections for bracketed scenarios (pessimistic / base / optimistic).
+ *
+ * For each event with a `bracket`, the three projections substitute
+ * pessimistic/base/optimistic delta values respectively.
+ * Events without a bracket use their `delta` in all three runs.
+ *
+ * Returns merged rows with three NW columns plus per-scenario summaries.
+ */
+export function runBracketProjection(
+  baseline: ScenarioBaseline,
+  events: ScenarioEvent[],
+): BracketProjectionResult {
+  const hasBracket = events.some((e) => e.bracket != null);
+
+  // Build three event lists — substituting bracket deltas where available
+  function substituteEvents(which: "pessimistic" | "base" | "optimistic"): ScenarioEvent[] {
+    return events.map((e) => {
+      if (!e.bracket) return e;
+      return { ...e, delta: e.bracket[which] };
+    });
+  }
+
+  const { rows: baseRows,        summary: summaryBase }        = runProjection(baseline, substituteEvents("base"));
+  const { rows: pessimisticRows, summary: summaryPessimistic } = runProjection(baseline, substituteEvents("pessimistic"));
+  const { rows: optimisticRows,  summary: summaryOptimistic }  = runProjection(baseline, substituteEvents("optimistic"));
+
+  // Merge into BracketRows — base.scenario is the primary scenario line
+  const rows: BracketRow[] = baseRows.map((b, i) => ({
+    month:       b.month,
+    monthKey:    b.monthKey,
+    base:        b.scenario,
+    pessimistic: pessimisticRows[i]?.scenario ?? b.scenario,
+    optimistic:  optimisticRows[i]?.scenario  ?? b.scenario,
+  }));
+
+  return { rows, summaryBase, summaryPessimistic, summaryOptimistic, hasBracket };
 }
