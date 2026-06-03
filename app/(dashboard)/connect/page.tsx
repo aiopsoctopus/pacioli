@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, Landmark, FileText, CheckCircle2, AlertCircle, Plus, Trash2, FlaskConical, ArrowRight, Tag } from "lucide-react";
+import { Upload, Landmark, FileText, CheckCircle2, AlertCircle, Plus, Trash2, FlaskConical, ArrowRight, Tag, Download, FolderOpen } from "lucide-react";
 import { formatCurrency, IMPORTED_KEY } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
 
@@ -107,6 +107,79 @@ export default function ConnectPage() {
       localStorage.setItem(IMPORTED_KEY, JSON.stringify(parsed));
       // Signal to Cash Flow that there are uncategorized items to review
       if (uncategorized > 0) sessionStorage.setItem("pacioli-review-uncategorized", "1");
+    };
+    reader.readAsText(file);
+  }
+
+  const [importStatus, setImportStatus] = useState<"idle" | "success" | "error">("idle");
+  const [importError, setImportError] = useState<string | null>(null);
+  const importRef = useRef<HTMLInputElement>(null);
+
+  // All the localStorage keys that make up a user's Pacioli data
+  const EXPORT_KEYS = [
+    "pacioli-imported-transactions",
+    "pacioli-category-rules",
+    "pacioli-tx-overrides",
+    "pacioli-budget-envelopes",
+    "pacioli-sinking-funds",
+    MANUAL_ACCOUNTS_KEY,
+    "pacioli-scenario-events",
+    "pacioli-scenario-delta",
+    "pacioli-setup-complete",
+    "hfos-theme",
+  ];
+
+  function exportData() {
+    const snapshot: Record<string, unknown> = {
+      _version: 1,
+      _exportedAt: new Date().toISOString(),
+    };
+    for (const key of EXPORT_KEYS) {
+      const val = localStorage.getItem(key);
+      if (val !== null) {
+        try { snapshot[key] = JSON.parse(val); }
+        catch { snapshot[key] = val; }
+      }
+    }
+    const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `pacioli-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handleImportFile(file: File) {
+    setImportStatus("idle");
+    setImportError(null);
+    if (!file.name.endsWith(".json")) {
+      setImportStatus("error");
+      setImportError("Please upload a Pacioli backup .json file.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target?.result as string);
+        if (!data._version) throw new Error("Not a valid Pacioli backup file.");
+        let restored = 0;
+        for (const key of EXPORT_KEYS) {
+          if (key in data && key !== "_version" && key !== "_exportedAt") {
+            localStorage.setItem(key, JSON.stringify(data[key]));
+            restored++;
+          }
+        }
+        setImportStatus("success");
+        // Re-read manual accounts from the restored data
+        const saved = localStorage.getItem(MANUAL_ACCOUNTS_KEY);
+        if (saved) setManualAccounts(JSON.parse(saved));
+        // Brief delay then reload so all hooks re-init from the restored data
+        setTimeout(() => window.location.reload(), 1200);
+      } catch (err) {
+        setImportStatus("error");
+        setImportError(err instanceof Error ? err.message : "Could not read backup file.");
+      }
     };
     reader.readAsText(file);
   }
@@ -377,6 +450,69 @@ export default function ConnectPage() {
         <p className="text-xs pacioli-text-faint mt-6">
           Balances are saved in your browser. When you connect Plaid, linked accounts will automatically update — only manual entries stay here.
         </p>
+      </div>
+
+      {/* Export / Import */}
+      <div className="pacioli-bg-surface rounded-2xl p-6 border">
+        <h3 className="text-sm font-semibold pacioli-text-primary mb-1">Backup & Restore</h3>
+        <p className="text-xs pacioli-text-muted mb-5">
+          Export all your data as a JSON file — transactions, category rules, budgets, goals, and account balances. Keep a copy as a backup, or use it to migrate to a future Pacioli account when login ships.
+        </p>
+
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          {/* Export */}
+          <div className="pacioli-bg-surface-2 rounded-xl p-5 border">
+            <div className="flex items-center gap-2 mb-2">
+              <Download size={15} className="pacioli-accent" />
+              <p className="text-sm font-medium pacioli-text-primary">Export data</p>
+            </div>
+            <p className="text-xs pacioli-text-muted mb-4">
+              Downloads a <span className="font-mono">pacioli-backup-YYYY-MM-DD.json</span> file with everything saved in your browser.
+            </p>
+            <button
+              onClick={exportData}
+              className="flex items-center gap-2 px-4 py-2 bg-teal-700 hover:bg-teal-600 text-white text-sm font-medium rounded-xl transition-colors"
+            >
+              <Download size={14} /> Download backup
+            </button>
+          </div>
+
+          {/* Import */}
+          <div className="pacioli-bg-surface-2 rounded-xl p-5 border">
+            <div className="flex items-center gap-2 mb-2">
+              <FolderOpen size={15} className="pacioli-accent" />
+              <p className="text-sm font-medium pacioli-text-primary">Restore from backup</p>
+            </div>
+            <p className="text-xs pacioli-text-muted mb-4">
+              Upload a Pacioli backup JSON to restore your data. This will overwrite your current data.
+            </p>
+            <button
+              onClick={() => importRef.current?.click()}
+              className="flex items-center gap-2 px-4 py-2 pacioli-bg-surface border pacioli-text-primary text-sm font-medium rounded-xl hover:border-indigo-500/50 transition-colors"
+            >
+              <FolderOpen size={14} /> Choose backup file
+            </button>
+            <input
+              ref={importRef}
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={(e) => { if (e.target.files?.[0]) handleImportFile(e.target.files[0]); }}
+            />
+            {importStatus === "success" && (
+              <div className="flex items-center gap-2 mt-3">
+                <CheckCircle2 size={13} className="pacioli-text-success shrink-0" />
+                <p className="text-xs pacioli-text-success">Data restored — reloading…</p>
+              </div>
+            )}
+            {importStatus === "error" && importError && (
+              <div className="flex items-center gap-2 mt-3">
+                <AlertCircle size={13} className="pacioli-text-danger shrink-0" />
+                <p className="text-xs pacioli-text-danger">{importError}</p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
