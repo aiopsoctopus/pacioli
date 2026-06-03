@@ -6,6 +6,7 @@ import {
   LayoutDashboard, Scale, ArrowLeftRight, PiggyBank, TrendingUp,
   Link2, Sun, Moon, Wallet, List, Info, Sparkles,
 } from "lucide-react";
+import { UserButton } from "@clerk/nextjs";
 import { useTheme } from "@/components/theme-provider";
 import PacioliLogo from "@/components/pacioli-logo";
 
@@ -121,24 +122,31 @@ export default function Nav() {
           })}
         </div>
 
-        {/* Footer — Home + About */}
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors pacioli-text-muted pacioli-bg-nav-hover mb-1"
-        >
-          <span style={{ fontSize: 14 }}>🏠</span> Back to Home
-        </Link>
-        <Link
-          href="/about"
-          className={`flex items-center gap-2.5 px-3 py-3 rounded-xl text-sm font-medium transition-colors border ${
-            path === "/about"
-              ? "pacioli-bg-nav-active pacioli-text-nav-active pacioli-border-accent"
-              : "pacioli-text-secondary hover:pacioli-text-primary pacioli-border-subtle"
-          }`}
-        >
-          <Info size={15} />
-          About Pacioli
-        </Link>
+        {/* Footer — Account + Home + About */}
+        <div className="flex flex-col gap-1">
+          {/* User account button */}
+          <div className="flex items-center gap-3 px-3 py-2.5">
+            <UserButton />
+            <span className="text-sm pacioli-text-muted">My account</span>
+          </div>
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors pacioli-text-muted pacioli-bg-nav-hover"
+          >
+            <span style={{ fontSize: 14 }}>🏠</span> Back to Home
+          </Link>
+          <Link
+            href="/about"
+            className={`flex items-center gap-2.5 px-3 py-3 rounded-xl text-sm font-medium transition-colors border ${
+              path === "/about"
+                ? "pacioli-bg-nav-active pacioli-text-nav-active pacioli-border-accent"
+                : "pacioli-text-secondary hover:pacioli-text-primary pacioli-border-subtle"
+            }`}
+          >
+            <Info size={15} />
+            About Pacioli
+          </Link>
+        </div>
       </div>
     </nav>
   );

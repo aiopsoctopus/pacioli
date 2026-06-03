@@ -1,9 +1,11 @@
 import Nav from "@/components/nav";
 import DemoBanner from "@/components/demo-banner";
 import SetupGuard from "@/components/setup-guard";
+import UserStorageProvider from "@/components/user-storage-provider";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
+    <UserStorageProvider>
     <div className="flex flex-col min-h-screen pacioli-bg-base pacioli-text-primary">
       <DemoBanner />
       <SetupGuard />
@@ -51,5 +53,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </main>
       </div>
     </div>
+    </UserStorageProvider>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import { DemoProvider } from "@/components/demo-provider";
 
@@ -40,11 +41,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="antialiased min-h-screen" suppressHydrationWarning>
-        <ThemeProvider>
-          <DemoProvider>
-            {children}
-          </DemoProvider>
-        </ThemeProvider>
+        <ClerkProvider>
+          <ThemeProvider>
+            <DemoProvider>
+              {children}
+            </DemoProvider>
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
