@@ -15,8 +15,8 @@ import {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const ALL_CATEGORIES = [
-  "Dining Out", "Entertainment", "Groceries", "Health", "Housing",
-  "Savings", "Shopping", "Subscriptions", "Transport", "Uncategorized",
+  "Childcare", "Dining Out", "Entertainment", "Groceries", "Health", "Housing",
+  "Kids Activities", "Savings", "Shopping", "Subscriptions", "Transport", "Travel", "Uncategorized",
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -163,8 +163,13 @@ export default function TransactionsPage() {
   // ── Filters ──
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState<string[]>([]);
-  const [filterMonth, setFilterMonth] = useState("");
+  const [filterMonthFrom, setFilterMonthFrom] = useState("");
+  const [filterMonthTo, setFilterMonthTo] = useState("");
+  const [amountMin, setAmountMin] = useState("");
+  const [amountMax, setAmountMax] = useState("");
+  const [uncategorizedOnly, setUncategorizedOnly] = useState(false);
   const [catFilterOpen, setCatFilterOpen] = useState(false);
+  const [showAmountFilter, setShowAmountFilter] = useState(false);
 
   // ── Sort ──
   const [sortField, setSortField] = useState<SortField>("date");
@@ -189,10 +194,19 @@ export default function TransactionsPage() {
       const q = search.trim().toLowerCase();
       txs = txs.filter((t) => t.merchant.toLowerCase().includes(q) || t.category.toLowerCase().includes(q));
     }
-    if (filterCat.length > 0) txs = txs.filter((t) => filterCat.includes(t.category));
-    if (filterMonth) txs = txs.filter((t) => t.date.startsWith(filterMonth));
+    if (uncategorizedOnly) {
+      txs = txs.filter((t) => t.category === "Uncategorized" || !t.category);
+    } else if (filterCat.length > 0) {
+      txs = txs.filter((t) => filterCat.includes(t.category));
+    }
+    if (filterMonthFrom) txs = txs.filter((t) => t.date.slice(0, 7) >= filterMonthFrom);
+    if (filterMonthTo)   txs = txs.filter((t) => t.date.slice(0, 7) <= filterMonthTo);
+    const minAmt = amountMin !== "" ? Number(amountMin) : null;
+    const maxAmt = amountMax !== "" ? Number(amountMax) : null;
+    if (minAmt !== null) txs = txs.filter((t) => t.amount >= minAmt);
+    if (maxAmt !== null) txs = txs.filter((t) => t.amount <= maxAmt);
     return txs;
-  }, [transactions, search, filterCat, filterMonth]);
+  }, [transactions, search, filterCat, filterMonthFrom, filterMonthTo, amountMin, amountMax, uncategorizedOnly]);
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -248,10 +262,14 @@ export default function TransactionsPage() {
   function clearFilters() {
     setSearch("");
     setFilterCat([]);
-    setFilterMonth("");
+    setFilterMonthFrom("");
+    setFilterMonthTo("");
+    setAmountMin("");
+    setAmountMax("");
+    setUncategorizedOnly(false);
   }
 
-  const hasFilters = search.trim() || filterCat.length > 0 || filterMonth;
+  const hasFilters = search.trim() || filterCat.length > 0 || filterMonthFrom || filterMonthTo || amountMin || amountMax || uncategorizedOnly;
   const allSelected = sorted.length > 0 && selected.size === sorted.length;
   const someSelected = selected.size > 0;
 
@@ -291,78 +309,140 @@ export default function TransactionsPage() {
       </div>
 
       {/* Filters bar */}
-      <div className="flex flex-wrap gap-2 items-center">
-        {/* Search */}
-        <div className="relative flex-1 min-w-48">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 pacioli-text-muted pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Search merchant or category…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pacioli-bg-input border rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-indigo-500 pacioli-text-primary placeholder:pacioli-text-muted"
-          />
-          {search && (
-            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 pacioli-text-muted hover:pacioli-text-primary">
-              <X size={13} />
+      <div className="space-y-2">
+        {/* Row 1: search + date range + category + amount toggle */}
+        <div className="flex flex-wrap gap-2 items-center">
+          {/* Search */}
+          <div className="relative flex-1 min-w-48">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 pacioli-text-muted pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search merchant or category…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pacioli-bg-input border rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-indigo-500 pacioli-text-primary placeholder:pacioli-text-muted"
+            />
+            {search && (
+              <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 pacioli-text-muted hover:pacioli-text-primary">
+                <X size={13} />
+              </button>
+            )}
+          </div>
+
+          {/* Date range */}
+          <select
+            value={filterMonthFrom}
+            onChange={(e) => setFilterMonthFrom(e.target.value)}
+            className="pacioli-bg-input border rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 pacioli-text-primary"
+          >
+            <option value="">From…</option>
+            {allMonths.slice().reverse().map((m) => (
+              <option key={m} value={m}>{formatMonth(m)}</option>
+            ))}
+          </select>
+          <select
+            value={filterMonthTo}
+            onChange={(e) => setFilterMonthTo(e.target.value)}
+            className="pacioli-bg-input border rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 pacioli-text-primary"
+          >
+            <option value="">To…</option>
+            {allMonths.slice().reverse().map((m) => (
+              <option key={m} value={m}>{formatMonth(m)}</option>
+            ))}
+          </select>
+
+          {/* Category filter */}
+          <div className="relative">
+            <button
+              onClick={() => setCatFilterOpen((o) => !o)}
+              className={`flex items-center gap-2 px-3 py-2 border rounded-xl text-sm transition-colors ${filterCat.length > 0 ? "border-indigo-500 text-indigo-400" : "pacioli-text-muted pacioli-bg-input hover:pacioli-text-primary"}`}
+            >
+              <Filter size={13} />
+              {filterCat.length > 0 ? `${filterCat.length} categories` : "Category"}
+            </button>
+            {catFilterOpen && (
+              <div className="absolute z-50 mt-1 left-0 w-48 pacioli-bg-surface border rounded-xl shadow-xl overflow-hidden max-h-72 overflow-y-auto">
+                {allCategories.map((cat) => {
+                  const active = filterCat.includes(cat);
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setFilterCat((prev) => active ? prev.filter((c) => c !== cat) : [...prev, cat])}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs transition-colors ${active ? "pacioli-bg-surface-2 pacioli-accent" : "pacioli-text-secondary pacioli-bg-nav-hover"}`}
+                    >
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: CATEGORY_COLORS[cat] ?? "#71717a" }} />
+                      {cat}
+                      {active && <Check size={11} className="ml-auto" />}
+                    </button>
+                  );
+                })}
+                {filterCat.length > 0 && (
+                  <button
+                    onClick={() => { setFilterCat([]); setCatFilterOpen(false); }}
+                    className="w-full px-3 py-2 text-xs text-center pacioli-text-muted border-t pacioli-border-subtle hover:pacioli-text-primary"
+                  >
+                    Clear filter
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Amount filter toggle */}
+          <button
+            onClick={() => setShowAmountFilter((o) => !o)}
+            className={`flex items-center gap-2 px-3 py-2 border rounded-xl text-sm transition-colors ${(amountMin || amountMax) ? "border-indigo-500 text-indigo-400" : "pacioli-text-muted pacioli-bg-input hover:pacioli-text-primary"}`}
+          >
+            $ Amount
+          </button>
+
+          {/* Uncategorized quick filter */}
+          <button
+            onClick={() => { setUncategorizedOnly((o) => !o); setFilterCat([]); }}
+            className={`flex items-center gap-2 px-3 py-2 border rounded-xl text-sm transition-colors ${uncategorizedOnly ? "border-amber-500 text-amber-400" : "pacioli-text-muted pacioli-bg-input hover:pacioli-text-primary"}`}
+          >
+            Uncategorized
+          </button>
+
+          {/* Clear filters */}
+          {hasFilters && (
+            <button onClick={clearFilters} className="flex items-center gap-1.5 text-xs pacioli-text-muted hover:pacioli-text-primary transition-colors">
+              <X size={12} /> Clear all
             </button>
           )}
         </div>
 
-        {/* Month filter */}
-        <select
-          value={filterMonth}
-          onChange={(e) => setFilterMonth(e.target.value)}
-          className="pacioli-bg-input border rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 pacioli-text-primary"
-        >
-          <option value="">All months</option>
-          {allMonths.map((m) => (
-            <option key={m} value={m}>{formatMonth(m)}</option>
-          ))}
-        </select>
-
-        {/* Category filter */}
-        <div className="relative">
-          <button
-            onClick={() => setCatFilterOpen((o) => !o)}
-            className={`flex items-center gap-2 px-3 py-2 border rounded-xl text-sm transition-colors ${filterCat.length > 0 ? "border-indigo-500 text-indigo-400" : "pacioli-text-muted pacioli-bg-input hover:pacioli-text-primary"}`}
-          >
-            <Filter size={13} />
-            {filterCat.length > 0 ? `${filterCat.length} categories` : "Category"}
-          </button>
-          {catFilterOpen && (
-            <div className="absolute z-50 mt-1 left-0 w-48 pacioli-bg-surface border rounded-xl shadow-xl overflow-hidden">
-              {allCategories.map((cat) => {
-                const active = filterCat.includes(cat);
-                return (
-                  <button
-                    key={cat}
-                    onClick={() => setFilterCat((prev) => active ? prev.filter((c) => c !== cat) : [...prev, cat])}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs transition-colors ${active ? "pacioli-bg-surface-2 pacioli-accent" : "pacioli-text-secondary pacioli-bg-nav-hover"}`}
-                  >
-                    <span className="w-2 h-2 rounded-full shrink-0" style={{ background: CATEGORY_COLORS[cat] ?? "#71717a" }} />
-                    {cat}
-                    {active && <Check size={11} className="ml-auto" />}
-                  </button>
-                );
-              })}
-              {filterCat.length > 0 && (
-                <button
-                  onClick={() => { setFilterCat([]); setCatFilterOpen(false); }}
-                  className="w-full px-3 py-2 text-xs text-center pacioli-text-muted border-t pacioli-border-subtle hover:pacioli-text-primary"
-                >
-                  Clear filter
-                </button>
-              )}
+        {/* Row 2: amount range (expandable) */}
+        {showAmountFilter && (
+          <div className="flex items-center gap-2">
+            <span className="text-xs pacioli-text-muted">Amount:</span>
+            <div className="relative">
+              <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs pacioli-text-muted">$</span>
+              <input
+                type="number"
+                placeholder="Min"
+                value={amountMin}
+                onChange={(e) => setAmountMin(e.target.value)}
+                className="w-28 pacioli-bg-input border rounded-xl pl-6 pr-3 py-1.5 text-sm focus:outline-none focus:border-indigo-500 pacioli-text-primary"
+              />
             </div>
-          )}
-        </div>
-
-        {/* Clear filters */}
-        {hasFilters && (
-          <button onClick={clearFilters} className="flex items-center gap-1.5 text-xs pacioli-text-muted hover:pacioli-text-primary transition-colors">
-            <X size={12} /> Clear all
-          </button>
+            <span className="text-xs pacioli-text-muted">–</span>
+            <div className="relative">
+              <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs pacioli-text-muted">$</span>
+              <input
+                type="number"
+                placeholder="Max"
+                value={amountMax}
+                onChange={(e) => setAmountMax(e.target.value)}
+                className="w-28 pacioli-bg-input border rounded-xl pl-6 pr-3 py-1.5 text-sm focus:outline-none focus:border-indigo-500 pacioli-text-primary"
+              />
+            </div>
+            {(amountMin || amountMax) && (
+              <button onClick={() => { setAmountMin(""); setAmountMax(""); }} className="text-xs pacioli-text-muted hover:pacioli-text-primary">
+                <X size={12} />
+              </button>
+            )}
+          </div>
         )}
       </div>
 
