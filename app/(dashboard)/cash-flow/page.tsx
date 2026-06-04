@@ -7,10 +7,6 @@ import {
   Transaction, MonthIncome,
 } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
-import { useTheme } from "@/components/theme-provider";
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
-} from "recharts";
 import { ChevronLeft, Tag, BookOpen, Trash2, CheckCircle2 } from "lucide-react";
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -21,29 +17,17 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 const ALL_CATEGORIES = [
   "Housing", "Groceries", "Dining Out", "Transport", "Subscriptions",
-  "Health", "Shopping", "Travel", "Entertainment", "Savings", "Other",
+  "Health", "Shopping", "Travel", "Entertainment", "Childcare", "Kids Activities", "Savings", "Other",
 ];
+
+// Fixed-cost categories for waterfall grouping
+const FIXED_CATEGORIES = new Set(["Housing", "Subscriptions", "Childcare"]);
+const VARIABLE_CATEGORIES = new Set(["Groceries", "Dining Out", "Transport", "Health", "Shopping", "Travel", "Entertainment", "Kids Activities", "Other"]);
 
 
 export default function CashFlow() {
   const { isDemo } = useDemo();
   const ns = isDemo ? "demo" : "";
-  const { theme } = useTheme();
-
-  const chartTheme = useMemo(() => {
-    if (typeof window === "undefined") return {
-      tooltipBg: "#18181b", tooltipBorder: "rgba(63,63,70,0.5)",
-      textMuted: "#71717a", textSecondary: "#d4d4d8",
-    };
-    const s = getComputedStyle(document.documentElement);
-    return {
-      tooltipBg:     s.getPropertyValue("--bg-surface").trim()    || "#18181b",
-      tooltipBorder: s.getPropertyValue("--border").trim()         || "rgba(63,63,70,0.5)",
-      textMuted:     s.getPropertyValue("--text-muted").trim()     || "#71717a",
-      textSecondary: s.getPropertyValue("--text-secondary").trim() || "#d4d4d8",
-    };
-  }, [theme]);
-
   const [income, setIncome] = useState<MonthIncome[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>("");
   const [drillCategory, setDrillCategory] = useState<string | null>(null);
@@ -93,19 +77,6 @@ export default function CashFlow() {
   if (!transactions.length || !activeMonth) return <div className="pacioli-text-muted animate-pulse">Loading cash flow...</div>;
 
   const months = allTxMonths;
-
-  // Monthly summary for bar chart
-  const monthlyData = months.map((m) => {
-    const inc = income.find((i) => i.month === m);
-    const totalIncome = inc ? inc.sources.reduce((s, src) => s + src.amount, 0) : 0;
-    const spend = getMonthlySpend(transactions, m);
-    const totalSpend = Object.values(spend).reduce((s, v) => s + v, 0);
-    return {
-      month: formatMonth(m),
-      Income: Math.round(totalIncome),
-      Spending: Math.round(totalSpend),
-    };
-  });
 
   // Selected month breakdown
   const spendByCat = getMonthlySpend(transactions, activeMonth);
@@ -261,6 +232,20 @@ export default function CashFlow() {
     );
   }
 
+  // ── Waterfall data ──
+  const fixedSpend = catBreakdown.filter(c => FIXED_CATEGORIES.has(c.cat)).reduce((s, c) => s + c.amount, 0);
+  const variableSpend = catBreakdown.filter(c => VARIABLE_CATEGORIES.has(c.cat)).reduce((s, c) => s + c.amount, 0);
+  const surplus = totalIncome - totalSpend;
+  const savingsRate = totalIncome > 0 ? Math.round((surplus / totalIncome) * 100) : 0;
+
+  // Waterfall bar widths as % of income
+  const fixedPct   = totalIncome > 0 ? (fixedSpend / totalIncome) * 100 : 0;
+  const varPct     = totalIncome > 0 ? (variableSpend / totalIncome) * 100 : 0;
+  const surplusPct = totalIncome > 0 ? Math.max(0, (surplus / totalIncome) * 100) : 0;
+
+  // Income sources for the month
+  const incomeSources = thisIncome?.sources ?? [];
+
   // ── Main cash flow view ──
   return (
     <div className="space-y-8">
@@ -287,37 +272,81 @@ export default function CashFlow() {
         </div>
       </div>
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {[
-          { label: "Income", value: totalIncome, color: "pacioli-text-success" },
-          { label: "Spending", value: totalSpend, color: "pacioli-text-danger" },
-          { label: "Net Cash Flow", value: net, color: net >= 0 ? "pacioli-text-success" : "pacioli-text-danger" },
-        ].map(({ label, value, color }) => (
-          <div key={label} className="pacioli-bg-surface rounded-2xl p-5 border">
-            <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">{label}</p>
-            <p className={`text-2xl font-bold ${color}`}>{value >= 0 ? "" : "−"}{formatCurrency(Math.abs(value))}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Income vs Spending bar chart */}
+      {/* ── Cash Waterfall ── */}
       <div className="pacioli-bg-surface rounded-2xl p-6 border">
-        <h3 className="text-sm font-semibold pacioli-text-secondary mb-4">Income vs. Spending — 12 Months</h3>
-        <ResponsiveContainer width="100%" height={240}>
-          <BarChart data={monthlyData} barGap={4}>
-            <XAxis dataKey="month" tick={{ fill: chartTheme.textMuted, fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} tick={{ fill: chartTheme.textMuted, fontSize: 11 }} axisLine={false} tickLine={false} width={50} />
-            <Tooltip
-              formatter={(v: unknown, name: unknown) => [formatCurrency(Number(v)), String(name)]}
-              contentStyle={{ background: chartTheme.tooltipBg, border: `1px solid ${chartTheme.tooltipBorder}`, borderRadius: 8 }}
-              labelStyle={{ color: chartTheme.textMuted }}
-            />
-            <Legend wrapperStyle={{ color: chartTheme.textSecondary, fontSize: 12 }} />
-            <Bar dataKey="Income" fill="#10b981" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="Spending" fill="#6366f1" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="flex items-start justify-between mb-6">
+          <div>
+            <h3 className="text-sm font-semibold pacioli-text-secondary">Cash Flow — {formatMonth(activeMonth)}</h3>
+            <p className="text-xs pacioli-text-muted mt-0.5">Where every dollar of income goes</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs pacioli-text-muted">Savings rate</p>
+            <p className={`text-2xl font-bold ${savingsRate >= 20 ? "pacioli-text-success" : "pacioli-text-warning"}`}>{savingsRate}%</p>
+          </div>
+        </div>
+
+        {/* Waterfall bar */}
+        <div className="w-full h-10 rounded-xl overflow-hidden flex gap-0.5 mb-4">
+          <div className="h-10 bg-emerald-500/80 flex items-center justify-center transition-all duration-500"
+            style={{ width: `${fixedPct}%` }} title={`Fixed costs: ${formatCurrency(fixedSpend)}`}>
+            {fixedPct > 8 && <span className="text-[10px] font-semibold text-white truncate px-1">Fixed</span>}
+          </div>
+          <div className="h-10 bg-indigo-500/80 flex items-center justify-center transition-all duration-500"
+            style={{ width: `${varPct}%` }} title={`Variable: ${formatCurrency(variableSpend)}`}>
+            {varPct > 8 && <span className="text-[10px] font-semibold text-white truncate px-1">Variable</span>}
+          </div>
+          <div className="h-10 bg-teal-600/40 border border-teal-600/30 flex items-center justify-center rounded-r-xl transition-all duration-500"
+            style={{ width: `${surplusPct}%` }} title={`Surplus: ${formatCurrency(surplus)}`}>
+            {surplusPct > 8 && <span className="text-[10px] font-semibold text-teal-300 truncate px-1">Saved</span>}
+          </div>
+        </div>
+
+        {/* Three columns */}
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <p className="text-xs font-medium text-emerald-400">Fixed Costs</p>
+            </div>
+            <p className="text-xl font-bold pacioli-text-primary">{formatCurrency(fixedSpend)}</p>
+            <p className="text-xs pacioli-text-muted mt-0.5">{Math.round(fixedPct)}% of income</p>
+            <p className="text-xs pacioli-text-muted mt-2 leading-relaxed">Housing, childcare, subscriptions</p>
+          </div>
+          <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="w-2 h-2 rounded-full bg-indigo-500" />
+              <p className="text-xs font-medium text-indigo-400">Variable Spending</p>
+            </div>
+            <p className="text-xl font-bold pacioli-text-primary">{formatCurrency(variableSpend)}</p>
+            <p className="text-xs pacioli-text-muted mt-0.5">{Math.round(varPct)}% of income</p>
+            <p className="text-xs pacioli-text-muted mt-2 leading-relaxed">Groceries, dining, travel, etc.</p>
+          </div>
+          <div className="p-4 rounded-xl bg-teal-500/10 border border-teal-500/20">
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="w-2 h-2 rounded-full bg-teal-500" />
+              <p className="text-xs font-medium text-teal-400">Net Surplus</p>
+            </div>
+            <p className={`text-xl font-bold ${surplus >= 0 ? "pacioli-text-success" : "pacioli-text-danger"}`}>{formatCurrency(Math.abs(surplus))}</p>
+            <p className="text-xs pacioli-text-muted mt-0.5">{savingsRate}% savings rate</p>
+            <p className="text-xs pacioli-text-muted mt-2 leading-relaxed">Available to save or invest</p>
+          </div>
+        </div>
+
+        {/* Income sources */}
+        {incomeSources.length > 0 && (
+          <div className="border-t pacioli-border-subtle pt-4">
+            <p className="text-xs font-semibold pacioli-text-secondary mb-3">Income Sources — {formatMonth(activeMonth)}</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {incomeSources.map((src) => (
+                <div key={src.label} className="p-3 pacioli-bg-surface-2 rounded-xl">
+                  <p className="text-xs pacioli-text-muted truncate mb-1">{src.label}</p>
+                  <p className="text-sm font-bold pacioli-text-primary">{formatCurrency(src.amount)}</p>
+                  <p className="text-[10px] pacioli-text-faint mt-0.5 capitalize">{src.type}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Category breakdown + recent transactions */}
@@ -340,7 +369,10 @@ export default function CashFlow() {
                       <span className="w-2 h-2 rounded-full inline-block" style={{ background: color }} />
                       {cat}
                     </span>
-                    <span className="pacioli-text-primary font-medium">{formatCurrency(amount)}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs pacioli-text-muted">{Math.round(pct)}%</span>
+                      <span className="pacioli-text-primary font-medium">{formatCurrency(amount)}</span>
+                    </div>
                   </div>
                   <div className="w-full h-1.5 pacioli-bar-track rounded-full">
                     <div className="h-1.5 rounded-full transition-all" style={{ width: `${pct}%`, background: color }} />
@@ -352,7 +384,6 @@ export default function CashFlow() {
         </div>
 
         <div className="pacioli-bg-surface rounded-2xl p-6 border">
-          {/* Review mode banner — shown when arriving from CSV import */}
           {reviewMode && (
             <div className="flex items-center justify-between gap-3 mb-4 px-3 py-2.5 pacioli-alert-warning border rounded-xl">
               <div className="flex items-center gap-2">
@@ -364,15 +395,11 @@ export default function CashFlow() {
                   }
                 </p>
               </div>
-              <button
-                onClick={() => setReviewMode(false)}
-                className="text-xs pacioli-text-muted hover:pacioli-text-primary transition-colors shrink-0"
-              >
+              <button onClick={() => setReviewMode(false)} className="text-xs pacioli-text-muted hover:pacioli-text-primary transition-colors shrink-0">
                 Show all
               </button>
             </div>
           )}
-
           <h3 className="text-sm font-semibold pacioli-text-secondary mb-4">
             {reviewMode ? "Uncategorized Transactions" : "Recent Transactions"}
           </h3>
