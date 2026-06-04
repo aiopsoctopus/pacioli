@@ -141,6 +141,10 @@ export default function LandingPage() {
   function handleTryDemo() {
     localStorage.setItem("pacioli-demo-mode", "true");
     localStorage.setItem("pacioli-setup-complete", "demo");
+    // Ensure light mode for sandbox (don't inherit a stale dark preference)
+    if (!localStorage.getItem("hfos-theme")) {
+      localStorage.setItem("hfos-theme", "light");
+    }
     window.location.href = "/zoom-out?demo=true";
   }
 

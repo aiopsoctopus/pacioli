@@ -2,22 +2,31 @@
 /**
  * SetupGuard — soft redirect
  *
- * If the user has never been through /setup AND is not in demo mode,
- * shows a gentle banner nudging them toward setup. It does NOT hard-block
- * navigation — the user can dismiss and use the app freely.
+ * Now that auth exists, any signed-in user is considered "set up".
+ * We auto-mark setup complete on mount so the guard never fires for
+ * authenticated users. It only shows the nudge banner if somehow
+ * setup is missing AND the user isn't in demo mode AND hasn't dismissed.
  */
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Sparkles, X } from "lucide-react";
+import { useAuth } from "@clerk/nextjs";
 
 const SETUP_KEY = "pacioli-setup-complete";
 const DEMO_KEY  = "pacioli-demo-mode";
 const DISMISS_BANNER_KEY = "pacioli-setup-banner-dismissed";
 
 export default function SetupGuard() {
+  const { isSignedIn } = useAuth();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    // Authenticated users are always considered set up
+    if (isSignedIn) {
+      localStorage.setItem(SETUP_KEY, "true");
+      return;
+    }
+
     const setupDone = localStorage.getItem(SETUP_KEY);
     const isDemo    = localStorage.getItem(DEMO_KEY) === "true";
     const dismissed = localStorage.getItem(DISMISS_BANNER_KEY) === "true";
@@ -25,7 +34,7 @@ export default function SetupGuard() {
     if (!setupDone && !isDemo && !dismissed) {
       setShow(true);
     }
-  }, []);
+  }, [isSignedIn]);
 
   function dismiss() {
     localStorage.setItem(DISMISS_BANNER_KEY, "true");

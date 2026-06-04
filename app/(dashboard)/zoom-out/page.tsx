@@ -266,7 +266,7 @@ function EmptyState() {
 
       <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", justifyContent: "center" }}>
         <Link
-          href="/setup"
+          href="/connect"
           style={{
             display: "inline-flex", alignItems: "center", gap: "8px",
             background: "#0d6e6e",
@@ -281,7 +281,7 @@ function EmptyState() {
           <Upload size={16} /> Connect my data
         </Link>
         <Link
-          href="/setup"
+          href="/connect"
           style={{
             display: "inline-flex", alignItems: "center", gap: "8px",
             background: "rgba(83,74,183,0.12)",

@@ -13,6 +13,12 @@ export async function POST() {
     products: [Products.Transactions],
     country_codes: [CountryCode.Us],
     language: "en",
+    // Use instant match to avoid microdeposit / phone MFA flows
+    auth: {
+      automated_microdeposits_enabled: false,
+      instant_match_enabled: true,
+      same_day_microdeposits_enabled: false,
+    },
   });
 
   return NextResponse.json({ link_token: response.data.link_token });

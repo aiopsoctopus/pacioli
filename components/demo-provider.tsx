@@ -43,6 +43,11 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
     setIsDemo(true);
     localStorage.setItem(DEMO_STORAGE_KEY, "true");
     localStorage.setItem("pacioli-setup-complete", "demo");
+    // Default to light mode when entering sandbox (don't inherit a stale dark preference)
+    if (!localStorage.getItem("hfos-theme")) {
+      localStorage.setItem("hfos-theme", "light");
+      document.documentElement.setAttribute("data-theme", "light");
+    }
     // Update URL without reload so the link stays shareable
     const url = new URL(window.location.href);
     url.searchParams.set("demo", "true");

@@ -164,6 +164,13 @@ export default function PlaidLinkButton({ onSync }: { onSync?: () => void }) {
         <span className="font-semibold text-amber-400">Privacy note:</span> Plaid routes your bank data through their infrastructure. Unlike CSV import (which stays 100% on your device), connecting a live bank shares data with a third party. <a href="https://plaid.com/legal/privacy-statement/" target="_blank" rel="noopener noreferrer" className="underline opacity-70 hover:opacity-100">Plaid privacy policy ↗</a>
       </div>
 
+      {/* Sandbox test credentials note */}
+      {process.env.NEXT_PUBLIC_PLAID_ENV === "sandbox" && (
+        <div className="text-xs pacioli-text-muted bg-indigo-500/8 border border-indigo-500/20 rounded-lg px-3 py-2.5 leading-relaxed">
+          <span className="font-semibold text-indigo-400">Sandbox mode:</span> Use test credentials — username <span className="font-mono">user_good</span>, password <span className="font-mono">pass_good</span>. If asked for a phone number or MFA code, enter <span className="font-mono">1234</span>.
+        </div>
+      )}
+
       {/* Error */}
       {error && (
         <div className="flex items-start gap-2 p-3 pacioli-alert-danger border rounded-lg">
