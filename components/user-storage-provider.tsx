@@ -17,6 +17,11 @@ export default function UserStorageProvider({ children }: { children: React.Reac
   useEffect(() => {
     if (isLoaded && userId) {
       migrateLocalStorageToUser(userId);
+      // Default new users to light mode — don't inherit a stale dark preference
+      if (!localStorage.getItem("hfos-theme")) {
+        localStorage.setItem("hfos-theme", "light");
+        document.documentElement.setAttribute("data-theme", "light");
+      }
     }
   }, [isLoaded, userId]);
 
