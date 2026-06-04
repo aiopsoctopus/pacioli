@@ -32,13 +32,13 @@ const FEATURES = [
   },
   {
     icon: Shield,
-    title: "100% private",
-    body: "No accounts, no servers, no telemetry. Your numbers live in your browser and nowhere else.",
+    title: "Privacy-first by default",
+    body: "CSV imports stay 100% on your device. Optional Plaid connection for live bank sync — your choice, clearly disclosed.",
   },
 ];
 
 const STAT_ITEMS = [
-  { value: "100%", label: "Private — your data never leaves your device" },
+  { value: "CSV", label: "Imports stay 100% on your device — or connect live via Plaid" },
   { value: "6mo", label: "Of spending history analysed per budget category" },
   { value: "12mo", label: "Net worth forecast based on your real numbers" },
   { value: "0", label: "Subscriptions, trackers, or third-party accounts" },
@@ -313,7 +313,7 @@ export default function LandingPage() {
 
         {/* Trust note */}
         <p style={{ marginTop: "24px", fontSize: "12px", color: c.textTrust, transition: "color 0.2s" }}>
-          Free · No credit card · No tracking · Your data stays on your device
+          Free · No credit card · No telemetry · CSV imports never leave your device
         </p>
       </section>
 

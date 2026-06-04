@@ -62,6 +62,7 @@ export default function ForecastView() {
   const [earnerVersion, setEarnerVersion] = useState(0);
   const [mortgageVersion, setMortgageVersion] = useState(0);
   const [collegeVersion, setCollegeVersion] = useState(0);
+  const [householdOpen, setHouseholdOpen] = useState(false);
 
   const transactions = useTransactions(ns);
 
@@ -331,11 +332,27 @@ export default function ForecastView() {
           Connect data
         </a>
       </div>
-      {/* Household modeling panels — always available even before data is imported */}
-      <EquityGrants onChange={() => setEquityVersion((v) => v + 1)} />
-      <TwoEarnerModel onChange={() => setEarnerVersion((v) => v + 1)} />
-      <MortgageAccelerator onChange={() => setMortgageVersion((v) => v + 1)} />
-      <CollegeFund onChange={() => setCollegeVersion((v) => v + 1)} />
+      {/* Household modeling panels — collapsible, available even before data imported */}
+      <div className="border pacioli-border rounded-xl overflow-hidden">
+        <button
+          onClick={() => setHouseholdOpen((o) => !o)}
+          className="w-full flex items-center justify-between px-4 py-3 pacioli-bg-surface-2 hover:opacity-90 transition-opacity"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold pacioli-text-secondary uppercase tracking-wide">Household Models</span>
+            <span className="text-xs pacioli-text-faint">Equity · Two-earner · Mortgage · College</span>
+          </div>
+          <span className="text-xs pacioli-text-muted">{householdOpen ? "▲" : "▼"}</span>
+        </button>
+        {householdOpen && (
+          <div className="p-4 space-y-4 border-t pacioli-border">
+            <EquityGrants onChange={() => setEquityVersion((v) => v + 1)} />
+            <TwoEarnerModel onChange={() => setEarnerVersion((v) => v + 1)} />
+            <MortgageAccelerator onChange={() => setMortgageVersion((v) => v + 1)} />
+            <CollegeFund onChange={() => setCollegeVersion((v) => v + 1)} />
+          </div>
+        )}
+      </div>
     </div>
   );
 
@@ -473,11 +490,27 @@ export default function ForecastView() {
             </div>
           </div>
 
-          {/* Household modeling panels */}
-          <EquityGrants onChange={() => setEquityVersion((v) => v + 1)} />
-          <TwoEarnerModel onChange={() => setEarnerVersion((v) => v + 1)} />
-          <MortgageAccelerator onChange={() => setMortgageVersion((v) => v + 1)} />
-          <CollegeFund onChange={() => setCollegeVersion((v) => v + 1)} />
+          {/* Household modeling panels — collapsible */}
+          <div className="border pacioli-border rounded-xl overflow-hidden mt-1">
+            <button
+              onClick={() => setHouseholdOpen((o) => !o)}
+              className="w-full flex items-center justify-between px-4 py-3 pacioli-bg-surface-2 hover:opacity-90 transition-opacity"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold pacioli-text-secondary uppercase tracking-wide">Household Models</span>
+                <span className="text-xs pacioli-text-faint">Equity · Two-earner · Mortgage · College</span>
+              </div>
+              <span className="text-xs pacioli-text-muted">{householdOpen ? "▲" : "▼"}</span>
+            </button>
+            {householdOpen && (
+              <div className="p-4 space-y-4 border-t pacioli-border">
+                <EquityGrants onChange={() => setEquityVersion((v) => v + 1)} />
+                <TwoEarnerModel onChange={() => setEarnerVersion((v) => v + 1)} />
+                <MortgageAccelerator onChange={() => setMortgageVersion((v) => v + 1)} />
+                <CollegeFund onChange={() => setCollegeVersion((v) => v + 1)} />
+              </div>
+            )}
+          </div>
 
           {scenarioEvents.length > 0 && (
             <div className="space-y-3">

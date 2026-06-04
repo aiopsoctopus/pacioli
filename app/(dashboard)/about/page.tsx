@@ -66,34 +66,35 @@ export default function AboutPage() {
 
       {/* Privacy */}
       <Section>
-        <SectionTitle icon={<Shield size={18} />}>Your data never leaves your device</SectionTitle>
+        <SectionTitle icon={<Shield size={18} />}>Privacy, clearly explained</SectionTitle>
         <p className="text-sm pacioli-text-secondary leading-relaxed">
-          This is the thing I'm most deliberate about. Pacioli has no backend, no database, no user accounts,
-          and no telemetry. Your financial data — CSV imports, category rules, budget amounts, everything you
-          add or change — is written to your browser's local storage and never sent anywhere.
+          Pacioli gives you two ways to get your data in, with different privacy tradeoffs — and I want to
+          be upfront about both.
         </p>
-        <p className="text-sm pacioli-text-secondary leading-relaxed">
-          I know "local storage" can sound technical, so here's the clearest way I can put it: the app code
-          is hosted on Vercel and loads in your browser like any website. But there's a meaningful difference
-          between the <span className="font-medium pacioli-text-primary">code</span> (which downloads once, like a webpage)
-          and your <span className="font-medium pacioli-text-primary">data</span> (which never goes back up).
-          Think of it like downloading a spreadsheet template — the template came from the internet, but your
-          numbers stay on your computer. Pacioli works the same way.
-        </p>
-        <div className="p-4 pacioli-bg-surface-2 border pacioli-border rounded-xl">
-          <p className="text-xs pacioli-text-secondary leading-relaxed">
-            <span className="font-semibold pacioli-accent">You can verify this yourself.</span> Open
-            DevTools → Network tab, then import a CSV. You'll see zero outbound requests carrying your data —
-            because none are made. Compare that to apps like Mint, YNAB, or Copilot, which store your
-            transaction history and spending patterns on their servers. That's a real tradeoff. Pacioli
-            makes the opposite choice.
-          </p>
+        <div className="space-y-3">
+          <div className="p-4 pacioli-bg-surface-2 border pacioli-border rounded-xl space-y-1">
+            <p className="text-sm font-semibold pacioli-text-primary">CSV import — fully local</p>
+            <p className="text-xs pacioli-text-secondary leading-relaxed">
+              Export a CSV from your bank and drop it in. Your transaction data is stored in your browser's
+              local storage and <span className="font-medium pacioli-text-primary">never leaves your device</span>.
+              No server, no database, no telemetry. You can verify this in DevTools → Network — zero outbound
+              requests carry your data.
+            </p>
+          </div>
+          <div className="p-4 pacioli-bg-surface-2 border pacioli-border rounded-xl space-y-1">
+            <p className="text-sm font-semibold pacioli-text-primary">Plaid live connection — optional, disclosed</p>
+            <p className="text-xs pacioli-text-secondary leading-relaxed">
+              Connecting a live bank via Plaid is faster and stays up to date automatically — but it routes
+              your bank credentials and transaction history through Plaid's infrastructure. That's a real
+              tradeoff. It's opt-in, clearly labeled, and you can use CSV import instead if you'd rather keep
+              everything local. See <a href="https://plaid.com/legal/privacy-statement/" target="_blank" rel="noopener noreferrer" className="pacioli-accent underline">Plaid's privacy policy</a>.
+            </p>
+          </div>
         </div>
         <p className="text-xs pacioli-text-muted leading-relaxed">
-          <span className="font-medium pacioli-text-secondary">A note on Plaid:</span> A future version of Pacioli
-          will optionally support live bank connections via Plaid. That will change this story — Plaid
-          connects to your accounts through their servers. I'll make that tradeoff explicit and opt-in when
-          the time comes. For now, everything stays local.
+          Your account (used to sign in) is managed by <a href="https://clerk.com/legal/privacy" target="_blank" rel="noopener noreferrer" className="pacioli-accent underline">Clerk</a>.
+          No financial data is stored there — only your email address for authentication.
+          There is no telemetry, no ad tracking, and no analytics on your usage.
         </p>
       </Section>
 
@@ -137,14 +138,13 @@ export default function AboutPage() {
       <Section>
         <SectionTitle icon={<Upload size={18} />}>Recommended first steps</SectionTitle>
         <p className="text-sm pacioli-text-secondary mb-2">
-          The app comes pre-loaded with sample data so every page works out of the box. When you're ready
-          to use your real numbers, here's the workflow:
+          Here's the quickest path to seeing your real numbers:
         </p>
         <div className="space-y-2">
           <Step
             n={1}
-            label="Import your transactions"
-            sub="Export a CSV from your bank and upload it on the Connect page."
+            label="Connect your data"
+            sub="Upload a CSV from your bank, or connect a live bank account via Plaid on the Connect page."
             href="/connect"
           />
           <Step
