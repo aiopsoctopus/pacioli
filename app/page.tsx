@@ -200,7 +200,7 @@ export default function LandingPage() {
             Try demo
           </button>
           <Link
-            href="/setup"
+            href="/sign-up"
             style={{
               background: c.ctaPrimary,
               borderRadius: "8px",
@@ -272,7 +272,7 @@ export default function LandingPage() {
         {/* CTAs */}
         <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
           <Link
-            href="/setup"
+            href="/sign-up"
             style={{
               display: "inline-flex", alignItems: "center", gap: "8px",
               background: c.ctaPrimary,
@@ -308,7 +308,7 @@ export default function LandingPage() {
 
         {/* Trust note */}
         <p style={{ marginTop: "24px", fontSize: "12px", color: c.textTrust, transition: "color 0.2s" }}>
-          No sign-up · No credit card · No tracking · Open in seconds
+          Free · No credit card · No tracking · Your data stays on your device
         </p>
       </section>
 
@@ -391,11 +391,11 @@ export default function LandingPage() {
           Ready to see your real picture?
         </h2>
         <p style={{ color: c.textSecondary, marginBottom: "40px", fontSize: "1rem", transition: "color 0.2s" }}>
-          Takes 2 minutes. No account required.
+          Takes 2 minutes. Free to sign up.
         </p>
         <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
           <Link
-            href="/setup"
+            href="/sign-up"
             style={{
               display: "inline-flex", alignItems: "center", gap: "8px",
               background: c.ctaPrimary,
