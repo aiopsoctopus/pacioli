@@ -16,9 +16,19 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  // Allow demo mode through without requiring sign-in
+  // Allow demo mode through without requiring sign-in.
+  // Check both the URL param (?demo=true) and the demo cookie set by the app.
   const url = new URL(req.url);
-  if (url.searchParams.get("demo") === "true") {
+  const isDemoParam = url.searchParams.get("demo") === "true";
+  const isDemoCookie = req.cookies.get("pacioli-demo-mode")?.value === "true";
+
+  if (isDemoParam || isDemoCookie) {
+    // If URL has ?demo=true, set the cookie for subsequent navigation
+    if (isDemoParam && !isDemoCookie) {
+      const res = NextResponse.next();
+      res.cookies.set("pacioli-demo-mode", "true", { path: "/", sameSite: "lax" });
+      return res;
+    }
     return NextResponse.next();
   }
 

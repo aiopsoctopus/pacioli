@@ -43,11 +43,11 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
     setIsDemo(true);
     localStorage.setItem(DEMO_STORAGE_KEY, "true");
     localStorage.setItem("pacioli-setup-complete", "demo");
-    // Default to light mode when entering sandbox (don't inherit a stale dark preference)
-    if (!localStorage.getItem("hfos-theme")) {
-      localStorage.setItem("hfos-theme", "light");
-      document.documentElement.setAttribute("data-theme", "light");
-    }
+    // Set cookie so middleware allows navigation without auth
+    document.cookie = "pacioli-demo-mode=true; path=/; samesite=lax";
+    // Default to light mode when entering sandbox
+    localStorage.setItem("hfos-theme", "light");
+    document.documentElement.setAttribute("data-theme", "light");
     // Update URL without reload so the link stays shareable
     const url = new URL(window.location.href);
     url.searchParams.set("demo", "true");
@@ -59,6 +59,8 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(DEMO_STORAGE_KEY, "false");
     localStorage.removeItem("pacioli-setup-complete");
     localStorage.removeItem("pacioli-setup-banner-dismissed");
+    // Clear demo cookie so middleware resumes auth requirement
+    document.cookie = "pacioli-demo-mode=false; path=/; samesite=lax; max-age=0";
     const url = new URL(window.location.href);
     url.searchParams.delete("demo");
     window.history.replaceState({}, "", url.toString());

@@ -141,9 +141,11 @@ export default function LandingPage() {
   function handleTryDemo() {
     localStorage.setItem("pacioli-demo-mode", "true");
     localStorage.setItem("pacioli-setup-complete", "demo");
-    // Always force light mode for sandbox — demo should look its best
+    // Always force light mode for sandbox
     localStorage.setItem("hfos-theme", "light");
     document.documentElement.setAttribute("data-theme", "light");
+    // Set cookie so middleware allows all dashboard routes without sign-in
+    document.cookie = "pacioli-demo-mode=true; path=/; samesite=lax";
     window.location.href = "/zoom-out?demo=true";
   }
 
