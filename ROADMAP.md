@@ -30,11 +30,23 @@ _Last updated: 2026-06-03_
 
 ## 🔲 Phase 2 — Polish & Power Features (Next)
 
-Priority order based on critique session (2026-06-03):
+### 🔴 Critical bugs (from critique session 2026-06-03)
 
-- [ ] **Transactions filtering** — ✅ done (date range, amount range, uncategorized filter)
+- [ ] **Fix `?demo=true` direct URL entry** — navigating directly to any page with `?demo=true` shows empty state; shareable demo link is broken. Must work as a standalone entry point without going through the landing page.
+- [ ] **Chart y-axis baseline** — net worth trend and scenario planner both start y-axis at $0, leaving 90% of chart empty. Should start near the data minimum (~$1.4M for current demo NW).
+- [ ] **Suppress budget alerts early in month** — over-budget alerts fire at day 3 for lumpy categories (travel, annual costs). Apply same `monthProgress < 0.25` guard already used for pace label.
+- [ ] **Sinking funds target date accuracy** — funds past their target date or within the current month show wrong status badge ("On track" when they're actually missed/at risk). Fix status logic to account for elapsed target dates.
+
+### 🟡 High value (from critique session 2026-06-03)
+
+- [ ] **Zoom Out — recommended action callout** — surface one actionable insight on the dashboard (e.g. "Emergency Fund is $8K short with 6 months left — needs $1,334/mo" or "RSU vest this month: do you have a tax reserve?")
+- [ ] **Household Models — real content or proper coming soon** — the collapsed "Equity · Two-earner · Mortgage · College" section currently does nothing visible when expanded; needs either working templates or an explained "coming soon" treatment
 - [ ] **Scenario Planner — Household Models** — implement the Equity, Two-earner, Mortgage, College model templates (currently UI stubs only)
-- [ ] **Budget default envelopes for new demo visitors** — smart setup auto-runs on first visit; stale envelopes auto-wiped ✅ done
+
+### 🟢 Improvements
+
+- [ ] **Transactions filtering** — ✅ done (date range, amount range, uncategorized filter, source column, memos)
+- [ ] **Budget default envelopes for new demo visitors** — ✅ done (smart setup auto-runs; stale envelopes auto-wiped)
 - [ ] **Cash Flow — 12-month savings rate trend** — add a small sparkline showing savings rate over time
 - [ ] **Net Worth — account editing** — let users add/edit/remove accounts without a CSV import
 - [ ] **Transactions — export** — filtered CSV export of visible transactions
