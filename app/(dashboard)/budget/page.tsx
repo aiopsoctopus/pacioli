@@ -337,8 +337,18 @@ export default function BudgetPage() {
 
   useEffect(() => {
     // Re-read envelopes from localStorage when ns (demo mode) changes.
+    let saved = loadBudgetEnvelopes(ns);
+    if (isDemo) {
+      // If demo envelopes were built from old data (total budget < $5k), wipe them
+      // so the user hits smart setup fresh with the upgraded demo transactions.
+      const total = Object.values(saved).reduce((s, e) => s + e.budgetAmount, 0);
+      if (total > 0 && total < 5000) {
+        saveBudgetEnvelopes({}, ns);
+        saved = {};
+      }
+    }
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setEnvelopes(loadBudgetEnvelopes(ns));
+    setEnvelopes(saved);
     if (isDemo) {
       fetchJSON<MonthIncome[]>("income.json").then(setIncome);
     }
@@ -373,6 +383,9 @@ export default function BudgetPage() {
   const avgIncome = avgMonthlyIncome(income, currentMonth, 6);
   const thisMonthIncome = income.find((i) => i.month === currentMonth);
   const mtdIncome = thisMonthIncome?.sources.reduce((s, src) => s + src.amount, 0) ?? 0;
+  const hasIrregularIncome = thisMonthIncome?.sources.some(
+    (s) => s.type === "rsu" || s.type === "rental" || s.type === "bonus"
+  ) ?? false;
 
   // Total budget vs total spent
   const totalBudget = envelopes
@@ -382,8 +395,9 @@ export default function BudgetPage() {
   const totalRemaining = totalBudget - totalSpent;
   const budgetPct = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
   const monthPct = monthProgress * 100;
-  const isAheadOfPace = budgetPct < monthPct - 5;
-  const isBehindPace = budgetPct > monthPct + 5;
+  const tooEarlyForPace = monthProgress < 0.25;
+  const isAheadOfPace = !tooEarlyForPace && budgetPct < monthPct - 5;
+  const isBehindPace = !tooEarlyForPace && budgetPct > monthPct + 5;
 
   function handleSetupComplete(e: Record<string, BudgetEnvelope>) {
     setEnvelopes(e);
@@ -477,6 +491,7 @@ export default function BudgetPage() {
           <p className="text-2xl font-bold pacioli-text-primary">{formatCurrency(mtdIncome)}</p>
           <p className="text-xs pacioli-text-muted mt-1">
             {avgIncome > 0 ? `${Math.round((mtdIncome / avgIncome) * 100)}% of typical ${formatCurrency(avgIncome)}/mo` : ""}
+            {hasIrregularIncome && <span className="ml-1 text-amber-400" title="Includes RSU vest, rental, or bonus income">· incl. irregular</span>}
           </p>
         </div>
         <div className="pacioli-bg-surface rounded-2xl p-5 border">
@@ -493,8 +508,8 @@ export default function BudgetPage() {
         </div>
         <div className="pacioli-bg-surface rounded-2xl p-5 border">
           <p className="text-xs pacioli-text-muted uppercase tracking-wide mb-2">Budget Pace</p>
-          <p className={`text-2xl font-bold ${isAheadOfPace ? "pacioli-text-success" : isBehindPace ? "pacioli-text-warning" : "pacioli-text-success"}`}>
-            {isAheadOfPace ? "Ahead" : isBehindPace ? "Behind" : "On pace"}
+          <p className={`text-2xl font-bold ${tooEarlyForPace ? "pacioli-text-muted" : isAheadOfPace ? "pacioli-text-success" : isBehindPace ? "pacioli-text-warning" : "pacioli-text-success"}`}>
+            {tooEarlyForPace ? "Too early" : isAheadOfPace ? "Ahead" : isBehindPace ? "Behind" : "On pace"}
           </p>
           <p className="text-xs pacioli-text-muted mt-1">
             {Math.round(budgetPct)}% spent · {Math.round(monthPct)}% through {formatMonth(currentMonth)}
