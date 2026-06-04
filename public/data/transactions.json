@@ -53,7 +53,8 @@
     "merchant": "Equinox",
     "category": "Health",
     "amount": 195.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Monthly membership"
   },
   {
     "id": "tx_0618",
@@ -61,7 +62,8 @@
     "merchant": "Apple Store",
     "category": "Shopping",
     "amount": 51.77,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "AirPods Pro replacement"
   },
   {
     "id": "tx_0592",
@@ -69,7 +71,8 @@
     "merchant": "Nobu",
     "category": "Dining Out",
     "amount": 191.37,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Anniversary dinner"
   },
   {
     "id": "tx_0629",
@@ -77,7 +80,8 @@
     "merchant": "Verizon Fios",
     "category": "Housing",
     "amount": 89.99,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Internet & TV"
   },
   {
     "id": "tx_0622",
@@ -125,7 +129,8 @@
     "merchant": "Apple Store",
     "category": "Shopping",
     "amount": 77.58,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "AirPods Pro replacement"
   },
   {
     "id": "tx_0598",
@@ -157,7 +162,8 @@
     "merchant": "Con Edison",
     "category": "Housing",
     "amount": 143.62,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Electric \u2014 May"
   },
   {
     "id": "tx_0582",
@@ -173,7 +179,8 @@
     "merchant": "Delta Airlines",
     "category": "Travel",
     "amount": 649.84,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Summer vacation flights"
   },
   {
     "id": "tx_0597",
@@ -189,7 +196,8 @@
     "merchant": "Airbnb",
     "category": "Travel",
     "amount": 1063.74,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Tahoe weekend"
   },
   {
     "id": "tx_0581",
@@ -237,7 +245,8 @@
     "merchant": "Music Lessons",
     "category": "Kids Activities",
     "amount": 120.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Piano \u2014 weekly"
   },
   {
     "id": "tx_0604",
@@ -245,7 +254,8 @@
     "merchant": "CycleBar",
     "category": "Health",
     "amount": 95.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "10-class pack"
   },
   {
     "id": "tx_0620",
@@ -253,7 +263,8 @@
     "merchant": "YMCA Soccer League",
     "category": "Kids Activities",
     "amount": 85.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Spring season registration"
   },
   {
     "id": "tx_0627",
@@ -269,7 +280,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0612",
@@ -333,7 +345,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0609",
@@ -365,7 +378,8 @@
     "merchant": "Dr. Martinez Copay",
     "category": "Health",
     "amount": 45.45,
-    "account": "cc_chase"
+    "account": "cc_chase",
+    "memo": "Annual physical"
   },
   {
     "id": "tx_0608",
@@ -413,7 +427,8 @@
     "merchant": "Dr. Martinez Copay",
     "category": "Health",
     "amount": 51.12,
-    "account": "cc_chase"
+    "account": "cc_chase",
+    "memo": "Annual physical"
   },
   {
     "id": "tx_0568",
@@ -477,7 +492,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0545",
@@ -485,7 +501,8 @@
     "merchant": "Nobu",
     "category": "Dining Out",
     "amount": 190.51,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Anniversary dinner"
   },
   {
     "id": "tx_0575",
@@ -525,7 +542,8 @@
     "merchant": "Verizon Fios",
     "category": "Housing",
     "amount": 89.99,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Internet & TV"
   },
   {
     "id": "tx_0544",
@@ -677,7 +695,8 @@
     "merchant": "Equinox",
     "category": "Health",
     "amount": 195.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Monthly membership"
   },
   {
     "id": "tx_0570",
@@ -749,7 +768,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0560",
@@ -765,7 +785,8 @@
     "merchant": "Handy.com (Cleaning)",
     "category": "Housing",
     "amount": 180.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Bi-weekly cleaning"
   },
   {
     "id": "tx_0569",
@@ -837,7 +858,8 @@
     "merchant": "HOA Fee",
     "category": "Housing",
     "amount": 425.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly HOA"
   },
   {
     "id": "tx_0489",
@@ -877,7 +899,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0512",
@@ -893,7 +916,8 @@
     "merchant": "Pottery Barn",
     "category": "Shopping",
     "amount": 357.06,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Living room chairs"
   },
   {
     "id": "tx_0488",
@@ -949,7 +973,8 @@
     "merchant": "Dr. Martinez Copay",
     "category": "Health",
     "amount": 42.88,
-    "account": "cc_chase"
+    "account": "cc_chase",
+    "memo": "Annual physical"
   },
   {
     "id": "tx_0515",
@@ -965,7 +990,8 @@
     "merchant": "Verizon Fios",
     "category": "Housing",
     "amount": 89.99,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Internet & TV"
   },
   {
     "id": "tx_0504",
@@ -1021,7 +1047,8 @@
     "merchant": "Handy.com (Cleaning)",
     "category": "Housing",
     "amount": 180.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Bi-weekly cleaning"
   },
   {
     "id": "tx_0496",
@@ -1053,7 +1080,8 @@
     "merchant": "Nobu",
     "category": "Dining Out",
     "amount": 224.62,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Anniversary dinner"
   },
   {
     "id": "tx_0494",
@@ -1085,7 +1113,8 @@
     "merchant": "Pottery Barn",
     "category": "Shopping",
     "amount": 351.91,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Living room chairs"
   },
   {
     "id": "tx_0486",
@@ -1133,7 +1162,8 @@
     "merchant": "Music Lessons",
     "category": "Kids Activities",
     "amount": 120.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Piano \u2014 weekly"
   },
   {
     "id": "tx_0501",
@@ -1229,7 +1259,8 @@
     "merchant": "Music Lessons",
     "category": "Kids Activities",
     "amount": 120.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Piano \u2014 weekly"
   },
   {
     "id": "tx_0455",
@@ -1277,7 +1308,8 @@
     "merchant": "Dr. Martinez Copay",
     "category": "Health",
     "amount": 54.4,
-    "account": "cc_chase"
+    "account": "cc_chase",
+    "memo": "Annual physical"
   },
   {
     "id": "tx_0467",
@@ -1301,7 +1333,8 @@
     "merchant": "Equinox",
     "category": "Health",
     "amount": 195.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Monthly membership"
   },
   {
     "id": "tx_0466",
@@ -1317,7 +1350,8 @@
     "merchant": "Apple Store",
     "category": "Shopping",
     "amount": 55.22,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "AirPods Pro replacement"
   },
   {
     "id": "tx_0484",
@@ -1325,7 +1359,8 @@
     "merchant": "Handy.com (Cleaning)",
     "category": "Housing",
     "amount": 180.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Bi-weekly cleaning"
   },
   {
     "id": "tx_0446",
@@ -1365,7 +1400,8 @@
     "merchant": "Marriott Bonvoy",
     "category": "Travel",
     "amount": 556.4,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "NYC conference stay"
   },
   {
     "id": "tx_0445",
@@ -1421,7 +1457,8 @@
     "merchant": "CycleBar",
     "category": "Health",
     "amount": 95.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "10-class pack"
   },
   {
     "id": "tx_0483",
@@ -1429,7 +1466,8 @@
     "merchant": "Handy.com (Cleaning)",
     "category": "Housing",
     "amount": 180.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Bi-weekly cleaning"
   },
   {
     "id": "tx_0443",
@@ -1453,7 +1491,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0438",
@@ -1469,7 +1508,8 @@
     "merchant": "United Airlines",
     "category": "Travel",
     "amount": 572.72,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Work travel \u2014 reimbursable"
   },
   {
     "id": "tx_0442",
@@ -1509,7 +1549,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0463",
@@ -1629,7 +1670,8 @@
     "merchant": "Equinox",
     "category": "Health",
     "amount": 195.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Monthly membership"
   },
   {
     "id": "tx_0391",
@@ -1693,7 +1735,8 @@
     "merchant": "HOA Fee",
     "category": "Housing",
     "amount": 425.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly HOA"
   },
   {
     "id": "tx_0407",
@@ -1725,7 +1768,8 @@
     "merchant": "CycleBar",
     "category": "Health",
     "amount": 95.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "10-class pack"
   },
   {
     "id": "tx_0400",
@@ -1741,7 +1785,8 @@
     "merchant": "Dr. Martinez Copay",
     "category": "Health",
     "amount": 32.16,
-    "account": "cc_chase"
+    "account": "cc_chase",
+    "memo": "Annual physical"
   },
   {
     "id": "tx_0427",
@@ -1789,7 +1834,8 @@
     "merchant": "Nobu",
     "category": "Dining Out",
     "amount": 201.78,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Anniversary dinner"
   },
   {
     "id": "tx_0418",
@@ -1813,7 +1859,8 @@
     "merchant": "HOA Fee",
     "category": "Housing",
     "amount": 425.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly HOA"
   },
   {
     "id": "tx_0405",
@@ -1869,7 +1916,8 @@
     "merchant": "YMCA Soccer League",
     "category": "Kids Activities",
     "amount": 85.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Spring season registration"
   },
   {
     "id": "tx_0404",
@@ -1885,7 +1933,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0425",
@@ -1957,7 +2006,8 @@
     "merchant": "YMCA Soccer League",
     "category": "Kids Activities",
     "amount": 85.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Spring season registration"
   },
   {
     "id": "tx_0343",
@@ -2045,7 +2095,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0379",
@@ -2069,7 +2120,8 @@
     "merchant": "Equinox",
     "category": "Health",
     "amount": 195.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Monthly membership"
   },
   {
     "id": "tx_0371",
@@ -2093,7 +2145,8 @@
     "merchant": "Airbnb",
     "category": "Travel",
     "amount": 1079.39,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Tahoe weekend"
   },
   {
     "id": "tx_0357",
@@ -2117,7 +2170,8 @@
     "merchant": "Marriott Bonvoy",
     "category": "Travel",
     "amount": 862.95,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "NYC conference stay"
   },
   {
     "id": "tx_0341",
@@ -2149,7 +2203,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0368",
@@ -2221,7 +2276,8 @@
     "merchant": "Handy.com (Cleaning)",
     "category": "Housing",
     "amount": 180.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Bi-weekly cleaning"
   },
   {
     "id": "tx_0347",
@@ -2229,7 +2285,8 @@
     "merchant": "Nobu",
     "category": "Dining Out",
     "amount": 198.45,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Anniversary dinner"
   },
   {
     "id": "tx_0340",
@@ -2253,7 +2310,8 @@
     "merchant": "Marriott Bonvoy",
     "category": "Travel",
     "amount": 754.34,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "NYC conference stay"
   },
   {
     "id": "tx_0345",
@@ -2317,7 +2375,8 @@
     "merchant": "CycleBar",
     "category": "Health",
     "amount": 95.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "10-class pack"
   },
   {
     "id": "tx_0344",
@@ -2349,7 +2408,8 @@
     "merchant": "YMCA Soccer League",
     "category": "Kids Activities",
     "amount": 85.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Spring season registration"
   },
   {
     "id": "tx_0334",
@@ -2485,7 +2545,8 @@
     "merchant": "HOA Fee",
     "category": "Housing",
     "amount": 425.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly HOA"
   },
   {
     "id": "tx_0306",
@@ -2533,7 +2594,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0299",
@@ -2549,7 +2611,8 @@
     "merchant": "Equinox",
     "category": "Health",
     "amount": 195.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Monthly membership"
   },
   {
     "id": "tx_0291",
@@ -2565,7 +2628,8 @@
     "merchant": "Airbnb",
     "category": "Travel",
     "amount": 445.52,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Tahoe weekend"
   },
   {
     "id": "tx_0298",
@@ -2589,7 +2653,8 @@
     "merchant": "Nobu",
     "category": "Dining Out",
     "amount": 307.49,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Anniversary dinner"
   },
   {
     "id": "tx_0310",
@@ -2597,7 +2662,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0317",
@@ -2621,7 +2687,8 @@
     "merchant": "HOA Fee",
     "category": "Housing",
     "amount": 425.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly HOA"
   },
   {
     "id": "tx_0296",
@@ -2645,7 +2712,8 @@
     "merchant": "Dr. Martinez Copay",
     "category": "Health",
     "amount": 54.13,
-    "account": "cc_chase"
+    "account": "cc_chase",
+    "memo": "Annual physical"
   },
   {
     "id": "tx_0295",
@@ -2685,7 +2753,8 @@
     "merchant": "Apple Store",
     "category": "Shopping",
     "amount": 48.74,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "AirPods Pro replacement"
   },
   {
     "id": "tx_0335",
@@ -2693,7 +2762,8 @@
     "merchant": "HOA Fee",
     "category": "Housing",
     "amount": 425.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly HOA"
   },
   {
     "id": "tx_0289",
@@ -2749,7 +2819,8 @@
     "merchant": "Handy.com (Cleaning)",
     "category": "Housing",
     "amount": 180.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Bi-weekly cleaning"
   },
   {
     "id": "tx_0261",
@@ -2789,7 +2860,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0246",
@@ -2909,7 +2981,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0274",
@@ -2925,7 +2998,8 @@
     "merchant": "HOA Fee",
     "category": "Housing",
     "amount": 425.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly HOA"
   },
   {
     "id": "tx_0251",
@@ -2965,7 +3039,8 @@
     "merchant": "YMCA Soccer League",
     "category": "Kids Activities",
     "amount": 85.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Spring season registration"
   },
   {
     "id": "tx_0273",
@@ -3029,7 +3104,8 @@
     "merchant": "Music Lessons",
     "category": "Kids Activities",
     "amount": 120.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Piano \u2014 weekly"
   },
   {
     "id": "tx_0285",
@@ -3037,7 +3113,8 @@
     "merchant": "Verizon Fios",
     "category": "Housing",
     "amount": 89.99,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Internet & TV"
   },
   {
     "id": "tx_0243",
@@ -3061,7 +3138,8 @@
     "merchant": "Equinox",
     "category": "Health",
     "amount": 195.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Monthly membership"
   },
   {
     "id": "tx_0270",
@@ -3133,7 +3211,8 @@
     "merchant": "CycleBar",
     "category": "Health",
     "amount": 95.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "10-class pack"
   },
   {
     "id": "tx_0230",
@@ -3237,7 +3316,8 @@
     "merchant": "Music Lessons",
     "category": "Kids Activities",
     "amount": 120.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Piano \u2014 weekly"
   },
   {
     "id": "tx_0206",
@@ -3253,7 +3333,8 @@
     "merchant": "Nobu",
     "category": "Dining Out",
     "amount": 212.41,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Anniversary dinner"
   },
   {
     "id": "tx_0220",
@@ -3317,7 +3398,8 @@
     "merchant": "CycleBar",
     "category": "Health",
     "amount": 95.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "10-class pack"
   },
   {
     "id": "tx_0231",
@@ -3341,7 +3423,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0224",
@@ -3357,7 +3440,8 @@
     "merchant": "Handy.com (Cleaning)",
     "category": "Housing",
     "amount": 180.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Bi-weekly cleaning"
   },
   {
     "id": "tx_0197",
@@ -3453,7 +3537,8 @@
     "merchant": "Dr. Martinez Copay",
     "category": "Health",
     "amount": 48.11,
-    "account": "cc_chase"
+    "account": "cc_chase",
+    "memo": "Annual physical"
   },
   {
     "id": "tx_0222",
@@ -3517,7 +3602,8 @@
     "merchant": "Con Edison",
     "category": "Housing",
     "amount": 152.14,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Electric \u2014 May"
   },
   {
     "id": "tx_0152",
@@ -3645,7 +3731,8 @@
     "merchant": "Con Edison",
     "category": "Housing",
     "amount": 186.16,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Electric \u2014 May"
   },
   {
     "id": "tx_0157",
@@ -3765,7 +3852,8 @@
     "merchant": "Dr. Martinez Copay",
     "category": "Health",
     "amount": 44.2,
-    "account": "cc_chase"
+    "account": "cc_chase",
+    "memo": "Annual physical"
   },
   {
     "id": "tx_0164",
@@ -3829,7 +3917,8 @@
     "merchant": "Dr. Martinez Copay",
     "category": "Health",
     "amount": 49.92,
-    "account": "cc_chase"
+    "account": "cc_chase",
+    "memo": "Annual physical"
   },
   {
     "id": "tx_0148",
@@ -3845,7 +3934,8 @@
     "merchant": "Equinox",
     "category": "Health",
     "amount": 195.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Monthly membership"
   },
   {
     "id": "tx_0188",
@@ -3869,7 +3959,8 @@
     "merchant": "Delta Airlines",
     "category": "Travel",
     "amount": 1243.86,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Summer vacation flights"
   },
   {
     "id": "tx_0102",
@@ -3901,7 +3992,8 @@
     "merchant": "HOA Fee",
     "category": "Housing",
     "amount": 425.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly HOA"
   },
   {
     "id": "tx_0111",
@@ -3917,7 +4009,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0132",
@@ -3941,7 +4034,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0136",
@@ -3973,7 +4067,8 @@
     "merchant": "Delta Airlines",
     "category": "Travel",
     "amount": 1506.69,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Summer vacation flights"
   },
   {
     "id": "tx_0131",
@@ -3989,7 +4084,8 @@
     "merchant": "Music Lessons",
     "category": "Kids Activities",
     "amount": 120.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Piano \u2014 weekly"
   },
   {
     "id": "tx_0146",
@@ -3997,7 +4093,8 @@
     "merchant": "Verizon Fios",
     "category": "Housing",
     "amount": 89.99,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Internet & TV"
   },
   {
     "id": "tx_0109",
@@ -4117,7 +4214,8 @@
     "merchant": "Equinox",
     "category": "Health",
     "amount": 195.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Monthly membership"
   },
   {
     "id": "tx_0128",
@@ -4149,7 +4247,8 @@
     "merchant": "Handy.com (Cleaning)",
     "category": "Housing",
     "amount": 180.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Bi-weekly cleaning"
   },
   {
     "id": "tx_0105",
@@ -4165,7 +4264,8 @@
     "merchant": "Equinox",
     "category": "Health",
     "amount": 195.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Monthly membership"
   },
   {
     "id": "tx_0099",
@@ -4245,7 +4345,8 @@
     "merchant": "Equinox",
     "category": "Health",
     "amount": 195.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Monthly membership"
   },
   {
     "id": "tx_0125",
@@ -4349,7 +4450,8 @@
     "merchant": "Music Lessons",
     "category": "Kids Activities",
     "amount": 120.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Piano \u2014 weekly"
   },
   {
     "id": "tx_0049",
@@ -4381,7 +4483,8 @@
     "merchant": "Dr. Martinez Copay",
     "category": "Health",
     "amount": 48.69,
-    "account": "cc_chase"
+    "account": "cc_chase",
+    "memo": "Annual physical"
   },
   {
     "id": "tx_0097",
@@ -4413,7 +4516,8 @@
     "merchant": "Pottery Barn",
     "category": "Shopping",
     "amount": 414.19,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Living room chairs"
   },
   {
     "id": "tx_0096",
@@ -4421,7 +4525,8 @@
     "merchant": "Verizon Fios",
     "category": "Housing",
     "amount": 89.99,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Internet & TV"
   },
   {
     "id": "tx_0093",
@@ -4461,7 +4566,8 @@
     "merchant": "CycleBar",
     "category": "Health",
     "amount": 95.0,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "10-class pack"
   },
   {
     "id": "tx_0078",
@@ -4493,7 +4599,8 @@
     "merchant": "Pottery Barn",
     "category": "Shopping",
     "amount": 242.79,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Living room chairs"
   },
   {
     "id": "tx_0057",
@@ -4533,7 +4640,8 @@
     "merchant": "Nobu",
     "category": "Dining Out",
     "amount": 300.2,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Anniversary dinner"
   },
   {
     "id": "tx_0063",
@@ -4549,7 +4657,8 @@
     "merchant": "Music Lessons",
     "category": "Kids Activities",
     "amount": 120.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Piano \u2014 weekly"
   },
   {
     "id": "tx_0076",
@@ -4573,7 +4682,8 @@
     "merchant": "Delta Airlines",
     "category": "Travel",
     "amount": 1081.15,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Summer vacation flights"
   },
   {
     "id": "tx_0095",
@@ -4581,7 +4691,8 @@
     "merchant": "Con Edison",
     "category": "Housing",
     "amount": 202.27,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Electric \u2014 May"
   },
   {
     "id": "tx_0084",
@@ -4589,7 +4700,8 @@
     "merchant": "Apple Store",
     "category": "Shopping",
     "amount": 163.94,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "AirPods Pro replacement"
   },
   {
     "id": "tx_0054",
@@ -4605,7 +4717,8 @@
     "merchant": "Con Edison",
     "category": "Housing",
     "amount": 211.41,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Electric \u2014 May"
   },
   {
     "id": "tx_0069",
@@ -4629,7 +4742,8 @@
     "merchant": "Music Lessons",
     "category": "Kids Activities",
     "amount": 120.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Piano \u2014 weekly"
   },
   {
     "id": "tx_0048",
@@ -4709,7 +4823,8 @@
     "merchant": "Apple Store",
     "category": "Shopping",
     "amount": 169.99,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "AirPods Pro replacement"
   },
   {
     "id": "tx_0020",
@@ -4733,7 +4848,8 @@
     "merchant": "YMCA Soccer League",
     "category": "Kids Activities",
     "amount": 85.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Spring season registration"
   },
   {
     "id": "tx_0035",
@@ -4877,7 +4993,8 @@
     "merchant": "Nobu",
     "category": "Dining Out",
     "amount": 187.02,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Anniversary dinner"
   },
   {
     "id": "tx_0018",
@@ -4893,7 +5010,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0009",
@@ -4901,7 +5019,8 @@
     "merchant": "Nobu",
     "category": "Dining Out",
     "amount": 284.72,
-    "account": "cc_amex"
+    "account": "cc_amex",
+    "memo": "Anniversary dinner"
   },
   {
     "id": "tx_0029",
@@ -4973,7 +5092,8 @@
     "merchant": "Bright Horizons Daycare",
     "category": "Childcare",
     "amount": 1100.0,
-    "account": "chk_main"
+    "account": "chk_main",
+    "memo": "Monthly tuition \u2014 June"
   },
   {
     "id": "tx_0044",

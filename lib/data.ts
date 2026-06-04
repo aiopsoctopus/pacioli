@@ -34,6 +34,7 @@ export interface Transaction {
   category: string;
   amount: number;
   account: string;
+  memo?: string;
 }
 
 export interface IncomeSource {

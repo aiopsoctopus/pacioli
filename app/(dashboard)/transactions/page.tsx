@@ -1,10 +1,10 @@
 "use client";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   formatCurrency, formatMonth,
   loadRules, saveRules, loadOverrides, saveOverrides,
-  applyRulesAndOverrides, useTransactions,
-  Transaction,
+  applyRulesAndOverrides, useTransactions, fetchJSON,
+  Transaction, AccountData,
 } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
 import {
@@ -73,12 +73,14 @@ function TxRow({
   onSelect,
   onCategoryChange,
   categories,
+  accountName,
 }: {
   tx: Transaction;
   selected: boolean;
   onSelect: (id: string) => void;
   onCategoryChange: (id: string, cat: string) => void;
   categories: string[];
+  accountName?: string;
 }) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const color = CATEGORY_COLORS[tx.category] ?? "#71717a";
@@ -96,8 +98,18 @@ function TxRow({
       {/* Date */}
       <span className="w-24 shrink-0 text-xs pacioli-text-muted tabular-nums">{tx.date}</span>
 
-      {/* Merchant */}
-      <span className="flex-1 text-sm pacioli-text-primary truncate">{tx.merchant}</span>
+      {/* Merchant + memo */}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm pacioli-text-primary truncate">{tx.merchant}</p>
+        {tx.memo && <p className="text-xs pacioli-text-muted truncate mt-0.5">{tx.memo}</p>}
+      </div>
+
+      {/* Source account */}
+      {accountName && (
+        <span className="hidden lg:block w-36 shrink-0 text-xs pacioli-text-muted truncate" title={accountName}>
+          {accountName}
+        </span>
+      )}
 
       {/* Category pill + picker */}
       <div className="relative shrink-0">
@@ -159,6 +171,17 @@ export default function TransactionsPage() {
   const [rules, setRules] = useState<Record<string, string>>(() => loadRules(ns));
   const [overrides, setOverrides] = useState<Record<string, string>>(() => loadOverrides(ns));
   const transactions = useTransactions(ns, rules, overrides);
+
+  // Account ID → display name map
+  const [accountNames, setAccountNames] = useState<Record<string, string>>({});
+  useEffect(() => {
+    if (!isDemo) return;
+    fetchJSON<AccountData>("accounts.json").then((data) => {
+      const map: Record<string, string> = {};
+      [...data.assets, ...data.liabilities].forEach((a) => { map[a.id] = a.name; });
+      setAccountNames(map);
+    });
+  }, [isDemo]);
 
   // ── Filters ──
   const [search, setSearch] = useState("");
@@ -502,6 +525,9 @@ export default function TransactionsPage() {
           <div className="flex-1">
             <SortBtn field="merchant" current={sortField} dir={sortDir} onClick={toggleSort}>Merchant</SortBtn>
           </div>
+          <div className="hidden lg:block w-36 shrink-0">
+            <span className="text-xs font-semibold uppercase tracking-wide pacioli-text-muted">Source</span>
+          </div>
           <div className="w-36 shrink-0">
             <SortBtn field="category" current={sortField} dir={sortDir} onClick={toggleSort}>Category</SortBtn>
           </div>
@@ -530,6 +556,7 @@ export default function TransactionsPage() {
                 onSelect={toggleSelect}
                 onCategoryChange={handleCategoryChange}
                 categories={allCategories}
+                accountName={accountNames[tx.account] ?? tx.account}
               />
             ))}
           </div>

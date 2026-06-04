@@ -90,12 +90,12 @@ body {
   --border-nav:     rgba(255,255,255,0.07);
   /* Text: high-contrast whites and grays */
   --text-primary:   #f0f2f5;
-  --text-secondary: #a8b4c0;
-  --text-muted:     #6b7a8d;
-  --text-faint:     #404855;
+  --text-secondary: #c4cdd8;
+  --text-muted:     #8896a8;
+  --text-faint:     #606d7e;
   --text-nav-active:#ffffff;
   --bar-track:      rgba(255,255,255,0.1);
-  --icon-muted:     #6b7a8d;
+  --icon-muted:     #8896a8;
   --icon-active:    #ffffff;
   /* Accent: teal */
   --accent:         #5dcaa5;
