@@ -4,7 +4,7 @@ import {
   fetchJSON, formatCurrency, formatMonth, getMonthlySpend, analyseCategorySpend,
   loadBudgetEnvelopes, saveBudgetEnvelopes, monthProgressFraction, avgMonthlyIncome,
   useTransactions,
-  MonthIncome, BudgetAnalysis, BudgetEnvelope,
+  MonthIncome, BudgetAnalysis, BudgetEnvelope, SinkingFund,
 } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
 import { Sparkles, ChevronRight, Check, Pencil, X, TrendingUp, TrendingDown, Minus, AlertTriangle } from "lucide-react";
@@ -12,7 +12,8 @@ import { Sparkles, ChevronRight, Check, Pencil, X, TrendingUp, TrendingDown, Min
 const CATEGORY_COLORS: Record<string, string> = {
   Housing: "#6366f1", Groceries: "#10b981", "Dining Out": "#f59e0b",
   Transport: "#06b6d4", Subscriptions: "#ec4899", Health: "#3b82f6",
-  Shopping: "#8b5cf6", Travel: "#14b8a6", Entertainment: "#f97316", Other: "#71717a",
+  Shopping: "#8b5cf6", Travel: "#14b8a6", Entertainment: "#f97316",
+  Childcare: "#0ea5e9", "Kids Activities": "#a855f7", Other: "#71717a",
 };
 
 // ── Setup flow ────────────────────────────────────────────────────────────────
@@ -330,6 +331,7 @@ export default function BudgetPage() {
     () => loadBudgetEnvelopes()
   );
   const [showSetup, setShowSetup] = useState(false);
+  const [sinkingFunds, setSinkingFunds] = useState<SinkingFund[]>([]);
 
   const transactions = useTransactions(ns);
 
@@ -339,6 +341,13 @@ export default function BudgetPage() {
     setEnvelopes(loadBudgetEnvelopes(ns));
     if (isDemo) {
       fetchJSON<MonthIncome[]>("income.json").then(setIncome);
+    }
+    // Load sinking funds from localStorage (same source as sinking-funds page)
+    const stored = localStorage.getItem("pacioli-sinking-funds");
+    if (stored) {
+      try { setSinkingFunds(JSON.parse(stored)); } catch { /* ignore */ }
+    } else {
+      fetchJSON<SinkingFund[]>("sinking_funds.json").then(setSinkingFunds);
     }
   }, [ns, isDemo]);
 
@@ -656,19 +665,109 @@ export default function BudgetPage() {
               <p className="text-xs font-semibold text-indigo-400">Spending Insight</p>
               <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/30">Soon</span>
             </div>
-            {/* LLM_HOOK: monthly narrative — the CFO memo.
-                Generate once per month, cache in localStorage["pacioli-narrative-YYYY-MM"].
-                Prompt includes: category actuals vs budgets, income vs avg, net savings,
-                top merchant changes, sinking fund progress.
-                Example output: "May is shaping up as a lean month — spending is tracking
-                18% below pace despite the grocery bump. Your $10k surplus could accelerate
-                the Emergency Fund by 2 months if directed there." */}
+            {/* LLM_HOOK: monthly narrative — the CFO memo. */}
             <p className="text-xs pacioli-text-muted leading-relaxed">
               Your monthly CFO memo — a plain-English summary of where you stand, what changed, and what to watch. Coming once LLM integration is wired up.
             </p>
           </div>
         </div>
       </div>
+
+      {/* ── Surplus Routing Panel ───────────────────────────────────────────── */}
+      {avgIncome > 0 && (() => {
+        const sinkingTotal = sinkingFunds.reduce((s, f) => s + f.monthly_contribution, 0);
+        const surplus = avgIncome - totalBudget - sinkingTotal;
+        const savingsRate = avgIncome > 0 ? Math.round(((totalBudget < avgIncome ? avgIncome - totalBudget : 0) / avgIncome) * 100) : 0;
+        const behindFunds = sinkingFunds.filter(f => {
+          const monthsLeft = Math.max(1, Math.ceil((new Date(f.target_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30)));
+          const needed = (f.target - f.saved) / monthsLeft;
+          return needed > f.monthly_contribution * 1.1;
+        });
+
+        // Bar segments: spending, sinking funds, surplus
+        const total = avgIncome;
+        const spendPct = Math.min(100, (totalBudget / total) * 100);
+        const sinkPct = Math.min(100 - spendPct, (sinkingTotal / total) * 100);
+        const surplusPct = Math.max(0, 100 - spendPct - sinkPct);
+
+        return (
+          <div className="pacioli-bg-surface rounded-2xl p-6 border">
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-sm font-semibold pacioli-text-secondary">Where Does Your Surplus Go?</h3>
+              <span className="text-xs pacioli-text-muted">Based on 6-mo avg income of {formatCurrency(avgIncome)}/mo</span>
+            </div>
+
+            {/* Big savings rate number */}
+            <div className="flex items-end gap-6 mt-4 mb-5">
+              <div>
+                <p className="text-xs pacioli-text-muted mb-1">Savings rate</p>
+                <p className="text-4xl font-bold pacioli-text-success">{savingsRate}%</p>
+              </div>
+              <div className="flex gap-6 pb-1">
+                <div>
+                  <p className="text-xs pacioli-text-muted mb-1">Spending budget</p>
+                  <p className="text-xl font-bold pacioli-text-primary">{formatCurrency(totalBudget)}</p>
+                </div>
+                <div>
+                  <p className="text-xs pacioli-text-muted mb-1">Sinking funds</p>
+                  <p className="text-xl font-bold pacioli-text-primary">{formatCurrency(sinkingTotal)}</p>
+                </div>
+                <div>
+                  <p className="text-xs pacioli-text-muted mb-1">Unallocated</p>
+                  <p className={`text-xl font-bold ${surplus > 0 ? "text-indigo-400" : "pacioli-text-danger"}`}>
+                    {formatCurrency(Math.abs(surplus))}{surplus < 0 ? " over" : ""}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Allocation bar */}
+            <div className="w-full h-4 rounded-full overflow-hidden flex gap-0.5 mb-3">
+              <div className="h-4 rounded-l-full transition-all duration-500 bg-indigo-500"
+                style={{ width: `${spendPct}%` }} title={`Spending: ${formatCurrency(totalBudget)}`} />
+              <div className="h-4 transition-all duration-500 bg-teal-500"
+                style={{ width: `${sinkPct}%` }} title={`Sinking funds: ${formatCurrency(sinkingTotal)}`} />
+              {surplusPct > 0 && (
+                <div className="h-4 rounded-r-full transition-all duration-500 bg-emerald-800/40 border border-emerald-700/30"
+                  style={{ width: `${surplusPct}%` }} title={`Unallocated: ${formatCurrency(surplus)}`} />
+              )}
+            </div>
+            <div className="flex gap-4 text-xs pacioli-text-muted mb-5">
+              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block" />Spending envelopes</span>
+              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-teal-500 inline-block" />Sinking funds</span>
+              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-800/40 border border-emerald-700/30 inline-block" />Unallocated surplus</span>
+            </div>
+
+            {/* Behind goals callout */}
+            {behindFunds.length > 0 && surplus > 0 && (
+              <div className="flex gap-3 p-4 bg-indigo-950/20 border border-indigo-800/30 rounded-xl">
+                <Sparkles size={14} className="text-indigo-400 mt-0.5 shrink-0" />
+                <div className="flex-1">
+                  <p className="text-xs font-medium text-indigo-300 mb-1">
+                    {behindFunds.length === 1 ? `${behindFunds[0].emoji} ${behindFunds[0].name} is behind` : `${behindFunds.length} goals are behind pace`}
+                  </p>
+                  <p className="text-xs pacioli-text-muted">
+                    You have {formatCurrency(surplus)}/mo unallocated. Routing it to {behindFunds[0].name} would close the gap{behindFunds.length > 1 ? " on your highest-priority goal" : ""}.
+                  </p>
+                  <a href="/sinking-funds" className="text-xs text-indigo-400 hover:text-indigo-300 mt-2 inline-block transition-colors">
+                    Review goals →
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* All goals funded + surplus */}
+            {behindFunds.length === 0 && surplus > 500 && (
+              <div className="flex gap-3 p-4 bg-emerald-950/20 border border-emerald-800/30 rounded-xl">
+                <Sparkles size={14} className="text-teal-400 mt-0.5 shrink-0" />
+                <p className="text-xs pacioli-text-muted">
+                  All goals are on pace. Your {formatCurrency(surplus)}/mo unallocated surplus could go to brokerage, 529 top-up, or mortgage paydown.
+                </p>
+              </div>
+            )}
+          </div>
+        );
+      })()}
     </div>
   );
 }

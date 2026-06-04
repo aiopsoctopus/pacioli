@@ -3,23 +3,23 @@
     "month": "2025-06",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 1196.79,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2763.23,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 51.07,
+        "amount": 504.52,
         "type": "investment"
       }
     ]
@@ -28,23 +28,23 @@
     "month": "2025-07",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 592.22,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2807.1,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 100.46,
+        "amount": 393.44,
         "type": "investment"
       }
     ]
@@ -53,23 +53,23 @@
     "month": "2025-08",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 1033.32,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2828.46,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 52.23,
+        "amount": 473.8,
         "type": "investment"
       }
     ]
@@ -78,24 +78,29 @@
     "month": "2025-09",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 191.98,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2769.04,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 94.44,
+        "amount": 303.26,
         "type": "investment"
+      },
+      {
+        "label": "RSU Vest (MSFT)",
+        "amount": 14200,
+        "type": "rsu"
       }
     ]
   },
@@ -103,23 +108,23 @@
     "month": "2025-10",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 715.69,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2793.11,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 70.78,
+        "amount": 381.66,
         "type": "investment"
       }
     ]
@@ -128,23 +133,23 @@
     "month": "2025-11",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 715.07,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2796.7,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 77.44,
+        "amount": 454.98,
         "type": "investment"
       }
     ]
@@ -153,24 +158,29 @@
     "month": "2025-12",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 301.7,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2817.34,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 84.26,
+        "amount": 516.2,
         "type": "investment"
+      },
+      {
+        "label": "RSU Vest (MSFT)",
+        "amount": 16800,
+        "type": "rsu"
       }
     ]
   },
@@ -178,23 +188,23 @@
     "month": "2026-01",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 1130.92,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2759.84,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 94.42,
+        "amount": 376.63,
         "type": "investment"
       }
     ]
@@ -203,23 +213,23 @@
     "month": "2026-02",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 137.46,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2783.93,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 110.78,
+        "amount": 486.8,
         "type": "investment"
       }
     ]
@@ -228,24 +238,29 @@
     "month": "2026-03",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 901.05,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2774.87,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 101.49,
+        "amount": 325.65,
         "type": "investment"
+      },
+      {
+        "label": "RSU Vest (MSFT)",
+        "amount": 19400,
+        "type": "rsu"
       }
     ]
   },
@@ -253,23 +268,23 @@
     "month": "2026-04",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 408.21,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2794.86,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 63.48,
+        "amount": 381.25,
         "type": "investment"
       }
     ]
@@ -278,24 +293,54 @@
     "month": "2026-05",
     "sources": [
       {
-        "label": "Salary \u2013 Christina",
-        "amount": 6250.0,
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
         "type": "salary"
       },
       {
-        "label": "Salary \u2013 Partner",
-        "amount": 5833.0,
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
         "type": "salary"
       },
       {
-        "label": "Freelance",
-        "amount": 189.79,
-        "type": "freelance"
+        "label": "Rental Income",
+        "amount": 2777.85,
+        "type": "rental"
       },
       {
         "label": "Dividends",
-        "amount": 40.26,
+        "amount": 339.95,
         "type": "investment"
+      }
+    ]
+  },
+  {
+    "month": "2026-06",
+    "sources": [
+      {
+        "label": "Salary \u2014 Alex",
+        "amount": 9817.0,
+        "type": "salary"
+      },
+      {
+        "label": "Salary \u2014 Jordan",
+        "amount": 7583.0,
+        "type": "salary"
+      },
+      {
+        "label": "Rental Income",
+        "amount": 2842.33,
+        "type": "rental"
+      },
+      {
+        "label": "Dividends",
+        "amount": 386.35,
+        "type": "investment"
+      },
+      {
+        "label": "RSU Vest (MSFT)",
+        "amount": 22100,
+        "type": "rsu"
       }
     ]
   }
