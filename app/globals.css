@@ -74,36 +74,41 @@ body {
 }
 
 [data-theme="dark"] {
-  --bg-base:        #1e1e1e;
-  --bg-nav:         #1c1b4b;
-  --bg-surface:     rgba(255,255,255,0.05);
-  --bg-surface-2:   rgba(255,255,255,0.03);
-  --bg-input:       rgba(255,255,255,0.07);
+  /* Base: dark slate, no purple */
+  --bg-base:        #111318;
+  --bg-nav:         #1a1d24;
+  --bg-surface:     #1f2229;
+  --bg-surface-2:   #252930;
+  --bg-input:       #2a2e38;
   --bg-nav-active:  #0d6e6e;
   --bg-nav-hover:   rgba(93,202,165,0.08);
-  --bg-btn-cancel:  rgba(255,255,255,0.08);
-  --bg-chip:        rgba(93,202,165,0.12);
+  --bg-btn-cancel:  #2a2e38;
+  --bg-chip:        rgba(93,202,165,0.15);
+  /* Borders: visible but subtle */
   --border:         rgba(255,255,255,0.1);
   --border-subtle:  rgba(255,255,255,0.06);
-  --border-nav:     rgba(255,255,255,0.08);
-  --text-primary:   #ffffff;
-  --text-secondary: #c8d6e5;
-  --text-muted:     #8fa3b8;
-  --text-faint:     #506070;
+  --border-nav:     rgba(255,255,255,0.07);
+  /* Text: high-contrast whites and grays */
+  --text-primary:   #f0f2f5;
+  --text-secondary: #a8b4c0;
+  --text-muted:     #6b7a8d;
+  --text-faint:     #404855;
   --text-nav-active:#ffffff;
   --bar-track:      rgba(255,255,255,0.1);
-  --icon-muted:     #8fa3b8;
+  --icon-muted:     #6b7a8d;
   --icon-active:    #ffffff;
+  /* Accent: teal */
   --accent:         #5dcaa5;
+  /* Semantic status */
   --text-warning:   #fbbf24;
   --text-danger:    #f87171;
   --text-success:   #5dcaa5;
-  --bg-warning:     rgba(120,53,15,0.35);
-  --bg-danger:      rgba(127,29,29,0.35);
+  --bg-warning:     rgba(120,53,15,0.3);
+  --bg-danger:      rgba(127,29,29,0.3);
   --bg-success:     rgba(13,110,110,0.2);
-  --border-warning: rgba(180,83,9,0.5);
-  --border-danger:  rgba(185,28,28,0.5);
-  --border-success: rgba(93,202,165,0.3);
+  --border-warning: rgba(180,83,9,0.4);
+  --border-danger:  rgba(185,28,28,0.4);
+  --border-success: rgba(93,202,165,0.25);
 }
 
 /* v2 — dark mode surfaces: white-alpha overlays on indigo base, no purple cards */
