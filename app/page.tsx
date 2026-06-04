@@ -141,10 +141,9 @@ export default function LandingPage() {
   function handleTryDemo() {
     localStorage.setItem("pacioli-demo-mode", "true");
     localStorage.setItem("pacioli-setup-complete", "demo");
-    // Ensure light mode for sandbox (don't inherit a stale dark preference)
-    if (!localStorage.getItem("hfos-theme")) {
-      localStorage.setItem("hfos-theme", "light");
-    }
+    // Always force light mode for sandbox — demo should look its best
+    localStorage.setItem("hfos-theme", "light");
+    document.documentElement.setAttribute("data-theme", "light");
     window.location.href = "/zoom-out?demo=true";
   }
 
