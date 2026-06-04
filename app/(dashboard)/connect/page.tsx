@@ -1,9 +1,10 @@
 "use client";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, Landmark, FileText, CheckCircle2, AlertCircle, Plus, Trash2, FlaskConical, ArrowRight, Tag, Download, FolderOpen } from "lucide-react";
+import { Upload, FileText, CheckCircle2, AlertCircle, Plus, Trash2, FlaskConical, ArrowRight, Tag, Download, FolderOpen } from "lucide-react";
 import { formatCurrency, IMPORTED_KEY } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
+import PlaidLinkButton from "@/components/plaid-link-button";
 
 const MANUAL_ACCOUNTS_KEY = "pacioli-manual-accounts";
 
@@ -333,25 +334,8 @@ export default function ConnectPage() {
           )}
         </div>
 
-        {/* Plaid (coming soon) */}
-        <div className="pacioli-bg-surface rounded-2xl p-6 border flex flex-col">
-          <div className="flex items-center gap-3 mb-1">
-            <Landmark size={18} className="pacioli-text-muted" />
-            <h3 className="text-sm font-semibold pacioli-text-primary">Live Bank Connection</h3>
-            <span className="text-[10px] font-semibold px-2 py-0.5 pacioli-bg-chip pacioli-text-muted rounded-full">Soon</span>
-          </div>
-          <p className="text-xs pacioli-text-muted mb-4 flex-1">
-            Automatic transaction sync via Plaid — connects to 12,000+ banks and updates daily. No more manual exports.
-          </p>
-          <div className="space-y-2 text-xs pacioli-text-muted">
-            <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full pacioli-bar-track inline-block" />Chase, BofA, Wells Fargo</p>
-            <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full pacioli-bar-track inline-block" />Amex, Citi, Capital One</p>
-            <p className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full pacioli-bar-track inline-block" />Fidelity, Vanguard, Schwab</p>
-          </div>
-          <button disabled className="mt-5 w-full py-2 text-sm font-medium pacioli-text-muted pacioli-bg-surface-2 border pacioli-border rounded-lg cursor-not-allowed">
-            Connect a Bank
-          </button>
-        </div>
+        {/* Plaid live connection */}
+        <PlaidLinkButton />
       </div>
 
       {/* Manual account balances */}

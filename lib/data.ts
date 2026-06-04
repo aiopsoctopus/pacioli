@@ -498,14 +498,14 @@ export function applyRulesAndOverrides(
   });
 }
 
+export const PLAID_TRANSACTIONS_KEY = "pacioli-plaid-transactions";
+
 // ─── useTransactions hook ─────────────────────────────────────────────────────
 /**
- * Loads transactions from two sources and merges them:
- *   1. /data/transactions.json  — static seed data
- *   2. localStorage[IMPORTED_KEY] — rows saved by the CSV importer
- *
- * Imported rows are keyed by a synthetic id (`imp_<date>_<merchant>_<amount>`)
- * so re-uploading the same file is idempotent (duplicates are deduplicated by id).
+ * Loads transactions from three sources and merges them:
+ *   1. /data/transactions.json       — static seed data (demo mode only)
+ *   2. localStorage[IMPORTED_KEY]    — rows saved by the CSV importer
+ *   3. localStorage[PLAID_TRANSACTIONS_KEY] — rows synced from Plaid
  *
  * Category rules and per-transaction overrides are applied at read time.
  *
@@ -515,14 +515,17 @@ export function applyRulesAndOverrides(
  * Pages that don't write rules/overrides can omit these and the hook manages them.
  *
  * Pass `ns` (namespace) to scope localStorage keys to demo mode.
+ * Pass `userId` to scope Plaid/import keys to the current user.
  */
 export function useTransactions(
   ns = "",
   rulesOverride?: Record<string, string>,
   overridesOverride?: Record<string, string>,
+  userId?: string | null,
 ): Transaction[] {
   const [staticTxs, setStaticTxs]     = useState<Transaction[]>([]);
   const [importedTxs, setImportedTxs] = useState<Transaction[]>([]);
+  const [plaidTxs, setPlaidTxs]       = useState<Transaction[]>([]);
   // Internal state used only when the caller doesn't pass its own rules/overrides
   const [internalRules, setInternalRules]         = useState<Record<string, string>>(() => loadRules(ns));
   const [internalOverrides, setInternalOverrides] = useState<Record<string, string>>(() => loadOverrides(ns));
@@ -538,39 +541,64 @@ export function useTransactions(
       .catch((e) => console.error("[Pacioli] transactions.json failed:", e));
   }, [ns]);
 
-  // Re-sync internal state and imports whenever ns changes (demo toggle).
+  // Re-sync internal state and imports whenever ns or userId changes.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setInternalRules(loadRules(ns));
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setInternalOverrides(loadOverrides(ns));
 
+    const prefix = userId ? `${userId}:` : "";
+
+    // CSV imports
     try {
-      const importKey = ns ? `${ns}-${IMPORTED_KEY}` : IMPORTED_KEY;
+      const importKey = ns ? `${ns}-${IMPORTED_KEY}` : `${prefix}${IMPORTED_KEY}`;
       const raw = localStorage.getItem(importKey);
-      if (!raw) { setImportedTxs([]); return; }
-
-      // Imported rows may lack an `id` or `account` field — normalise them.
-      const parsed: Partial<Transaction>[] = JSON.parse(raw);
-      const normalised: Transaction[] = parsed.map((t) => ({
-        id:       t.id ?? `imp_${t.date}_${t.merchant}_${t.amount}`,
-        date:     t.date    ?? "",
-        merchant: t.merchant ?? "Unknown",
-        category: t.category ?? "Uncategorized",
-        amount:   t.amount  ?? 0,
-        account:  t.account ?? "Imported",
-      }));
-      setImportedTxs(normalised);
+      if (!raw) { setImportedTxs([]); }
+      else {
+        const parsed: Partial<Transaction>[] = JSON.parse(raw);
+        const normalised: Transaction[] = parsed.map((t) => ({
+          id:       t.id ?? `imp_${t.date}_${t.merchant}_${t.amount}`,
+          date:     t.date    ?? "",
+          merchant: t.merchant ?? "Unknown",
+          category: t.category ?? "Uncategorized",
+          amount:   t.amount  ?? 0,
+          account:  t.account ?? "Imported",
+        }));
+        setImportedTxs(normalised);
+      }
     } catch { setImportedTxs([]); }
-  }, [ns]);
 
-  // Merge: static first, then imported. Deduplicate by id (imported wins on conflict).
+    // Plaid transactions (not used in demo mode)
+    if (!ns) {
+      try {
+        const plaidKey = `${prefix}${PLAID_TRANSACTIONS_KEY}`;
+        const raw = localStorage.getItem(plaidKey);
+        if (!raw) { setPlaidTxs([]); }
+        else {
+          const parsed: Partial<Transaction>[] = JSON.parse(raw);
+          const normalised: Transaction[] = parsed.map((t) => ({
+            id:       t.id ?? `plaid_${t.date}_${t.merchant}_${t.amount}`,
+            date:     t.date    ?? "",
+            merchant: t.merchant ?? "Unknown",
+            category: t.category ?? "Uncategorized",
+            amount:   t.amount  ?? 0,
+            account:  t.account ?? "Plaid",
+          }));
+          setPlaidTxs(normalised);
+        }
+      } catch { setPlaidTxs([]); }
+    }
+  }, [ns, userId]);
+
+  // Merge: static → CSV imports → Plaid. Deduplicate by id (later sources win).
   const merged = useMemo(() => {
     const map = new Map<string, Transaction>();
     for (const tx of staticTxs)   map.set(tx.id, tx);
-    for (const tx of importedTxs) map.set(tx.id, tx); // imported overwrites on same id
+    for (const tx of importedTxs) map.set(tx.id, tx);
+    for (const tx of plaidTxs)    map.set(tx.id, tx);
     return Array.from(map.values()).sort((a, b) => a.date < b.date ? 1 : -1);
-  }, [staticTxs, importedTxs]);
+  }, [staticTxs, importedTxs, plaidTxs]);
 
   // Apply rules + overrides
   return useMemo(
