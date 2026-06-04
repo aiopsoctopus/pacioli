@@ -6,6 +6,8 @@ import {
   avgMonthlyIncome, useTransactions, getNormalizedMonthlyCategorySpend, classifyMerchants,
 } from "@/lib/data";
 import { runProjection, runBracketProjection, ScenarioEvent, ProjectionSummary } from "@/lib/scenario";
+import { equityGrantToScenarioEvents, loadEquityGrants, EQUITY_GRANTS_KEY } from "@/lib/equity";
+import EquityGrants from "@/components/equity-grants";
 import { useDemo } from "@/components/demo-provider";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -51,6 +53,9 @@ export default function ForecastView() {
   });
   const [lastQuestion, setLastQuestion] = useState<string | null>(null);
   const chatInputRef = useRef<HTMLInputElement>(null);
+
+  // Equity grants — re-derive scenario events when grants change
+  const [equityVersion, setEquityVersion] = useState(0);
 
   const transactions = useTransactions(ns);
 
@@ -143,8 +148,9 @@ export default function ForecastView() {
     const monthlyCashFlow = avgIncome - avgSpend;
     const savingsRate = avgIncome > 0 ? Math.round((monthlyCashFlow / avgIncome) * 100) : 0;
 
-    // Merge slider delta + chat scenario events
-    const allEvents: ScenarioEvent[] = [...scenarioEvents];
+    // Merge slider delta + chat scenario events + equity vest events
+    const equityEvents = loadEquityGrants().flatMap(equityGrantToScenarioEvents);
+    const allEvents: ScenarioEvent[] = [...scenarioEvents, ...equityEvents];
     if (scenarioDelta !== 0) {
       allEvents.push({
         id: "slider",
@@ -196,7 +202,7 @@ export default function ForecastView() {
       hasBracket,
       windowMonths: completedMonths.length,
     };
-  }, [accounts, income, transactions, scenarioDelta, scenarioEvents, projectionMonths, annualIncomeGrowth, annualInflation]);
+  }, [accounts, income, transactions, scenarioDelta, scenarioEvents, projectionMonths, annualIncomeGrowth, annualInflation, equityVersion]);
 
   // ── Chat handler ─────────────────────────────────────────────────────────────
   async function handleChat(question: string) {
@@ -441,6 +447,9 @@ export default function ForecastView() {
               })}
             </div>
           </div>
+
+          {/* Equity grants */}
+          <EquityGrants onChange={() => setEquityVersion((v) => v + 1)} />
 
           {scenarioEvents.length > 0 && (
             <div className="space-y-3">
