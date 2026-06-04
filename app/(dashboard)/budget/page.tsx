@@ -607,10 +607,17 @@ export default function BudgetPage() {
             <p className="text-xs font-semibold pacioli-text-secondary mb-3">Month-End Projection</p>
             {monthProgress > 0 && (
               (() => {
-                const projectedSpend = monthProgress > 0 ? Math.round(totalSpent / monthProgress) : totalSpent;
+                const TOO_EARLY = monthProgress < 0.25;
+                // When early in month, simple extrapolation is unreliable (rent + subs hit day 1).
+                // Use 6-month average spend as the projection baseline instead of pace-extrapolating.
+                const avgHistoricalSpend = analyses.reduce((s, a) => s + a.avg, 0);
+                const projectedSpend = TOO_EARLY
+                  ? Math.round(avgHistoricalSpend)
+                  : Math.round(totalSpent / monthProgress);
                 const projectedOver = projectedSpend - totalBudget;
-                const projectedSavings = mtdIncome > 0
-                  ? (mtdIncome / monthProgress) - projectedSpend
+                // Projected savings: use average monthly income (not extrapolated MTD income)
+                const projectedSavings = avgIncome > 0
+                  ? avgIncome - projectedSpend
                   : 0;
                 return (
                   <div className="space-y-3">
@@ -624,6 +631,11 @@ export default function BudgetPage() {
                           ? `${formatCurrency(projectedOver)} over budget`
                           : `${formatCurrency(Math.abs(projectedOver))} under budget`}
                       </p>
+                      {TOO_EARLY && (
+                        <p className="text-xs pacioli-text-faint mt-1 italic">
+                          Based on your 6-mo average — too early in month to pace-project
+                        </p>
+                      )}
                     </div>
                     {projectedSavings > 0 && (
                       <div>
