@@ -10,6 +10,7 @@ import { equityGrantToScenarioEvents, loadEquityGrants, EQUITY_GRANTS_KEY } from
 import EquityGrants from "@/components/equity-grants";
 import TwoEarnerModel, { earnerStreamsToScenarioEvents, EarnerStream } from "@/components/two-earner-model";
 import MortgageAccelerator, { mortgageToScenarioEvent, MortgageConfig } from "@/components/mortgage-accelerator";
+import CollegeFund, { collegeFundToScenarioEvent, CollegeFundConfig } from "@/components/college-fund";
 import { useDemo } from "@/components/demo-provider";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -60,6 +61,7 @@ export default function ForecastView() {
   const [equityVersion, setEquityVersion] = useState(0);
   const [earnerVersion, setEarnerVersion] = useState(0);
   const [mortgageVersion, setMortgageVersion] = useState(0);
+  const [collegeVersion, setCollegeVersion] = useState(0);
 
   const transactions = useTransactions(ns);
 
@@ -158,11 +160,14 @@ export default function ForecastView() {
     const earnerEvents = earnerStreamsToScenarioEvents(earnerStreams);
     const mortgageConfig: MortgageConfig | null = (() => { try { const r = localStorage.getItem("pacioli-mortgage"); return r ? JSON.parse(r) : null; } catch { return null; } })();
     const mortgageEvent = mortgageToScenarioEvent(mortgageConfig);
+    const collegeFunds: CollegeFundConfig[] = (() => { try { return JSON.parse(localStorage.getItem("pacioli-college-funds") ?? "[]"); } catch { return []; } })();
+    const collegeEvents = collegeFunds.map(collegeFundToScenarioEvent).filter(Boolean) as ScenarioEvent[];
     const allEvents: ScenarioEvent[] = [
       ...scenarioEvents,
       ...equityEvents,
       ...earnerEvents,
       ...(mortgageEvent ? [mortgageEvent] : []),
+      ...collegeEvents,
     ];
     if (scenarioDelta !== 0) {
       allEvents.push({
@@ -215,7 +220,7 @@ export default function ForecastView() {
       hasBracket,
       windowMonths: completedMonths.length,
     };
-  }, [accounts, income, transactions, scenarioDelta, scenarioEvents, projectionMonths, annualIncomeGrowth, annualInflation, equityVersion, earnerVersion, mortgageVersion]);
+  }, [accounts, income, transactions, scenarioDelta, scenarioEvents, projectionMonths, annualIncomeGrowth, annualInflation, equityVersion, earnerVersion, mortgageVersion, collegeVersion]);
 
   // ── Chat handler ─────────────────────────────────────────────────────────────
   async function handleChat(question: string) {
@@ -330,6 +335,7 @@ export default function ForecastView() {
       <EquityGrants onChange={() => setEquityVersion((v) => v + 1)} />
       <TwoEarnerModel onChange={() => setEarnerVersion((v) => v + 1)} />
       <MortgageAccelerator onChange={() => setMortgageVersion((v) => v + 1)} />
+      <CollegeFund onChange={() => setCollegeVersion((v) => v + 1)} />
     </div>
   );
 
@@ -471,6 +477,7 @@ export default function ForecastView() {
           <EquityGrants onChange={() => setEquityVersion((v) => v + 1)} />
           <TwoEarnerModel onChange={() => setEarnerVersion((v) => v + 1)} />
           <MortgageAccelerator onChange={() => setMortgageVersion((v) => v + 1)} />
+          <CollegeFund onChange={() => setCollegeVersion((v) => v + 1)} />
 
           {scenarioEvents.length > 0 && (
             <div className="space-y-3">
