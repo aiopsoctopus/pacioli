@@ -8,7 +8,7 @@ export default function SignUpPage() {
           <h1 className="text-2xl font-semibold pacioli-text-primary mb-1">Create your account</h1>
           <p className="text-sm pacioli-text-muted">Your data stays on your device — we just need a way to recognize you</p>
         </div>
-        <SignUp />
+        <SignUp forceRedirectUrl="/zoom-out" />
       </div>
     </div>
   );

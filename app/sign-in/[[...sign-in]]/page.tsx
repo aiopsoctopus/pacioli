@@ -8,7 +8,7 @@ export default function SignInPage() {
           <h1 className="text-2xl font-semibold pacioli-text-primary mb-1">Welcome back</h1>
           <p className="text-sm pacioli-text-muted">Sign in to your Pacioli account</p>
         </div>
-        <SignIn />
+        <SignIn forceRedirectUrl="/zoom-out" />
       </div>
     </div>
   );
