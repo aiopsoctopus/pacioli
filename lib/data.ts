@@ -499,14 +499,12 @@ export function applyRulesAndOverrides(
   });
 }
 
-export const PLAID_TRANSACTIONS_KEY = "pacioli-plaid-transactions";
-
 // ─── useTransactions hook ─────────────────────────────────────────────────────
 /**
  * Loads transactions from three sources and merges them:
  *   1. /data/transactions.json       — static seed data (demo mode only)
  *   2. localStorage[IMPORTED_KEY]    — rows saved by the CSV importer
- *   3. localStorage[PLAID_TRANSACTIONS_KEY] — rows synced from Plaid
+ *   3. GET /api/plaid/transactions   — rows stored in Supabase (live mode only)
  *
  * Category rules and per-transaction overrides are applied at read time.
  *
@@ -516,7 +514,7 @@ export const PLAID_TRANSACTIONS_KEY = "pacioli-plaid-transactions";
  * Pages that don't write rules/overrides can omit these and the hook manages them.
  *
  * Pass `ns` (namespace) to scope localStorage keys to demo mode.
- * Pass `userId` to scope Plaid/import keys to the current user.
+ * Pass `userId` to re-fetch when the signed-in user changes.
  */
 export function useTransactions(
   ns = "",
@@ -570,14 +568,12 @@ export function useTransactions(
       }
     } catch { setImportedTxs([]); }
 
-    // Plaid transactions (not used in demo mode)
+    // Plaid transactions — fetch from Supabase via API (not used in demo mode)
     if (!ns) {
-      try {
-        const plaidKey = `${prefix}${PLAID_TRANSACTIONS_KEY}`;
-        const raw = localStorage.getItem(plaidKey);
-        if (!raw) { setPlaidTxs([]); }
-        else {
-          const parsed: Partial<Transaction>[] = JSON.parse(raw);
+      fetch("/api/plaid/transactions")
+        .then((r) => r.ok ? r.json() : { transactions: [] })
+        .then((data: { transactions?: Partial<Transaction>[] }) => {
+          const parsed = data.transactions ?? [];
           const normalised: Transaction[] = parsed.map((t) => ({
             id:       t.id ?? `plaid_${t.date}_${t.merchant}_${t.amount}`,
             date:     t.date    ?? "",
@@ -587,8 +583,10 @@ export function useTransactions(
             account:  t.account ?? "Plaid",
           }));
           setPlaidTxs(normalised);
-        }
-      } catch { setPlaidTxs([]); }
+        })
+        .catch(() => setPlaidTxs([]));
+    } else {
+      setPlaidTxs([]);
     }
   }, [ns, userId]);
 
@@ -606,4 +604,119 @@ export function useTransactions(
     () => applyRulesAndOverrides(merged, rules, overrides),
     [merged, rules, overrides],
   );
+}
+
+// ─── Manual accounts (localStorage) ──────────────────────────────────────────
+
+export const MANUAL_ACCOUNTS_KEY = "pacioli-manual-accounts";
+
+export interface ManualAccountData {
+  assets: Account[];
+  liabilities: Account[];
+}
+
+export function loadManualAccounts(ns = ""): ManualAccountData {
+  try {
+    const key = ns ? `${ns}-${MANUAL_ACCOUNTS_KEY}` : MANUAL_ACCOUNTS_KEY;
+    const raw = localStorage.getItem(key);
+    if (!raw) return { assets: [], liabilities: [] };
+    return JSON.parse(raw);
+  } catch {
+    return { assets: [], liabilities: [] };
+  }
+}
+
+export function saveManualAccounts(data: ManualAccountData, ns = ""): void {
+  try {
+    const key = ns ? `${ns}-${MANUAL_ACCOUNTS_KEY}` : MANUAL_ACCOUNTS_KEY;
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch { /* ignore */ }
+}
+
+/**
+ * useAccounts — merges static JSON seed (demo only) with localStorage manual accounts.
+ *
+ * - Demo mode:  fetches accounts.json and overlays manual edits on top
+ * - Real users: manual accounts are the only source of truth
+ *
+ * Returns [accountData, setAccountData] where setAccountData persists to localStorage
+ * and triggers a re-render.
+ */
+export function useAccounts(
+  ns = "",
+  userId?: string | null,
+): [AccountData | null, (data: AccountData) => void] {
+  const [staticData, setStaticData] = useState<AccountData | null>(null);
+  const [manualData, setManualData] = useState<ManualAccountData>(() =>
+    typeof window !== "undefined" ? loadManualAccounts(ns) : { assets: [], liabilities: [] }
+  );
+
+  // Load static JSON in demo mode only
+  useEffect(() => {
+    if (!ns) { setStaticData(null); return; }
+    fetchJSON<AccountData>("accounts.json")
+      .then(setStaticData)
+      .catch(() => setStaticData({ assets: [], liabilities: [] }));
+  }, [ns]);
+
+  // Re-read manual accounts when ns or userId changes
+  useEffect(() => {
+    const key = ns
+      ? `${ns}-${MANUAL_ACCOUNTS_KEY}`
+      : userId
+        ? `${userId}:${MANUAL_ACCOUNTS_KEY}`
+        : MANUAL_ACCOUNTS_KEY;
+    try {
+      const raw = localStorage.getItem(key);
+      setManualData(raw ? JSON.parse(raw) : { assets: [], liabilities: [] });
+    } catch {
+      setManualData({ assets: [], liabilities: [] });
+    }
+  }, [ns, userId]);
+
+  const merged = useMemo((): AccountData | null => {
+    // Real users: show nothing until they add accounts
+    if (!ns && manualData.assets.length === 0 && manualData.liabilities.length === 0) {
+      return null;
+    }
+    // Demo mode: wait for static JSON to load before returning anything
+    if (ns && !staticData) return null;
+    // Demo: start from static JSON, overlay manual edits
+    const base: AccountData = staticData ?? { assets: [], liabilities: [] };
+
+    function mergeAccounts(baseList: Account[], manualList: Account[]): Account[] {
+      const map = new Map<string, Account>();
+      for (const a of baseList) map.set(a.id, a);
+      // Manual accounts override or add — deletions tracked via __deleted flag
+      for (const a of manualList) {
+        if ((a as Account & { __deleted?: boolean }).__deleted) {
+          map.delete(a.id);
+        } else {
+          map.set(a.id, a);
+        }
+      }
+      return Array.from(map.values());
+    }
+
+    return {
+      assets:      mergeAccounts(base.assets,      manualData.assets),
+      liabilities: mergeAccounts(base.liabilities, manualData.liabilities),
+    };
+  }, [ns, staticData, manualData]);
+
+  const setAccounts = (data: AccountData) => {
+    // For real users, data IS the manual data
+    // For demo users, we store only the delta (additions + overrides)
+    // For simplicity: store the full AccountData as manual — easy to reason about
+    const manual: ManualAccountData = { assets: data.assets, liabilities: data.liabilities };
+    const key = ns
+      ? `${ns}-${MANUAL_ACCOUNTS_KEY}`
+      : userId
+        ? `${userId}:${MANUAL_ACCOUNTS_KEY}`
+        : MANUAL_ACCOUNTS_KEY;
+    try { localStorage.setItem(key, JSON.stringify(manual)); } catch { /* ignore */ }
+    setManualData(manual);
+  };
+
+  return [merged, setAccounts];
 }

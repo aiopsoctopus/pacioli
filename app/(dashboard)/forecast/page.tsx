@@ -62,7 +62,7 @@ export default function ForecastView() {
   const [earnerVersion, setEarnerVersion] = useState(0);
   const [mortgageVersion, setMortgageVersion] = useState(0);
   const [collegeVersion, setCollegeVersion] = useState(0);
-  const [householdOpen, setHouseholdOpen] = useState(false);
+  const [householdOpen, setHouseholdOpen] = useState(isDemo);
 
   const transactions = useTransactions(ns);
 
@@ -70,6 +70,78 @@ export default function ForecastView() {
     if (!isDemo) return;
     fetchJSON<AccountData>("accounts.json").then(setAccounts);
     fetchJSON<MonthIncome[]>("income.json").then(setIncome);
+
+    // Seed household model demo data so the Household Models section shows
+    // real content rather than empty "Add" forms on first visit.
+    const today = new Date().toISOString().slice(0, 7);
+    const nextYear = `${new Date().getFullYear() + 1}`;
+
+    if (!localStorage.getItem("pacioli-equity-grants")) {
+      const demoGrants = [
+        {
+          id: "demo_rsu_1",
+          type: "rsu",
+          label: "MSFT RSU Grant",
+          totalShares: 400,
+          pricePerShare: 420,
+          grantMonth: `${new Date().getFullYear() - 1}-06`,
+          cliffMonths: 12,
+          cliffFraction: 0.25,
+          vestFrequency: "quarterly",
+          vestingPeriodMonths: 48,
+        },
+      ];
+      localStorage.setItem("pacioli-equity-grants", JSON.stringify(demoGrants));
+      setEquityVersion((v) => v + 1);
+    }
+
+    if (!localStorage.getItem("pacioli-mortgage")) {
+      const demoMortgage = {
+        label: "Primary Home",
+        balance: 720000,
+        monthlyPayment: 4850,
+        annualRate: 0.0675,
+        extraPayment: 500,
+        startMonth: today,
+      };
+      localStorage.setItem("pacioli-mortgage", JSON.stringify(demoMortgage));
+      setMortgageVersion((v) => v + 1);
+    }
+
+    // Also re-seed if existing data is malformed (missing required fields from a prior bad seed)
+    const existingCollege = (() => { try { return JSON.parse(localStorage.getItem("pacioli-college-funds") ?? "[]"); } catch { return []; } })();
+    const collegeNeedsReseed = existingCollege.length > 0 && existingCollege[0].mode == null;
+    if (!localStorage.getItem("pacioli-college-funds") || collegeNeedsReseed) {
+      const demoCollege = [
+        {
+          id: "demo_529_1",
+          label: "529 — College Fund",
+          mode: "backsolve",
+          targetAmount: 240000,
+          targetYear: new Date().getFullYear() + 14,
+          monthlyContribution: 800,
+          currentBalance: 28500,
+          annualReturn: 0.07,
+          startMonth: today,
+        },
+      ];
+      localStorage.setItem("pacioli-college-funds", JSON.stringify(demoCollege));
+      setCollegeVersion((v) => v + 1);
+    }
+
+    if (!localStorage.getItem("pacioli-two-earner")) {
+      const demoEarners = [
+        {
+          id: "demo_earner_1",
+          label: "Jordan income",
+          monthlyAmount: 9333,
+          startMonth: today,
+          annualGrowth: 0.04,
+        },
+      ];
+      localStorage.setItem("pacioli-two-earner", JSON.stringify(demoEarners));
+      setEarnerVersion((v) => v + 1);
+    }
   }, [isDemo]);
 
   // Persist scenario state across navigation
@@ -565,6 +637,13 @@ export default function ForecastView() {
             ? bracketRows.map((r, i) => ({ ...r, noChange: chartRows[i]?.base ?? r.base }))
             : chartRows;
 
+          // Y-axis floor: start near the data minimum rather than $0
+          const allValues: number[] = mergedRows.flatMap((r) =>
+            [r.base, r.scenario, r.pessimistic, r.optimistic, r.noChange].filter((v) => v != null)
+          );
+          const chartMin = allValues.length ? Math.min(...allValues) : 0;
+          const chartYFloor = Math.floor(chartMin / 100_000) * 100_000;
+
           return (
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={mergedRows} style={{ marginTop: 16 }}>
@@ -584,7 +663,7 @@ export default function ForecastView() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle, #27272a)" />
                 <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
-                <YAxis tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} width={60} />
+                <YAxis tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} width={60} domain={[chartYFloor, 'auto']} />
                 <Tooltip
                   formatter={(v: unknown, name: unknown) => {
                     const labels: Record<string, string> = {

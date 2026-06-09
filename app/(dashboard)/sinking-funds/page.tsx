@@ -156,8 +156,13 @@ export default function SinkingFunds() {
           const pct = Math.min(100, Math.round((data.saved / data.target) * 100));
           const remaining = data.target - data.saved;
           const mLeft = monthsUntil(data.target_date);
-          const neededPerMonth = mLeft > 0 ? Math.ceil(remaining / mLeft) : 0;
-          const onTrack = neededPerMonth <= data.monthly_contribution;
+          // When mLeft === 0 the target date is this month or past.
+          // neededPerMonth of 0 would wrongly mark under-funded goals as "On track".
+          const neededPerMonth = mLeft > 0 ? Math.ceil(remaining / mLeft) : remaining > 0 ? Infinity : 0;
+          // Goal is on track only if it's fully funded OR contributions are sufficient.
+          const isFunded = data.saved >= data.target;
+          const isPastDue = mLeft === 0 && !isFunded;
+          const onTrack = !isPastDue && neededPerMonth <= data.monthly_contribution;
           const targetDate = new Date(data.target_date).toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
           return (
@@ -242,11 +247,13 @@ export default function SinkingFunds() {
                     <div>
                       <span className="text-2xl">{data.emoji}</span>
                       <h3 className="text-lg font-bold pacioli-text-primary mt-1">{data.name}</h3>
-                      <p className="text-xs pacioli-text-muted">Target: {targetDate} · {mLeft} months away</p>
+                      <p className="text-xs pacioli-text-muted">
+                        Target: {targetDate} · {isFunded ? "Funded!" : isPastDue ? "Past due" : `${mLeft} months away`}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${onTrack ? "pacioli-badge-success" : "pacioli-badge-danger"}`}>
-                        {onTrack ? "On track ✓" : "Behind ↑"}
+                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${isFunded ? "pacioli-badge-success" : isPastDue ? "pacioli-badge-danger" : onTrack ? "pacioli-badge-success" : "pacioli-badge-danger"}`}>
+                        {isFunded ? "Funded ✓" : isPastDue ? "Missed ✗" : onTrack ? "On track ✓" : "Behind ↑"}
                       </span>
                       <button onClick={() => startEdit(f)} className="p-1.5 pacioli-text-muted hover:pacioli-text-primary pacioli-bg-nav-hover rounded-lg transition-all">
                         <Pencil size={14} />
@@ -265,7 +272,7 @@ export default function SinkingFunds() {
                   <div className="grid grid-cols-3 gap-3 text-center">
                     <Stat label="Remaining" value={formatCurrency(remaining)} />
                     <Stat label="Contributing" value={`${formatCurrency(data.monthly_contribution)}/mo`} />
-                    <Stat label="Need / mo" value={neededPerMonth > 0 ? `${formatCurrency(neededPerMonth)}/mo` : "Done!"} highlight={!onTrack ? "pacioli-text-warning" : undefined} />
+                    <Stat label="Need / mo" value={isFunded ? "Done!" : isPastDue ? "Past due" : neededPerMonth > 0 ? `${formatCurrency(neededPerMonth)}/mo` : "Done!"} highlight={!onTrack && !isFunded ? "pacioli-text-warning" : undefined} />
                   </div>
                 </>
               )}

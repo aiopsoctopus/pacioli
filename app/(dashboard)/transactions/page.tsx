@@ -9,8 +9,32 @@ import {
 import { useDemo } from "@/components/demo-provider";
 import {
   Search, X, Check, ChevronUp, ChevronDown, ChevronsUpDown,
-  Tag, Pencil, CheckSquare, Square, Filter,
+  Tag, Pencil, CheckSquare, Square, Filter, Download,
 } from "lucide-react";
+
+// ─── CSV export helper ────────────────────────────────────────────────────────
+
+function exportCSV(transactions: Transaction[], accountNames: Record<string, string>) {
+  const rows = [
+    ["Date", "Merchant", "Memo", "Account", "Category", "Amount"],
+    ...transactions.map((t) => [
+      t.date,
+      `"${t.merchant.replace(/"/g, '""')}"`,
+      `"${(t.memo ?? "").replace(/"/g, '""')}"`,
+      `"${(accountNames[t.account] ?? t.account ?? "").replace(/"/g, '""')}"`,
+      t.category,
+      t.amount.toFixed(2),
+    ]),
+  ];
+  const csv = rows.map((r) => r.join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `pacioli-transactions-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -316,7 +340,7 @@ export default function TransactionsPage() {
       </div>
 
       {/* Summary chips */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-3 items-center">
         <div className="pacioli-bg-surface border rounded-xl px-4 py-2.5">
           <p className="text-xs pacioli-text-muted">Showing</p>
           <p className="text-lg font-bold pacioli-text-primary">{filtered.length.toLocaleString()}</p>
@@ -329,6 +353,15 @@ export default function TransactionsPage() {
           <p className="text-xs pacioli-text-muted">All time</p>
           <p className="text-lg font-bold pacioli-text-primary">{transactions.length.toLocaleString()} transactions</p>
         </div>
+        <button
+          onClick={() => exportCSV(sorted, accountNames)}
+          disabled={sorted.length === 0}
+          className="ml-auto flex items-center gap-2 px-4 py-2.5 border rounded-xl text-sm font-medium pacioli-text-muted hover:pacioli-text-primary pacioli-bg-surface transition-colors disabled:opacity-40"
+          title="Export filtered transactions as CSV"
+        >
+          <Download size={14} />
+          Export CSV
+        </button>
       </div>
 
       {/* Filters bar */}

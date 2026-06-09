@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { fetchJSON, formatCurrency, formatMonth, getNetWorth, AccountData } from "@/lib/data";
+import { formatCurrency, formatMonth, getNetWorth, AccountData, useAccounts, saveManualAccounts } from "@/lib/data";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useDemo } from "@/components/demo-provider";
+import AccountEditor from "@/components/account-editor";
 import { Upload } from "lucide-react";
 
 // Asset type groupings for composition view
@@ -19,21 +19,33 @@ const ACCOUNT_GROUP_ORDER = ["checking", "savings", "investment", "property", "v
 
 export default function NetWorth() {
   const { isDemo } = useDemo();
-  const [accounts, setAccounts] = useState<AccountData | null>(null);
+  const ns = isDemo ? "demo" : "";
+  const [accounts, setAccounts] = useAccounts(ns);
 
-  useEffect(() => {
-    if (!isDemo) return;
-    fetchJSON<AccountData>("accounts.json").then(setAccounts);
-  }, [isDemo]);
+  function handleAccountsChange(updated: AccountData) {
+    // Persist full account data to localStorage and trigger re-render
+    saveManualAccounts({ assets: updated.assets, liabilities: updated.liabilities }, ns);
+    setAccounts(updated);
+  }
 
-  if (!isDemo) return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-      <p className="pacioli-text-muted text-sm mb-1">Assets minus what you owe.</p>
-      <h2 className="text-3xl font-bold pacioli-text-primary mt-1 mb-6">My Net Worth</h2>
-      <p className="pacioli-text-muted mb-8 max-w-sm">No account data yet. Import a CSV to see your balance sheet.</p>
-      <Link href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"#0d6e6e", color:"#fff", padding:"12px 24px", borderRadius:10, fontWeight:600, textDecoration:"none" }}>
-        <Upload size={15} /> Connect data
-      </Link>
+  // Real user with no accounts yet — show empty state + editor to add first account
+  if (!isDemo && !accounts) return (
+    <div className="space-y-8">
+      <div>
+        <p className="pacioli-text-muted text-sm">Assets minus what you owe.</p>
+        <h2 className="text-3xl font-bold pacioli-text-primary mt-1">My Net Worth</h2>
+      </div>
+      <div className="flex flex-col items-center text-center px-4 py-12">
+        <Upload size={28} className="pacioli-text-muted mb-4" />
+        <p className="pacioli-text-muted mb-2 max-w-sm">No accounts yet. Add them manually below, or import a CSV.</p>
+        <Link href="/connect" style={{ display:"inline-flex", alignItems:"center", gap:8, color:"#5dcaa5", textDecoration:"underline", fontSize:14 }}>
+          Import via CSV instead →
+        </Link>
+      </div>
+      <AccountEditor
+        accounts={{ assets: [], liabilities: [] }}
+        onChange={handleAccountsChange}
+      />
     </div>
   );
 
@@ -48,6 +60,11 @@ export default function NetWorth() {
     month: formatMonth(m),
     netWorth: Math.round(getNetWorth(accounts, m)),
   }));
+
+  // Y-axis floor: round down to the nearest $100k below the minimum value
+  // so the chart doesn't waste 90% of its space on empty baseline.
+  const nwMin = Math.min(...nwHistory.map(d => d.netWorth));
+  const nwYFloor = Math.floor(nwMin / 100_000) * 100_000;
 
   const currentNW = getNetWorth(accounts, currentMonth);
   const priorYearNW = getNetWorth(accounts, priorYearMonth);
@@ -175,7 +192,7 @@ export default function NetWorth() {
               </linearGradient>
             </defs>
             <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} width={55} />
+            <YAxis tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} width={55} domain={[nwYFloor, 'auto']} />
             <Tooltip
               formatter={(v: any) => [formatCurrency(Number(v)), "Net Worth"]}
               contentStyle={{ background: "#18181b", border: "1px solid #3f3f46", borderRadius: 8 }}
@@ -255,6 +272,9 @@ export default function NetWorth() {
           </div>
         </div>
       </div>
+
+      {/* Account editor */}
+      <AccountEditor accounts={accounts} onChange={handleAccountsChange} />
     </div>
   );
 }

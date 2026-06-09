@@ -1,20 +1,12 @@
 "use client";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, FileText, CheckCircle2, AlertCircle, Plus, Trash2, FlaskConical, ArrowRight, Tag, Download, FolderOpen } from "lucide-react";
+import { Upload, FileText, CheckCircle2, AlertCircle, FlaskConical, ArrowRight, Tag, Download, FolderOpen } from "lucide-react";
 import { formatCurrency, IMPORTED_KEY } from "@/lib/data";
 import { useDemo } from "@/components/demo-provider";
 import PlaidLinkButton from "@/components/plaid-link-button";
 
 const MANUAL_ACCOUNTS_KEY = "pacioli-manual-accounts";
-
-interface ManualAccount {
-  id: string;
-  name: string;
-  type: "asset" | "liability";
-  balance: number;
-  institution: string;
-}
 
 interface ParsedTransaction {
   date: string;
@@ -55,38 +47,6 @@ export default function ConnectPage() {
   const [csvError, setCsvError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-
-  const [manualAccounts, setManualAccounts] = useState<ManualAccount[]>(() => {
-    if (typeof window === "undefined") return [];
-    const saved = localStorage.getItem(MANUAL_ACCOUNTS_KEY);
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [newAccount, setNewAccount] = useState<Omit<ManualAccount, "id">>({
-    name: "", type: "asset", balance: 0, institution: "",
-  });
-  const [showAddForm, setShowAddForm] = useState(false);
-
-  function saveAccounts(updated: ManualAccount[]) {
-    setManualAccounts(updated);
-    localStorage.setItem(MANUAL_ACCOUNTS_KEY, JSON.stringify(updated));
-  }
-
-  function addAccount() {
-    if (!newAccount.name) return;
-    const updated = [...manualAccounts, { ...newAccount, id: `ma_${Date.now()}` }];
-    saveAccounts(updated);
-    setNewAccount({ name: "", type: "asset", balance: 0, institution: "" });
-    setShowAddForm(false);
-  }
-
-  function deleteAccount(id: string) {
-    saveAccounts(manualAccounts.filter((a) => a.id !== id));
-  }
-
-  function updateBalance(id: string, balance: number) {
-    saveAccounts(manualAccounts.map((a) => a.id === id ? { ...a, balance } : a));
-  }
 
   function handleFile(file: File) {
     setCsvError(null);
@@ -172,9 +132,6 @@ export default function ConnectPage() {
           }
         }
         setImportStatus("success");
-        // Re-read manual accounts from the restored data
-        const saved = localStorage.getItem(MANUAL_ACCOUNTS_KEY);
-        if (saved) setManualAccounts(JSON.parse(saved));
         // Brief delay then reload so all hooks re-init from the restored data
         setTimeout(() => window.location.reload(), 1200);
       } catch (err) {
@@ -184,11 +141,6 @@ export default function ConnectPage() {
     };
     reader.readAsText(file);
   }
-
-  const assets = manualAccounts.filter((a) => a.type === "asset");
-  const liabilities = manualAccounts.filter((a) => a.type === "liability");
-  const totalAssets = assets.reduce((s, a) => s + a.balance, 0);
-  const totalLiabilities = liabilities.reduce((s, a) => s + a.balance, 0);
 
   return (
     <div className="space-y-8">
@@ -338,102 +290,20 @@ export default function ConnectPage() {
         <PlaidLinkButton />
       </div>
 
-      {/* Manual account balances */}
-      <div className="pacioli-bg-surface rounded-2xl p-6 border">
-        <div className="flex justify-between items-center mb-1">
-          <h3 className="text-sm font-semibold pacioli-text-primary">Manual Account Balances</h3>
-          <button
-            onClick={() => setShowAddForm(true)}
-            className="flex items-center gap-1.5 text-xs font-medium pacioli-accent hover:opacity-80 transition-colors"
-          >
-            <Plus size={13} /> Add account
-          </button>
+      {/* Manual account balances — now lives on Net Worth page */}
+      <div className="pacioli-bg-surface rounded-2xl p-5 border flex items-center justify-between gap-4">
+        <div>
+          <h3 className="text-sm font-semibold pacioli-text-primary mb-0.5">Manual Account Balances</h3>
+          <p className="text-xs pacioli-text-muted">
+            Add home value, cars, or accounts at unlisted institutions. Managed on the Net Worth page.
+          </p>
         </div>
-        <p className="text-xs pacioli-text-muted mb-5">
-          For accounts that can't be linked — home value, cars, investment accounts at unlisted institutions. These feed into your net worth calculation.
-        </p>
-
-        {/* Add form */}
-        {showAddForm && (
-          <div className="mb-5 p-4 pacioli-bg-surface-2 rounded-xl border pacioli-border space-y-3">
-            <p className="text-xs font-semibold pacioli-text-secondary">New account</p>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-xs pacioli-text-muted mb-1 block">Name</label>
-                <input className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
-                  placeholder="e.g. Primary Home" value={newAccount.name}
-                  onChange={(e) => setNewAccount({ ...newAccount, name: e.target.value })} />
-              </div>
-              <div>
-                <label className="text-xs pacioli-text-muted mb-1 block">Institution</label>
-                <input className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
-                  placeholder="e.g. Manual / Zillow" value={newAccount.institution}
-                  onChange={(e) => setNewAccount({ ...newAccount, institution: e.target.value })} />
-              </div>
-              <div>
-                <label className="text-xs pacioli-text-muted mb-1 block">Type</label>
-                <select className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
-                  value={newAccount.type} onChange={(e) => setNewAccount({ ...newAccount, type: e.target.value as "asset" | "liability" })}>
-                  <option value="asset">Asset</option>
-                  <option value="liability">Liability</option>
-                </select>
-              </div>
-              <div>
-                <label className="text-xs pacioli-text-muted mb-1 block">Current balance ($)</label>
-                <input type="number" className="w-full pacioli-bg-input border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
-                  value={newAccount.balance} onChange={(e) => setNewAccount({ ...newAccount, balance: Number(e.target.value) })} />
-              </div>
-            </div>
-            <div className="flex gap-2 pt-1">
-              <button onClick={addAccount} className="px-4 py-1.5 bg-teal-700 hover:bg-teal-600 text-white text-xs font-medium rounded-lg transition-colors">Save</button>
-              <button onClick={() => setShowAddForm(false)} className="px-4 py-1.5 pacioli-bg-btn-cancel pacioli-text-primary text-xs font-medium rounded-lg transition-colors">Cancel</button>
-            </div>
-          </div>
-        )}
-
-        {/* Account list */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          {[
-            { title: "Assets", accounts: assets, total: totalAssets, colorClass: "pacioli-text-success" },
-            { title: "Liabilities", accounts: liabilities, total: totalLiabilities, colorClass: "pacioli-text-danger" },
-          ].map(({ title, accounts, total, colorClass }) => (
-            <div key={title}>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-xs font-semibold pacioli-text-muted uppercase tracking-wide">{title}</p>
-                <span className={`text-sm font-bold ${colorClass}`}>{formatCurrency(total)}</span>
-              </div>
-              {accounts.length === 0 && (
-                <p className="text-xs pacioli-text-faint italic">No {title.toLowerCase()} added yet.</p>
-              )}
-              <div className="space-y-3">
-                {accounts.map((a) => (
-                  <div key={a.id} className="flex items-center gap-3 group">
-                    <div className="flex-1">
-                      <div className="flex justify-between text-sm mb-0.5">
-                        <span className="pacioli-text-secondary">{a.name}</span>
-                      </div>
-                      {a.institution && <p className="text-xs pacioli-text-faint">{a.institution}</p>}
-                    </div>
-                    <input
-                      type="number"
-                      className="w-32 pacioli-bg-input border rounded-lg px-3 py-1.5 text-sm text-right focus:outline-none focus:border-indigo-500"
-                      value={a.balance}
-                      onChange={(e) => updateBalance(a.id, Number(e.target.value))}
-                    />
-                    <button onClick={() => deleteAccount(a.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 pacioli-text-muted hover:pacioli-text-danger transition-all">
-                      <Trash2 size={13} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <p className="text-xs pacioli-text-faint mt-6">
-          Balances are saved in your browser. When you connect Plaid, linked accounts will automatically update — only manual entries stay here.
-        </p>
+        <a
+          href="/net-worth"
+          className="shrink-0 flex items-center gap-1.5 text-xs font-semibold pacioli-text-success hover:underline whitespace-nowrap"
+        >
+          Go to Net Worth <ArrowRight size={12} />
+        </a>
       </div>
 
       {/* Export / Import */}

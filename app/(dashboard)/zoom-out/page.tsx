@@ -7,21 +7,21 @@ import {
   AccountData, SinkingFund, MonthIncome,
 } from "@/lib/data";
 import {
-  AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend,
+  AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, ReferenceLine,
 } from "recharts";
 import { TrendingUp, TrendingDown, DollarSign, Target, Wallet, Upload, Layers } from "lucide-react";
 import { useDemo } from "@/components/demo-provider";
 import { useTheme } from "@/components/theme-provider";
+import { useAuth } from "@clerk/nextjs";
 
 const COLORS = ["#5dcaa5","#10b981","#f59e0b","#ef4444","#ec4899","#3b82f6","#8b5cf6","#14b8a6"];
-const SETUP_KEY = "pacioli-setup-complete";
 
 export default function ZoomOut() {
   // ── ALL hooks must be declared before any early returns (Rules of Hooks) ──────
+  const { isSignedIn } = useAuth();
   const { isDemo } = useDemo();
   const ns = isDemo ? "demo" : "";
   const { theme } = useTheme();
-  const [setupDone, setSetupDone] = useState<boolean | null>(null);
   const [accounts, setAccounts] = useState<AccountData | null>(null);
   const [sinkingFunds, setSinkingFunds] = useState<SinkingFund[]>([]);
   const [income, setIncome] = useState<MonthIncome[]>([]);
@@ -42,11 +42,6 @@ export default function ZoomOut() {
     };
   }, [theme]);
 
-  useEffect(() => {
-    const val = localStorage.getItem(SETUP_KEY);
-    setSetupDone(!!val);
-  }, []);
-
   // Only fetch static JSON in demo mode — real data users start blank
   useEffect(() => {
     if (!isDemo) return;
@@ -56,11 +51,11 @@ export default function ZoomOut() {
   }, [isDemo]);
 
   // ── Early returns AFTER all hooks ───────────────────────────────────────────
-  // Real-data users always see the empty state — check localStorage directly
-  // so we don't depend on async context resolution timing.
-  const isRealUser = typeof window !== "undefined" &&
-    localStorage.getItem("pacioli-setup-complete") === "true";
-  if (!isDemo || isRealUser) return <EmptyState />;
+  // Signed-in real users who haven't imported data yet → empty state with CTA
+  // Demo mode → full dashboard with sample data
+  // Unauthenticated → loading spinner (Clerk is still resolving)
+  if (isSignedIn && !isDemo) return <EmptyState />;
+  if (!isDemo) return <div className="pacioli-text-muted animate-pulse">Loading your financial picture...</div>;
   if (!accounts || !transactions.length || !income.length || !sinkingFunds.length) {
     return <div className="pacioli-text-muted animate-pulse">Loading your financial picture...</div>;
   }
@@ -71,6 +66,10 @@ export default function ZoomOut() {
     month: formatMonth(m),
     netWorth: getNetWorth(accounts, m),
   }));
+
+  // Y-axis floor: round down to nearest $100k below min so chart isn't mostly empty.
+  const nwMin = Math.min(...nwHistory.map(d => d.netWorth));
+  const nwYFloor = Math.floor(nwMin / 100_000) * 100_000;
 
   // NW headline: cap to today so future-dated balance entries don't inflate the figure.
   // Matches the same logic used on /net-worth so both pages show the same number.
@@ -102,6 +101,111 @@ export default function ZoomOut() {
   // Sinking fund summary
   const sfTotal = sinkingFunds.reduce((s, f) => s + f.saved, 0);
   const sfTarget = sinkingFunds.reduce((s, f) => s + f.target, 0);
+
+  // ── Recommended action callout ─────────────────────────────────────────────
+  // Pick the single highest-priority insight to surface on the dashboard.
+  type ActionInsight = { label: string; body: string; cta: string; href: string; urgent: boolean };
+
+  function pickInsight(): ActionInsight | null {
+    // 1. Emergency fund shortfall (most important)
+    const emergencyFund = sinkingFunds.find((f) =>
+      /emergency/i.test(f.name)
+    );
+    if (emergencyFund && emergencyFund.saved < emergencyFund.target) {
+      const shortfall = emergencyFund.target - emergencyFund.saved;
+      const mLeft = Math.max(
+        1,
+        emergencyFund.target_date
+          ? (() => {
+              const t = new Date(emergencyFund.target_date);
+              const now = new Date();
+              return (t.getFullYear() - now.getFullYear()) * 12 + (t.getMonth() - now.getMonth());
+            })()
+          : 12
+      );
+      const needPerMonth = Math.ceil(shortfall / mLeft);
+      return {
+        label: "Emergency Fund",
+        body: `${formatCurrency(shortfall)} short of your ${formatCurrency(emergencyFund.target)} target — needs ${formatCurrency(needPerMonth)}/mo to reach it in ${mLeft} month${mLeft !== 1 ? "s" : ""}.`,
+        cta: "Review goals →",
+        href: "/sinking-funds",
+        urgent: shortfall > 10_000,
+      };
+    }
+
+    // 2. RSU vest this month (income spike — check tax reserve sinking fund)
+    const rsuVestMonths = ["03","06","09","12"]; // quarterly vests Sep/Dec/Mar/Jun
+    const thisMonthStr = new Date().toISOString().slice(5, 7);
+    const isRsuMonth = rsuVestMonths.includes(thisMonthStr);
+    const taxReserve = sinkingFunds.find((f) => /tax|rsu/i.test(f.name));
+    if (isRsuMonth && taxReserve && taxReserve.saved < taxReserve.target * 0.7) {
+      return {
+        label: "RSU Vest Month",
+        body: `RSU vest expected this month — your Tax Reserve is at ${Math.round((taxReserve.saved / taxReserve.target) * 100)}% (${formatCurrency(taxReserve.saved)}). Consider topping it up before the vest hits.`,
+        cta: "Review tax reserve →",
+        href: "/sinking-funds",
+        urgent: true,
+      };
+    }
+
+    // 3. Negative cash flow this month
+    if (cashFlowNet < -500) {
+      return {
+        label: "Spending Alert",
+        body: `Spending is ${formatCurrency(Math.abs(cashFlowNet))} ahead of income in ${formatMonth(currentMonth)}. Check your budget to find where to trim.`,
+        cta: "View budget →",
+        href: "/budget",
+        urgent: true,
+      };
+    }
+
+    // 4. Any sinking fund behind with < 6 months to go
+    const urgentFund = sinkingFunds.find((f) => {
+      if (f.saved >= f.target) return false;
+      const t = new Date(f.target_date);
+      const now = new Date();
+      const mLeft = (t.getFullYear() - now.getFullYear()) * 12 + (t.getMonth() - now.getMonth());
+      const needed = mLeft > 0 ? Math.ceil((f.target - f.saved) / mLeft) : Infinity;
+      return mLeft > 0 && mLeft <= 6 && needed > f.monthly_contribution * 1.2;
+    });
+    if (urgentFund) {
+      const t = new Date(urgentFund.target_date);
+      const now = new Date();
+      const mLeft = (t.getFullYear() - now.getFullYear()) * 12 + (t.getMonth() - now.getMonth());
+      const needed = Math.ceil((urgentFund.target - urgentFund.saved) / mLeft);
+      return {
+        label: urgentFund.emoji + " " + urgentFund.name,
+        body: `${mLeft} months left and ${formatCurrency(urgentFund.target - urgentFund.saved)} to go — needs ${formatCurrency(needed)}/mo but you're only contributing ${formatCurrency(urgentFund.monthly_contribution)}/mo.`,
+        cta: "Update goal →",
+        href: "/sinking-funds",
+        urgent: false,
+      };
+    }
+
+    // 5. Strong cash flow — positive reinforcement
+    if (cashFlowNet > 1000) {
+      return {
+        label: "Surplus Month",
+        body: `You're on track to save ${formatCurrency(cashFlowNet)} in ${formatMonth(currentMonth)}. Routing surplus to a goal or investment keeps the momentum.`,
+        cta: "View budget →",
+        href: "/budget",
+        urgent: false,
+      };
+    }
+
+    return null;
+  }
+
+  const insight = pickInsight();
+
+  // 12-month savings rate trend (plain derivation — after null guards, so no useMemo needed)
+  const savingsRateHistory = months.slice(-12).map((m) => {
+    const monthIncome = income.find((i) => i.month === m);
+    const totalInc = monthIncome?.sources.reduce((s, src) => s + src.amount, 0) ?? 0;
+    const totalSp = Object.values(getMonthlySpend(transactions, m)).reduce((s, v) => s + v, 0);
+    const rate = totalInc > 0 ? Math.round(((totalInc - totalSp) / totalInc) * 100) : 0;
+    return { month: formatMonth(m), rate };
+  });
 
   // Budget health
   const budgetEnvelopes = loadBudgetEnvelopes(ns);
@@ -164,6 +268,22 @@ export default function ZoomOut() {
         />
       </div>
 
+      {/* Recommended action callout */}
+      {insight && (
+        <div className={`rounded-2xl px-5 py-4 border flex items-start justify-between gap-4 ${insight.urgent ? "pacioli-alert-warning" : "pacioli-bg-surface"}`}>
+          <div className="min-w-0">
+            <p className="text-xs font-semibold pacioli-text-secondary mb-0.5">{insight.label}</p>
+            <p className="text-sm pacioli-text-primary leading-relaxed">{insight.body}</p>
+          </div>
+          <Link
+            href={insight.href}
+            className="shrink-0 text-xs font-semibold pacioli-text-success hover:underline whitespace-nowrap"
+          >
+            {insight.cta}
+          </Link>
+        </div>
+      )}
+
       {/* Charts row */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Net worth trend */}
@@ -178,7 +298,7 @@ export default function ZoomOut() {
                 </linearGradient>
               </defs>
               <XAxis dataKey="month" tick={{ fill: chartTheme.textMuted, fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} tick={{ fill: chartTheme.textMuted, fontSize: 11 }} axisLine={false} tickLine={false} width={50} />
+              <YAxis tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} tick={{ fill: chartTheme.textMuted, fontSize: 11 }} axisLine={false} tickLine={false} width={50} domain={[nwYFloor, 'auto']} />
               <Tooltip
                 formatter={(v: unknown) => [formatCurrency(Number(v)), "Net Worth"]}
                 contentStyle={{ background: chartTheme.tooltipBg, border: `1px solid ${chartTheme.tooltipBorder}`, borderRadius: 8 }}
@@ -213,6 +333,48 @@ export default function ZoomOut() {
             </PieChart>
           </ResponsiveContainer>
         </div>
+      </div>
+
+      {/* 12-month savings rate trend */}
+      <div className="pacioli-bg-surface rounded-2xl p-6 border">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold pacioli-text-secondary">Savings Rate — Last 12 Months</h3>
+          <span className="text-xs pacioli-text-muted">
+            Avg {Math.round(savingsRateHistory.reduce((s, d) => s + d.rate, 0) / savingsRateHistory.length)}%
+          </span>
+        </div>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={savingsRateHistory} barSize={18}>
+            <XAxis dataKey="month" tick={{ fill: chartTheme.textMuted, fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis
+              tickFormatter={(v) => `${v}%`}
+              tick={{ fill: chartTheme.textMuted, fontSize: 11 }}
+              axisLine={false}
+              tickLine={false}
+              width={38}
+              domain={['auto', 'auto']}
+            />
+            <ReferenceLine y={0} stroke={chartTheme.tooltipBorder} strokeDasharray="3 3" />
+            <Tooltip
+              formatter={(v: unknown) => [`${v}%`, "Savings rate"]}
+              contentStyle={{ background: chartTheme.tooltipBg, border: `1px solid ${chartTheme.tooltipBorder}`, borderRadius: 8 }}
+              labelStyle={{ color: chartTheme.textMuted }}
+            />
+            <Bar
+              dataKey="rate"
+              radius={[4, 4, 0, 0]}
+              fill="#5dcaa5"
+              label={false}
+              // colour bars red when rate is negative
+              isAnimationActive={true}
+            >
+              {savingsRateHistory.map((entry, i) => (
+                <Cell key={i} fill={entry.rate < 0 ? "#ef4444" : entry.rate < 10 ? "#f59e0b" : "#5dcaa5"} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+        <p className="text-xs pacioli-text-muted mt-2">Green = healthy (≥10%) · Amber = tight · Red = spending exceeded income</p>
       </div>
 
       {/* Sinking Funds mini-overview */}

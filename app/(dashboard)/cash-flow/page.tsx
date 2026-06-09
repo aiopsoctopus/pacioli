@@ -63,6 +63,18 @@ export default function CashFlow() {
   const allTxMonths = [...new Set(transactions.map((t) => t.date.slice(0, 7)))].sort();
   const activeMonth = selectedMonth || allTxMonths[allTxMonths.length - 1] || "";
 
+  // ── 12-month savings rate sparkline (must be before any early returns — Rules of Hooks) ──
+  const sparkData = useMemo(() => {
+    const last12 = allTxMonths.slice(-12);
+    return last12.map((m) => {
+      const spend = Object.values(getMonthlySpend(transactions, m)).reduce((s, v) => s + v, 0);
+      const inc   = income.find((i) => i.month === m)?.sources.reduce((s, src) => s + src.amount, 0) ?? 0;
+      const rate  = inc > 0 ? Math.round(((inc - spend) / inc) * 100) : null;
+      return { month: formatMonth(m), rate };
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactions, income]);
+
   if (!isDemo && transactions.length === 0) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
       <p className="pacioli-text-muted text-sm mb-1">Where it comes from, where it goes.</p>
@@ -280,8 +292,13 @@ export default function CashFlow() {
             <p className="text-xs pacioli-text-muted mt-0.5">Where every dollar of income goes</p>
           </div>
           <div className="text-right">
-            <p className="text-xs pacioli-text-muted">Savings rate</p>
-            <p className={`text-2xl font-bold ${savingsRate >= 20 ? "pacioli-text-success" : "pacioli-text-warning"}`}>{savingsRate}%</p>
+            <p className="text-xs pacioli-text-muted mb-1">Savings rate · 12-month trend</p>
+            <div className="flex items-end gap-3">
+              <SavingsSparkline data={sparkData} activeMonth={formatMonth(activeMonth)} />
+              <p className={`text-2xl font-bold leading-none ${savingsRate >= 20 ? "pacioli-text-success" : "pacioli-text-warning"}`}>
+                {savingsRate}%
+              </p>
+            </div>
           </div>
         </div>
 
@@ -480,5 +497,68 @@ function TransactionRow({
         </div>
       )}
     </div>
+  );
+}
+
+// ── Savings rate sparkline (pure SVG, no dependency) ─────────────────────────
+function SavingsSparkline({
+  data,
+  activeMonth,
+}: {
+  data: { month: string; rate: number | null }[];
+  activeMonth: string;
+}) {
+  const W = 96, H = 32, PAD = 2;
+  const valid = data.filter((d) => d.rate !== null) as { month: string; rate: number }[];
+  if (valid.length < 2) return null;
+
+  const rates = valid.map((d) => d.rate);
+  const min = Math.min(...rates, 0);
+  const max = Math.max(...rates, 1);
+  const range = max - min || 1;
+
+  const xStep = (W - PAD * 2) / (data.length - 1);
+
+  function xOf(i: number) { return PAD + i * xStep; }
+  function yOf(r: number) { return H - PAD - ((r - min) / range) * (H - PAD * 2); }
+
+  // Build polyline points from all non-null data, connecting segments
+  const points = data
+    .map((d, i) => d.rate !== null ? `${xOf(i).toFixed(1)},${yOf(d.rate).toFixed(1)}` : null)
+    .filter(Boolean)
+    .join(" ");
+
+  const activeIdx = data.findIndex((d) => d.month === activeMonth);
+  const activeRate = activeIdx >= 0 ? data[activeIdx].rate : null;
+
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="overflow-visible">
+      {/* Zero line */}
+      <line
+        x1={PAD} y1={yOf(0).toFixed(1)}
+        x2={W - PAD} y2={yOf(0).toFixed(1)}
+        stroke="currentColor" strokeOpacity={0.12} strokeWidth={1}
+        className="pacioli-text-muted"
+      />
+      {/* Sparkline */}
+      <polyline
+        points={points}
+        fill="none"
+        stroke="#5dcaa5"
+        strokeWidth={1.5}
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        opacity={0.7}
+      />
+      {/* Active month dot */}
+      {activeIdx >= 0 && activeRate !== null && (
+        <circle
+          cx={xOf(activeIdx).toFixed(1)}
+          cy={yOf(activeRate).toFixed(1)}
+          r={3}
+          fill="#5dcaa5"
+        />
+      )}
+    </svg>
   );
 }

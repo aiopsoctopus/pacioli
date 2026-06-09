@@ -1,28 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { plaidClient } from "@/lib/plaid-client";
+import { supabaseAdmin } from "@/lib/supabase";
 
-/**
- * Exchange a Plaid public_token for an access_token.
- * Stores the access_token in localStorage on the client (via response).
- *
- * Note: In a production app with a database you'd store this server-side
- * keyed to the userId. For now we return it to the client to store in
- * localStorage (scoped to userId via lib/storage.ts).
- */
 export async function POST(req: NextRequest) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { public_token, metadata } = await req.json();
+  const db = supabaseAdmin();
 
-  const response = await plaidClient.itemPublicTokenExchange({ public_token });
-  const accessToken = response.data.access_token;
-  const itemId = response.data.item_id;
+  const exchangeRes = await plaidClient.itemPublicTokenExchange({ public_token });
+  const accessToken = exchangeRes.data.access_token;
+  const itemId = exchangeRes.data.item_id;
+  const institutionName: string | null = metadata?.institution?.name ?? null;
 
-  return NextResponse.json({
-    access_token: accessToken,
+  // Persist the item — upsert in case the user re-connects the same institution
+  const { error: itemError } = await db.from("plaid_items").upsert({
     item_id: itemId,
-    institution: metadata?.institution ?? null,
-  });
+    user_id: userId,
+    access_token: accessToken,
+    institution_name: institutionName,
+    connected_at: new Date().toISOString(),
+  }, { onConflict: "item_id" });
+
+  if (itemError) {
+    console.error("[Plaid] exchange upsert error:", itemError);
+    return NextResponse.json({ error: "Failed to save item" }, { status: 500 });
+  }
+
+  // Fetch accounts and persist them
+  try {
+    const accountsRes = await plaidClient.accountsGet({ access_token: accessToken });
+    const accounts = accountsRes.data.accounts.map((a) => ({
+      account_id: a.account_id,
+      item_id: itemId,
+      name: a.name,
+      type: a.type as string,
+      subtype: (a.subtype as string | null) ?? null,
+      balance: a.balances.current ?? 0,
+    }));
+
+    if (accounts.length > 0) {
+      await db.from("plaid_accounts").upsert(accounts, { onConflict: "account_id" });
+    }
+  } catch (err) {
+    console.error("[Plaid] exchange accounts fetch error:", err);
+    // Non-fatal — the sync step will retry
+  }
+
+  return NextResponse.json({ item_id: itemId, institution_name: institutionName });
 }

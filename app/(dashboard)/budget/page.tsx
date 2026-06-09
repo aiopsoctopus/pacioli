@@ -573,6 +573,17 @@ export default function BudgetPage() {
         <div className="space-y-4">
           {/* Over-budget alerts */}
           {(() => {
+            // Suppress alerts in the first 25% of the month — lumpy categories
+            // (travel, annual subscriptions) routinely fire false alarms at day 3.
+            if (tooEarlyForPace) return (
+              <div className="pacioli-bg-surface rounded-2xl p-5 border">
+                <p className="text-xs font-semibold pacioli-text-secondary mb-1">Budget Status</p>
+                <p className="text-sm pacioli-text-muted font-medium mt-2">Too early to call</p>
+                <p className="text-xs pacioli-text-muted mt-1">
+                  Only {Math.round(monthPct)}% through {formatMonth(currentMonth)} — check back mid-month for accurate alerts.
+                </p>
+              </div>
+            );
             const overBudget = sortedEnvelopes.filter(
               (e) => (currentSpend[e.category] ?? 0) > e.budgetAmount
             );

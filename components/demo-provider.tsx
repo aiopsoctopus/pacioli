@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 
 const DEMO_STORAGE_KEY = "pacioli-demo-mode";
 
@@ -25,6 +25,17 @@ function resolveIsDemo(): boolean {
   if (params.has("demo")) {
     const urlDemo = params.get("demo") === "true";
     localStorage.setItem(DEMO_STORAGE_KEY, String(urlDemo));
+    if (urlDemo) {
+      // Eagerly apply all enterDemo side-effects so direct ?demo=true links
+      // work as standalone entry points — cookie must be set before any
+      // navigation so middleware allows subsequent page loads without auth.
+      localStorage.setItem("pacioli-setup-complete", "demo");
+      document.cookie = "pacioli-demo-mode=true; path=/; samesite=lax";
+      localStorage.setItem("hfos-theme", "light");
+      document.documentElement.setAttribute("data-theme", "light");
+    } else {
+      document.cookie = "pacioli-demo-mode=false; path=/; samesite=lax; max-age=0";
+    }
     return urlDemo;
   }
   // Real-setup users are never in demo mode — clear any stale flag
