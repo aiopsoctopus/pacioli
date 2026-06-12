@@ -694,7 +694,7 @@ export default function ForecastView() {
                 {hasBracket && (
                   <>
                     {/* Band fill: optimistic area with gradient, pessimistic cuts it out */}
-                    <Area type="monotone" dataKey="optimistic"  stroke="none"    fill="url(#bandGrad)" dot={false} legendType="none" />
+                    <Area type="monotone" dataKey="optimistic"  stroke="none"    fill="url(#bandGrad)" dot={false} legendType="none" tooltipType="none" />
                     {/* Three scenario lines */}
                     <Area type="monotone" dataKey="pessimistic" stroke="#f59e0b" strokeWidth={1.5} strokeDasharray="5 3" fill="none" dot={false} name="pessimistic" />
                     <Area type="monotone" dataKey="base"        stroke="#6366f1" strokeWidth={2.5} fill="none"             dot={false} name="base" />

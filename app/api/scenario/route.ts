@@ -199,7 +199,7 @@ Projection results:
 Scenario events:
 ${JSON.stringify(existingEvents, null, 2)}
 
-Write 2–3 sentences in plain English. ${bracket ? "Lead with the range: best case vs worst case, then give the base-case number. Be honest about uncertainty." : "Use the actual numbers. Be honest about uncertainty."} No JSON, no markdown.`;
+Write 2–3 sentences in plain English. ${bracket ? "Lead with the COST of this decision: compare the scenario's net worth gain to the base trajectory's gain (base trajectory = what happens if nothing changes), and state the difference in plain dollars — e.g. 'this costs you about $X compared to not doing it.' Then give the pessimistic-to-optimistic range for that cost. Do not present the scenario's raw gain numbers as if they were the range of outcomes for the decision — always frame them relative to the base trajectory. Be honest about uncertainty." : "Use the actual numbers, and compare the scenario to the base trajectory (what happens if nothing changes) so the user understands the cost or benefit of this decision, not just the raw ending balance. Be honest about uncertainty."} No JSON, no markdown.`;
 
     const response = await client.chat.completions.create({
       model: "llama-3.3-70b-versatile",

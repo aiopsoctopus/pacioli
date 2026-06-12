@@ -1,5 +1,5 @@
 # Pacioli Roadmap
-_Last updated: 2026-06-03_
+_Last updated: 2026-06-10_
 
 ---
 
@@ -53,26 +53,33 @@ _Last updated: 2026-06-03_
 
 ---
 
-## 🔲 Phase 3 — Auth + Plaid (v2 Platform Shift)
+## ✅ Phase 4 — Complex-Household Specialization (Shipped 2026-06-10)
 
-Ship Auth and Plaid together — they require the same backend infrastructure.
+All five items done, no backend required:
+
+- [x] **Equity comp vesting** — `lib/equity.ts` + `EquityGrants` component on `/forecast`. RSU/option vest schedules (cliff + monthly/quarterly) become one-time income `ScenarioEvent`s in the projection.
+- [x] **College fund backsolve** — `components/college-fund.tsx`, wired into `/forecast`.
+- [x] **Two-earner modeling** — `components/two-earner-model.tsx`, wired into `/forecast`.
+- [x] **Mortgage payoff accelerator** — `components/mortgage-accelerator.tsx`. Extra-payment scenarios with months/interest saved and new payoff date, injected as a recurring expense event.
+- [x] **Rental property P&L** — `lib/rental.ts` + `components/rental-pl.tsx`, on `/net-worth`. Manual-input model (property value, mortgage terms, rent, tax/insurance/HOA/maintenance/vacancy/management assumptions) since expense detail isn't in transaction history. Computes NOI, mortgage P&I split via amortization, net cash flow, cap rate, cash-on-cash return.
+
+---
+
+## 🔲 Phase 3 — Auth + Plaid (next up — big lift)
+
+Ship Auth and Plaid together — they require the same backend infrastructure. Plaid needs a server to hold the client secret; the server needs auth to scope data per user.
+
+**Sequencing:** Auth (Clerk) → Supabase schema (users, plaid_items, transactions) → Plaid Link + token exchange → transaction sync job.
 
 - [ ] **Auth** — Clerk or NextAuth magic-link, no passwords
 - [ ] **Database** — Supabase or PlanetScale to persist user data server-side
 - [ ] **Plaid** — live bank connection alongside CSV import (user's choice)
-  - Privacy disclosure required: Plaid routes data through Plaid's infrastructure; local CSV import stays on device
+  - Privacy disclosure required: Plaid routes data through Plaid's infrastructure; local CSV import stays on device — update `/about` when this ships
   - localStorage data exportable as JSON for migration to authenticated account
+  - Production trial note: 10 live Item connections before billing kicks in
 - [ ] **Webhook-driven refresh** — Plaid webhooks update balances/transactions automatically
 
----
-
-## 🔲 Phase 4 — Complex-Household Specialization
-
-- [ ] **Equity comp vesting** — RSU/option vesting schedule as timed Scenario Planner events; tax withholding estimates
-- [ ] **College fund backsolve** — given child age and target school cost, calculate required monthly 529 contribution
-- [ ] **Two-earner modeling** — model one partner going part-time, taking leave, or changing jobs
-- [ ] **Mortgage payoff accelerator** — extra principal payment scenarios with interest saved and payoff date
-- [ ] **Rental property P&L** — track rental income vs. expenses (mortgage, maintenance, vacancy) as a mini income statement
+The Connect page already has a "Coming Soon" panel stubbed out, and `lib/data.ts` loaders have comments marking where to swap in API calls.
 
 ---
 

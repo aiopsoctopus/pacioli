@@ -4,6 +4,7 @@ import { formatCurrency, formatMonth, getNetWorth, AccountData, useAccounts, sav
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useDemo } from "@/components/demo-provider";
 import AccountEditor from "@/components/account-editor";
+import RentalPL from "@/components/rental-pl";
 import { Upload } from "lucide-react";
 
 // Asset type groupings for composition view
@@ -272,6 +273,9 @@ export default function NetWorth() {
           </div>
         </div>
       </div>
+
+      {/* Rental property P&L */}
+      <RentalPL />
 
       {/* Account editor */}
       <AccountEditor accounts={accounts} onChange={handleAccountsChange} />
