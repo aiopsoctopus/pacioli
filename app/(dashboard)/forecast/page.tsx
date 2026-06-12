@@ -48,6 +48,7 @@ export default function ForecastView() {
   const [chatLoading, setChatLoading] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
   const [chatNarration, setChatNarration] = useState<string | null>(null);
+  const [chatFollowUps, setChatFollowUps] = useState<string[]>([]);
   const [clarifyingQuestion, setClarifyingQuestion] = useState<string | null>(null);
   const [scenarioEvents, setScenarioEvents] = useState<ScenarioEvent[]>(() => {
     if (typeof window === "undefined") return [];
@@ -301,6 +302,7 @@ export default function ForecastView() {
     setChatLoading(true);
     setChatError(null);
     setChatNarration(null);
+    setChatFollowUps([]);
     setLastQuestion(question);
 
     try {
@@ -375,6 +377,7 @@ export default function ForecastView() {
       const narrateData = await narrateRes.json();
       if (!narrateRes.ok) throw new Error(narrateData.error ?? "Narration failed");
       setChatNarration(narrateData.narration);
+      setChatFollowUps(Array.isArray(narrateData.followUps) ? narrateData.followUps : []);
     } catch (e: unknown) {
       setChatError(e instanceof Error ? e.message : "Something went wrong");
     } finally {
@@ -529,6 +532,19 @@ export default function ForecastView() {
                 <p className="text-sm pacioli-text-secondary leading-relaxed">{chatNarration}</p>
                 {lastQuestion && (
                   <p className="text-xs pacioli-text-muted mt-1.5 italic">"{lastQuestion}"</p>
+                )}
+                {chatFollowUps.length > 0 && (
+                  <div className="mt-2.5 pt-2.5 border-t pacioli-border">
+                    <p className="text-xs font-medium pacioli-text-muted mb-1.5">Things to think through:</p>
+                    <ul className="space-y-1">
+                      {chatFollowUps.map((item, i) => (
+                        <li key={i} className="text-xs pacioli-text-secondary flex items-start gap-1.5">
+                          <span className="pacioli-text-muted">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
               </div>
             </div>
