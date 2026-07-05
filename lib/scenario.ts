@@ -8,7 +8,7 @@
  * It never does arithmetic. All math lives here.
  */
 
-import { formatMonth } from "./data";
+import { formatMonth } from "./format";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

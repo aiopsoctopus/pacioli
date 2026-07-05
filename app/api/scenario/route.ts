@@ -198,9 +198,29 @@ Parse this into structured scenario events. Follow the output schema exactly.`;
 
     // Monthly-equivalent cost — converts the lump-sum NW gap into a "you'd need to
     // find $X/mo" figure, which is far more actionable than a 12-month NW delta.
+    // NOTE: for one-time expenses the NW-gain gap can wash out to ~$0 over the
+    // projection window because compounding dominates — that's mathematically
+    // correct but useless to the user. In that case the LLM should instead lead
+    // with the direct cost of the event(s) (their delta / bracket values), spread
+    // over the projection window, rather than the NW gap.
     const projectionMonths = PROJECTION_MONTHS;
     const costGap = gainBase - gainScenario; // positive = scenario is worse than doing nothing
     const monthlyEquivalent = Math.round(Math.abs(costGap) / Math.max(projectionMonths, 1));
+
+    // Sum of direct event costs (one-time + recurring*months), per bracket tier —
+    // a fallback "sticker price" framing for when the NW-gap framing is near zero.
+    function sumDirectCost(which: "pessimistic" | "base" | "optimistic"): number {
+      return (existingEvents ?? []).reduce((total, e) => {
+        const amt = e.bracket ? e.bracket[which] : e.delta;
+        const sign = e.type === "income" ? -1 : 1; // expenses/savings = cost (+), income = benefit (-)
+        const months = e.recurring ? projectionMonths : 1;
+        return total + sign * amt * months;
+      }, 0);
+    }
+    const directCostBase = sumDirectCost("base");
+    const directCostPess = bracket ? sumDirectCost("pessimistic") : directCostBase;
+    const directCostOpt  = bracket ? sumDirectCost("optimistic")  : directCostBase;
+    const directMonthlyBase = Math.round(Math.abs(directCostBase) / Math.max(projectionMonths, 1));
 
     const narrateMessage = `Today is ${baseline.currentMonth}.
 
@@ -209,19 +229,20 @@ The user asked: "${question}"
 Projection results:
 - Base trajectory (no changes): net worth ${gainBase >= 0 ? "+" : ""}$${gainBase.toLocaleString()} → $${endBase.toLocaleString()}
 - Scenario (base case): net worth ${gainScenario >= 0 ? "+" : ""}$${gainScenario.toLocaleString()} → $${endScenario.toLocaleString()}
-- Cost of this decision vs. doing nothing: $${costGap.toLocaleString()} over ${projectionMonths} months ≈ $${monthlyEquivalent.toLocaleString()}/mo
+- Net-worth-gain gap vs. doing nothing: $${costGap.toLocaleString()} over ${projectionMonths} months ≈ $${monthlyEquivalent.toLocaleString()}/mo (this can be near $0 for one-time costs because compounding dominates over ${projectionMonths} months — if so, IGNORE this figure and use the direct cost figures below instead)
+- Direct cost of the scenario's events themselves, spread over ${projectionMonths} months: base ≈ $${Math.abs(directCostBase).toLocaleString()} total ≈ $${directMonthlyBase.toLocaleString()}/mo${bracket ? ` (pessimistic ≈ $${Math.abs(directCostPess).toLocaleString()} total, optimistic ≈ $${Math.abs(directCostOpt).toLocaleString()} total)` : ""}
 - Does scenario go negative: ${goesNegative}${runwayMonths != null ? `\n- Runway: ${runwayMonths} months` : ""}${bracketSection}
 
 Scenario events:
 ${JSON.stringify(existingEvents, null, 2)}
 
-Respond with ONLY valid JSON, no markdown fences, matching this schema:
+Respond with ONLY valid JSON — your entire response must be a single JSON object, no markdown fences, no prose before or after. Schema:
 {
   "narration": "2-3 sentences in plain English",
   "followUps": ["short item 1", "short item 2", ...]
 }
 
-For "narration": ${bracket ? "Lead with the COST of this decision: state the monthly-equivalent figure (e.g. 'this works out to roughly $X/mo less than if you kept things as they are' or, if it's an expense, 'you'd need to find about $X/mo elsewhere to cover this without changing your trajectory'). Then give the pessimistic-to-optimistic range for the total cost. Do not present the scenario's raw NW gain numbers as if they were the range of outcomes for the decision — always frame them relative to the base trajectory and in terms of the monthly cost. Be honest about uncertainty." : "State the monthly-equivalent cost or benefit (e.g. '$X/mo less than your current trajectory'), then the total over the projection period. Be honest about uncertainty."}
+For "narration": Pick whichever framing is more meaningful given the numbers above — usually the DIRECT COST framing for one-time purchases/expenses (e.g. "this boat would cost you about $50,000 up front, equivalent to roughly $X/mo if you spread it over the next year"), and the NET-WORTH-GAIN-GAP framing for ongoing changes to income or spending (e.g. quitting a job, a permanent raise, a new recurring expense) where the gap is meaningfully nonzero. Never present a "$0 cost" framing as the headline if a direct cost figure is available and nonzero — use the direct cost instead. If a bracket is present, give the pessimistic-to-optimistic range for whichever figure you led with. Be honest about uncertainty, but do not manufacture a misleading "range of outcomes" from numbers that are actually just compounding noise.
 
 For "followUps": Generate 2-4 short (under 12 words each), concrete things the user should think through next, tailored to the SPECIFIC scenario events above — not generic advice. Examples of the kind of specificity wanted:
 - For a vehicle/boat/big-ticket purchase: "Paying cash or financing?", "Buying new or used?", "What are annual maintenance/storage/insurance costs?", "Want me to research typical prices in your area?"
@@ -229,13 +250,16 @@ For "followUps": Generate 2-4 short (under 12 words each), concrete things the u
 - For quitting a job / career change: "Do you have health insurance lined up?", "Any severance or unused PTO payout?"
 - For a sabbatical/travel: "Will you keep any income (freelance, rental)?", "Do you have travel insurance budgeted?"
 - If a follow-up would benefit from external research (prices, rates, costs in the user's area), phrase it as an offer, e.g. "Want me to look up typical [X] costs near you?"
-If the scenario is simple (e.g. "save an extra $500/mo") and there's nothing meaningful to flag, return an empty array.`;
+If the scenario is simple (e.g. "save an extra $500/mo") and there's nothing meaningful to flag, return an empty array.
+
+Remember: output raw JSON only. Do not wrap it in markdown code fences. Do not add any explanation outside the JSON.`;
 
     const response = await client.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       max_tokens: 400,
+      response_format: { type: "json_object" },
       messages: [
-        { role: "system", content: "You are a concise, honest financial narrator and planner. Use the exact numbers provided. Never add caveats not supported by the data. Output ONLY valid JSON matching the requested schema — no markdown fences, no prose outside the JSON." },
+        { role: "system", content: "You are a concise, honest financial narrator and planner. Use the exact numbers provided. Never add caveats not supported by the data. Output ONLY a single valid JSON object matching the requested schema — no markdown fences, no prose outside the JSON." },
         { role: "user", content: narrateMessage },
       ],
     });

@@ -76,30 +76,10 @@ export interface Forecast {
   months: ForecastMonth[];
 }
 
-// Helpers
-export function formatCurrency(n: number, compact = false): string {
-  if (compact && Math.abs(n) >= 1000) {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(n);
-  }
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(n);
-}
-
-export function formatMonth(yyyyMM: string): string {
-  const [y, m] = yyyyMM.split("-");
-  return new Date(Number(y), Number(m) - 1).toLocaleString("en-US", {
-    month: "short",
-    year: "2-digit",
-  });
-}
+// Helpers — pure formatters live in lib/format.ts (hook-free, server-safe);
+// re-exported here so existing client-side imports keep working.
+export { formatCurrency, formatMonth } from "./format";
+import { formatCurrency, formatMonth } from "./format";
 
 export function getNetWorth(accounts: AccountData, month: string): number {
   const assets = accounts.assets.reduce((s, a) => s + (a.balances[month] ?? 0), 0);
